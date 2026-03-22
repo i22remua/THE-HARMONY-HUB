@@ -1,229 +1,157 @@
-# 🎵 The Harmony Hub
+# 🎵 Harmony Hub
 
-> Una aplicación móvil inteligente que genera playlists adaptativas basadas en tu estado emocional y contexto acústico.
+> Aplicación móvil inteligente para generar playlists adaptativas en Spotify a partir del estado emocional del usuario, su contexto ambiental y un modelo híbrido de recomendación con aprendizaje progresivo.
 
-## 📋 Descripción del Proyecto
-
-**The Harmony Hub** es una aplicación innovadora que combina Machine Learning, procesamiento digital de señales (DSP) y integración con Spotify para crear una experiencia de música personalizada única. El sistema analiza:
-
-- 🧠 **Estado Emocional**: Registra y analiza tu estado emocional diario
-- 🔊 **Contexto Acústico**: Clasifica el ruido ambiental en tiempo real
-- 🎼 **Preferencias Musicales**: Aprende de tus interacciones (Reinforcement Learning)
-- 🎧 **Recomendaciones**: Genera playlists que se adaptan a tu ánimo y ambiente
-
-## 🎯 Objetivos Principales
-
-1. **Análisis de Emociones**: Implementar modelos de ML que mapeen estado emocional a características musicales
-2. **Interfaz Intuitiva**: Diseñar una UI mobile amigable para captura de estado de ánimo
-3. **Motor de Recomendación**: API REST en la nube para generar playlists personalizadas
-4. **Procesamiento de Audio**: DSP en tiempo real para clasificar ruido ambiental
-5. **Seguridad**: Proteger datos sensibles del usuario (emociones, historial)
-
-## 🏗️ Arquitectura del Proyecto
-
-```
-The Harmony Hub/
-├── backend_python/          # Backend - ML & API
-├── harmonyhub/              # Frontend Flutter
-├── firebase/                # Firebase Functions & Rules
-└── documentation/           # Documentación
-```
-
-**Para documentación detallada de arquitectura, ver**: [ARCHITECTURE.md](./ARCHITECTURE.md)
-
-## 🚀 Comienzo rápido
-
-### Requisitos Previos
-- Python 3.11+
-- Flutter 3.10+
-- Node.js 18+
-- Firebase CLI
-- Spotify Developer Account
-
-### Instalación Backend
-
-```bash
-cd backend_python
-
-# Crear entorno virtual
-python3 -m venv venv
-source venv/bin/activate
-
-# Instalar dependencias
-pip install -r requirements.txt
-
-# Configurar entorno
-cp .env.example .env
-# Editar .env con tus credenciales
-
-# Ejecutar servidor
-python main.py
-```
-
-El servidor estará disponible en `http://localhost:8000`
-
-### Instalación Frontend
-
-```bash
-cd harmonyhub
-
-# Instalar dependencias
-flutter pub get
-
-# Ejecutar en emulador/dispositivo
-flutter run
-```
-
-### Configuración Firebase
-
-```bash
-cd firebase
-
-# Login en Firebase
-firebase login
-
-# Inicializar proyecto (si es nuevo)
-firebase init
-
-# Desplegar
-firebase deploy
-```
-
-**Para instrucciones detalladas**: [QUICK_START.md](./QUICK_START.md)
-
-## 📁 Estructura de Directorio
-
-### Backend Python (`backend_python/`)
-
-```
-backend_python/
-├── api/                 # Rutas REST
-├── ml_models/          # Modelos de Machine Learning
-├── dsp/                # Procesamiento Digital de Señales
-├── database/           # Repositorios de datos
-├── services/           # Lógica de negocio
-├── security/           # Autenticación y seguridad
-├── config.py           # Configuración central
-├── main.py             # Punto de entrada
-└── requirements.txt    # Dependencias
-```
-
-### Frontend Flutter (`harmonyhub/lib/`)
-
-```
-lib/
-├── core/               # Constantes, tema, utilidades
-├── data/               # Acceso a datos
-├── domain/             # Lógica de negocio
-├── presentation/       # UI - Screens, Widgets
-├── services/           # Servicios especializados
-└── config/             # Configuración
-```
-
-## 🔌 Integraciones
-
-### Firebase
-- **Firestore**: Base de datos en tiempo real
-- **Firebase Auth**: Autenticación de usuarios
-- **Cloud Storage**: Almacenamiento de archivos
-- **Cloud Functions**: Lógica en nube
-
-### Spotify API
-- Búsqueda de canciones
-- Análisis de características de audio
-- Gestión de reproductor
-- Recomendaciones de Spotify
-
-### Servicios Externos
-- Audio Analysis API (clasificación de ruido)
-- Analytics (seguimiento de comportamiento)
-
-## 🔐 Seguridad
-
-- ✅ Autenticación OAuth2 con Firebase Auth
-- ✅ JWT tokens con renovación automática
-- ✅ Cifrado de datos sensibles
-- ✅ HTTPS/TLS para todas las comunicaciones
-- ✅ Firestore Rules para control de acceso
-- ✅ Certificate Pinning en mobile
-
-## 📊 Endpoints Principales
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| POST | `/api/v1/auth/login` | Login de usuario |
-| POST | `/api/v1/mood/record` | Registrar estado emocional |
-| GET | `/api/v1/mood/history` | Historial de emociones |
-| POST | `/api/v1/audio/analyze` | Analizar ruido ambiental |
-| GET | `/api/v1/recommendations` | Obtener recomendaciones |
-| POST | `/api/v1/playlist/create` | Crear playlist |
-| POST | `/api/v1/feedback/record` | Registrar feedback |
-
-## 🛠️ Tecnologías
-
-### Backend
-- **FastAPI**: Framework web moderno
-- **TensorFlow/PyTorch**: Machine Learning
-- **Librosa**: Procesamiento de audio
-- **Firebase Admin SDK**: Integración Firebase
-- **Spotipy**: Cliente de Spotify
-- **Redis**: Caché distribuido
-
-### Frontend
-- **Flutter**: Framework UI multiplataforma
-- **Riverpod/Provider**: State Management
-- **Firebase SDK**: Backend services
-- **Spotify SDK**: Integración Spotify
-- **Hive**: Base de datos local
-
-### Infraestructura
-- **Firebase**: Backend services
-- **Google Cloud Run**: Computación sin servidor
-- **Docker**: Containerización
-- **GitHub Actions**: CI/CD
-
-## 📈 Fases de Desarrollo
-
-### ✅ Fase 1: MVP ()
-
-
-### 🔄 Fase 2: Audio DSP ()
-
-
-### 🤖 Fase 3: ML Avanzado ()
-
-
-### 🚀 Fase 4: Optimización ()
-
-
-## 📚 Documentación
-
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Diseño completo de la arquitectura
-- [QUICK_START.md](./QUICK_START.md) - Guía de inicio rápido
-- [API Documentation](./backend_python/docs/API.md) - Referencia de endpoints
-- [ML Models Guide](./backend_python/ml_models/README.md) - Guía de modelos ML
-- [DSP Guide](./backend_python/dsp/README.md) - Guía de procesamiento de señales
-
-## 👥 Contribución
-
-Para contribuir al proyecto:
-
-1. Crear una rama: `git checkout -b feature/mi-feature`
-2. Commit cambios: `git commit -am 'Add feature'`
-3. Push a rama: `git push origin feature/mi-feature`
-4. Abrir Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la licencia MIT.
-
-## 📬 Contacto
-
-- 📧 Email: [i22remua@uco.com]
-- 🐙 GitHub: [tu-github]
 ---
 
-**Última actualización**: Febrero 2026
+## 📌 Descripción
 
-**Estado**: 🚧 En desarrollo - MVP en progreso
+**Harmony Hub** es una aplicación móvil desarrollada como Trabajo Final de Grado que combina:
 
+- **captura de estado emocional**
+- **medición de ruido ambiental**
+- **recomendación musical contextual**
+- **generación automática de playlists en Spotify**
+- **feedback del usuario**
+- **aprendizaje adaptativo**
+- **ranking híbrido heurística + machine learning**
+
+El objetivo del sistema es ofrecer una experiencia musical personalizada y contextual, capaz de evolucionar con el uso y con las preferencias reales del usuario.
+
+---
+
+## 🎯 Objetivo del proyecto
+
+El propósito de Harmony Hub es diseñar e implementar un sistema capaz de:
+
+1. registrar el contexto emocional del usuario
+2. interpretar factores adicionales como energía, estrés y ruido ambiental
+3. generar recomendaciones musicales adaptadas al momento actual
+4. crear playlists reales en Spotify
+5. aprender progresivamente del feedback del usuario
+6. utilizar un modelo híbrido de recomendación combinando lógica heurística y machine learning
+
+---
+
+## ✅ Funcionalidades actuales
+
+### Autenticación y persistencia
+- Registro e inicio de sesión con **Firebase Authentication**
+- Persistencia en **Cloud Firestore**
+- Historial de uso por usuario autenticado
+
+### Captura de contexto
+- Check-in emocional manual
+- Selección de:
+  - mood
+  - objetivo
+  - estrés
+  - energía
+- Medición del ruido ambiental con micrófono
+- Preferencias avanzadas:
+  - voz: instrumental / indistinto / con voz
+  - intensidad: suave / media / alta
+  - exploración: familiar / equilibrado / descubrir
+  - popularidad: mainstream / mixta / alternativa
+  - duración objetivo
+
+### Recomendación musical
+- Generación de recomendación contextual desde backend
+- Cálculo de:
+  - modo recomendado
+  - valencia objetivo
+  - energía objetivo
+  - rango BPM objetivo
+
+### Integración con Spotify
+- Conexión mediante **OAuth**
+- Obtención del perfil del usuario
+- Generación automática de playlists reales
+- Apertura de playlists en Spotify
+
+### Feedback y aprendizaje
+- Envío de feedback:
+  - helpful
+  - effect
+  - comentario opcional
+- Actualización de perfil adaptativo del usuario
+- Persistencia de:
+  - géneros preferidos
+  - géneros evitados
+  - métricas acústicas preferidas
+- Generación de dataset de entrenamiento
+
+### Machine Learning
+- Modelo de ranking entrenable con **scikit-learn**
+- Enfoque híbrido:
+  - score heurístico
+  - score ML
+  - score final combinado
+- Activación automática del ranking híbrido cuando existe modelo entrenado
+
+### Visualización
+- Historial de:
+  - check-ins
+  - recomendaciones
+  - feedback
+  - playlists generadas
+- Pantalla de aprendizaje del sistema
+- Visualización de canciones seleccionadas y motivos de selección
+
+---
+
+## 🧠 Cómo funciona el sistema
+
+El flujo principal es el siguiente:
+
+1. El usuario inicia sesión.
+2. Realiza un **check-in emocional**.
+3. La app mide el **ruido ambiental**.
+4. El backend genera una **recomendación contextual**.
+5. El usuario puede **generar una playlist automática en Spotify**.
+6. El sistema obtiene canciones candidatas.
+7. Se aplica un **ranking heurístico** y, si existe modelo entrenado, un **ranking híbrido con ML**.
+8. El usuario escucha la playlist y envía **feedback**.
+9. El sistema actualiza el perfil adaptativo y genera **training examples**.
+10. El modelo ML puede reentrenarse con esos datos.
+
+---
+
+## 🏗️ Arquitectura del sistema
+
+Harmony Hub sigue una arquitectura cliente-servidor con servicios externos:
+
+- **Frontend móvil:** Flutter
+- **Backend REST:** FastAPI
+- **Autenticación:** Firebase Authentication
+- **Persistencia:** Cloud Firestore
+- **Proveedor musical:** Spotify Web API
+- **Machine Learning:** scikit-learn + joblib
+
+⸻
+
+📄 Licencia
+
+Este proyecto puede mantenerse bajo licencia MIT si deseas distribución abierta.
+
+⸻
+
+📬 Contacto
+	•	Email: i22remua@uco.es
+	•	GitHub: i22remua
+
+⸻
+
+🏁 Estado del repositorio
+
+Estado actual: prototipo funcional avanzado en transición a producto final y documentación completa de TFG.
+
+Última actualización: marzo 2026
+
+---
+
+Si quieres, el siguiente paso te lo doy ya en formato **README más profesional todavía**, con:
+- badges
+- tabla de estado del proyecto
+- secciones de “Known issues”
+- y una versión más académica para que quede impecable en GitHub.
