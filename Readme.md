@@ -1,6 +1,6 @@
 # 🎵 Harmony Hub
 
-> Aplicación móvil inteligente para generar playlists adaptativas en Spotify a partir del estado emocional del usuario, su contexto ambiental y un modelo híbrido de recomendación con aprendizaje progresivo.
+**Aplicación móvil inteligente para generar playlists adaptativas en Spotify a partir del estado emocional del usuario, su contexto ambiental y un modelo híbrido de recomendación con aprendizaje progresivo.
 
 ---
 
@@ -150,8 +150,3 @@ Estado actual: prototipo funcional avanzado en transición a producto final y do
 
 ---
 
-Si quieres, el siguiente paso te lo doy ya en formato **README más profesional todavía**, con:
-- badges
-- tabla de estado del proyecto
-- secciones de “Known issues”
-- y una versión más académica para que quede impecable en GitHub.
