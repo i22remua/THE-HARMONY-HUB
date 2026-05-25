@@ -1,67 +1,91 @@
 # Harmony Hub
 
-Harmony Hub es un TFG centrado en la generacion de sesiones musicales personalizadas para bienestar emocional. El proyecto combina una app Flutter, un backend FastAPI, aprendizaje a partir de feedback del usuario y materializacion final de playlists reales en Spotify.
+Aplicacion movil y backend inteligente para generar playlists adaptativas en Spotify a partir del estado emocional del usuario, su contexto ambiental y un modelo hibrido de recomendacion con aprendizaje progresivo.
 
-## Que hace el proyecto
+## Descripcion
 
-- recoge un check-in breve sobre objetivo, estado emocional, energia, entorno y preferencias
-- genera una recomendacion de sesion musical explicable
-- transforma esa recomendacion en una playlist real en Spotify
-- aprende de sesiones previas y del feedback posterior
-- mantiene un clasificador supervisado a nivel de sesion para ajustar la seleccion del modo
+Harmony Hub es un Trabajo Fin de Grado que combina:
+
+- captura de estado emocional
+- medicion de ruido ambiental
+- recomendacion musical contextual
+- generacion automatica de playlists reales en Spotify
+- feedback posterior del usuario
+- aprendizaje adaptativo a nivel de perfil y de sesion
+- ranking hibrido de heuristicas y machine learning
+
+El objetivo del sistema es ofrecer una experiencia musical personalizada, explicable y sensible al momento concreto de uso.
+
+## Objetivo del proyecto
+
+Harmony Hub busca diseñar e implementar un sistema capaz de:
+
+1. registrar el contexto emocional del usuario
+2. interpretar factores como energia, estres y ruido ambiental
+3. generar recomendaciones musicales adaptadas al momento actual
+4. transformar la recomendacion en una playlist real de Spotify
+5. aprender progresivamente del feedback
+6. combinar reglas heuristicas con un clasificador supervisado a nivel de sesion
 
 ## Arquitectura general
 
 ```text
-Flutter app (harmonyhub/)
-  -> Auth + check-in + entorno + recomendacion + feedback
-  -> llama al backend REST
-
-FastAPI backend (backend_fastapi/)
-  -> recomendador heuristico
-  -> modelo supervisado de sesion
-  -> perfil de aprendizaje del usuario
-  -> catalogo musical local tipo MSD
-  -> conexion con Spotify para OAuth y playlists
-
-Documentacion TFG (tfg_documentacion/)
-  -> memoria en LaTeX
-  -> figuras, anexos y redaccion academica
-```
-
-## Estructura del repositorio
-
-```text
-harmonyhub/           App Flutter
-backend_fastapi/      Backend FastAPI y servicios ML/recomendacion
+harmonyhub/           Frontend Flutter
+backend_fastapi/      Backend FastAPI + catalogo + ML + Spotify
 tfg_documentacion/    Memoria del TFG en LaTeX
 firestore.rules       Reglas de seguridad de Firestore
-dataconnect/          Artefactos auxiliares de Firebase Data Connect
 ```
 
-## Stack principal
+## Funcionalidades principales
 
-- Flutter
-- FastAPI
-- Firebase Auth
-- Firestore
-- Spotify Web API
-- scikit-learn
-- catalogo local `msd_tracks` como base principal de candidatos
+### App Flutter
+
+- autenticacion de usuario
+- check-in emocional y contextual
+- medicion opcional del entorno acustico
+- visualizacion de recomendacion
+- generacion de playlist real
+- envio de feedback
+- historial, perfil y aprendizaje
+
+### Backend FastAPI
+
+- recomendacion de sesion basada en contexto
+- modelo supervisado de seleccion de modo
+- aprendizaje del perfil del usuario
+- catalogo musical local tipo MSD
+- materializacion de canciones en Spotify
+- mantenimiento y auditoria del modelo
+
+### Documentacion del TFG
+
+- memoria academica completa
+- diagramas
+- anexos tecnicos
+- manuales y material de defensa
 
 ## Flujo funcional resumido
 
 1. El usuario inicia sesion.
-2. Realiza un check-in emocional y contextual.
-3. La app envia el contexto al backend.
-4. El backend calcula candidatos de sesion y, si procede, activa el modelo supervisado.
-5. Se devuelve una recomendacion explicable.
-6. Si el usuario la acepta, se genera una playlist real en Spotify.
-7. El feedback posterior alimenta el aprendizaje del perfil y el mantenimiento del modelo.
+2. Realiza un check-in emocional.
+3. La app recoge preferencias y, si se desea, senales del entorno.
+4. El backend genera una recomendacion contextual.
+5. El usuario puede materializarla como playlist real en Spotify.
+6. Tras escucharla, envia feedback.
+7. El sistema actualiza el aprendizaje y mantiene el modelo supervisado.
 
-## Puesta en marcha rapida
+## Stack tecnologico
 
-### 1. Backend
+- Flutter
+- FastAPI
+- Firebase Authentication
+- Cloud Firestore
+- Spotify Web API
+- scikit-learn
+
+## Puesta en marcha
+
+### Backend
 
 ```bash
 cd backend_fastapi
@@ -71,19 +95,13 @@ pip install -r requirements.txt
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-### 2. Frontend Flutter
+### Frontend
 
 ```bash
 cd harmonyhub
 flutter pub get
 flutter run
 ```
-
-## Nota importante sobre red local
-
-En este estado del proyecto, el cliente Flutter puede apuntar a una IP local fija para probar en movil fisico. Si cambias de red o de IP, revisa:
-
-- [harmonyhub/lib/core/network/api_client.dart](harmonyhub/lib/core/network/api_client.dart)
 
 ## Tests
 
@@ -104,30 +122,27 @@ flutter test
 
 ## Documentacion relevante
 
-- [tfg_documentacion/](tfg_documentacion/)
 - [backend_fastapi/DEFENSA_FUNCIONAMIENTO_HARMONY_HUB.md](backend_fastapi/DEFENSA_FUNCIONAMIENTO_HARMONY_HUB.md)
 - [backend_fastapi/ML_AND_RECOMMENDER_ACADEMIC_TECHNICAL_EXPLANATION.md](backend_fastapi/ML_AND_RECOMMENDER_ACADEMIC_TECHNICAL_EXPLANATION.md)
 - [backend_fastapi/CATALOG_SUMMARY_REPORT.md](backend_fastapi/CATALOG_SUMMARY_REPORT.md)
 - [backend_fastapi/ML_SINGLE_PROFILE_EVIDENCE_TABLES.md](backend_fastapi/ML_SINGLE_PROFILE_EVIDENCE_TABLES.md)
+- [tfg_documentacion/](tfg_documentacion/)
 
-## Estado del repositorio
+## Nota sobre configuracion local
 
-Este repositorio contiene tanto el producto software como la memoria academica del TFG. La carpeta de referencia documental es:
+En este estado del proyecto, el cliente Flutter puede apuntar a una IP local concreta para probar en movil fisico. Si cambias de red o de IP, revisa:
 
-- `tfg_documentacion/`
+- [harmonyhub/lib/core/network/api_client.dart](harmonyhub/lib/core/network/api_client.dart)
 
-La implementacion movil y backend incluidas aqui corresponden al entregable funcional del proyecto.
+## Antes de publicar o clonar
 
-## Antes de subirlo a GitHub
-
-Revisa especialmente que no subas secretos ni artefactos locales:
+Este repositorio deja fuera secretos y configuraciones sensibles como:
 
 - `backend_fastapi/.env`
 - `backend_fastapi/firebase-service-account.json`
-- entornos virtuales
-- builds locales de Flutter
-- PDFs finales, zips o ficheros temporales si no quieres publicar entregables pesados
+
+Si otra persona quiere ejecutar el proyecto, debera crear sus propias credenciales y configuracion local.
 
 ## Licencia
 
-Si vas a publicar el repositorio de forma abierta, te recomiendo anadir una licencia explicita antes de hacerlo publico.
+Este repositorio incluye licencia MIT en [LICENSE](LICENSE).
