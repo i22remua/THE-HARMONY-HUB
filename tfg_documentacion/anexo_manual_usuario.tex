@@ -42,6 +42,34 @@ Una vez abierta la app, el flujo inicial es:
     \item volver al inicio para comenzar un check-in.
 \end{enumerate}
 
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.31\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-37-08-051_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.31\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-37-25-565_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.31\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-37-46-036_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \caption{Pantallas iniciales del flujo de acceso: bienvenida e inicio de
+    sesión, creación de cuenta y conexión obligatoria con Spotify antes de
+    generar playlists reales.}
+    \label{fig:manual_acceso_spotify}
+\end{figure}
+
+La figura~\ref{fig:manual_acceso_spotify} muestra el primer tramo del flujo de
+uso. Primero aparece la pantalla de acceso, desde la que es posible iniciar
+sesión o registrar una cuenta nueva. Una vez autenticada la persona usuaria, la
+app solicita la conexión con Spotify, ya que esta integración es la que permite
+materializar la recomendación final como playlist reproducible.
+
 \section{Uso básico}
 \label{sec:manual_usuario_uso_basico}
 
@@ -62,6 +90,102 @@ El flujo de uso normal puede resumirse en seis pasos:
     \item \textbf{Cerrar con feedback.} Tras escuchar la playlist, el usuario
     puede valorar si le resultó útil y cómo terminó la sesión.
 \end{enumerate}
+
+\subsection*{Pantalla principal y acceso al check-in}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-46-14-698_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-48-36-091_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \caption{Pantalla principal y comienzo del check-in. A la izquierda se ve
+    la portada con acceso directo a \textit{Empezar check-in}; a la derecha,
+    una de las preguntas guiadas del flujo conversacional.}
+    \label{fig:manual_home_checkin}
+\end{figure}
+
+La portada actúa como punto de entrada del producto. Desde ella se puede
+empezar el check-in, consultar accesos a otros bloques y moverse por la
+navegación inferior. Durante el check-in, Harmony Hub presenta preguntas breves
+en lenguaje natural para recoger estado emocional, objetivo, energía, estrés y
+preferencias sin exigir una interacción técnica.
+
+\subsection*{Entorno acústico y generación de la recomendación}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-49-26-089_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-49-39-980_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \caption{Activación opcional del análisis del entorno y presentación de la
+    recomendación resultante.}
+    \label{fig:manual_entorno_recomendacion}
+\end{figure}
+
+El análisis del entorno es opcional. Si la persona usuaria acepta, la app
+escucha unos segundos el ambiente para utilizar esa señal como contexto
+adicional. Después, se presenta una recomendación editorializada con el tipo de
+sesión sugerido, una explicación funcional y un resumen del modo elegido.
+
+\subsection*{Uso del aprendizaje acumulado y creación de la playlist}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-49-46-860_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-50-27-942_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \caption{Explicación del peso del aprendizaje acumulado y pantalla de
+    playlist ya generada dentro de la app.}
+    \label{fig:manual_aprendizaje_playlist}
+\end{figure}
+
+Antes de crear la playlist, la recomendación puede mostrar cómo se está usando
+el aprendizaje acumulado, incluyendo señales como el feedback disponible o el
+peso relativo del perfil aprendido. Una vez generada la playlist, Harmony Hub
+presenta el resultado final, permite abrirlo en Spotify y ofrece el acceso
+directo al cierre con feedback.
+
+\subsection*{Cierre de sesión y reproducción real en Spotify}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-50-33-482_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-51-18-766_com.spotify.music.jpg}
+    \end{minipage}
+    \caption{Pantalla de feedback al cerrar la sesión y ejemplo de playlist
+    abierta y reproducida ya dentro de Spotify.}
+    \label{fig:manual_feedback_spotify}
+\end{figure}
+
+El ciclo de uso se cierra cuando la persona usuaria escucha la playlist y
+responde cómo le ha dejado la sesión. Esta interacción es clave para el
+aprendizaje posterior. La segunda imagen confirma además que la salida no se
+queda en una sugerencia abstracta, sino que acaba convertida en una playlist
+real dentro del ecosistema de Spotify.
 
 \section{Funcionalidades principales}
 \label{sec:manual_usuario_funcionalidades}
@@ -88,11 +212,58 @@ identificador con la sesión correspondiente.
 El usuario puede revisar sesiones anteriores, playlists generadas y parte de la
 trazabilidad funcional acumulada.
 
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-46-30-561_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-46-35-030_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \caption{Bloques secundarios accesibles desde la navegación: modos
+    preestablecidos e historial personal.}
+    \label{fig:manual_modos_historial}
+\end{figure}
+
+La navegación inferior permite acceder a bloques complementarios sin romper el
+flujo principal. En \textit{Modos} se muestran accesos rápidos o rutas útiles
+para situaciones recurrentes; en \textit{Historial} se resume la actividad
+previa del usuario y se facilita la revisión de sesiones ya realizadas.
+
 \subsection*{Aprendizaje personal}
 
 La app muestra información resumida sobre el aprendizaje del sistema respecto a
 las preferencias del usuario, incluyendo pesos contextuales y estables cuando
 existe suficiente actividad acumulada.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.31\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-46-24-532_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.31\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-56-50-176_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.31\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-46-35-030_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \caption{Pantallas de aprendizaje, perfil y referencia de navegación entre
+    secciones.}
+    \label{fig:manual_aprendizaje_perfil}
+\end{figure}
+
+En \textit{Aprendizaje} se muestran indicadores resumidos sobre sesiones
+valoradas, afinidad positiva y otras señales útiles para entender si el sistema
+ya dispone de una base suficiente para personalizar mejor. En \textit{Perfil}
+se agrupan opciones relacionadas con Spotify, privacidad y ayuda rápida de uso.
 
 \subsection*{Modos guardados}
 

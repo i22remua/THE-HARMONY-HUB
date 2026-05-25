@@ -68,6 +68,18 @@ firestore.rules       Reglas de seguridad de Firestore
 - **Modelo prudente**: el componente supervisado no actua siempre, sino solo cuando supera puertas minimas de datos, calidad y confianza operativa.
 - **Trazabilidad**: el proyecto conserva auditoria tecnica, documentacion academica y material de defensa para explicar decisiones y resultados.
 
+## Vista rapida de la app
+
+<p align="center">
+  <img src="tfg_documentacion/Imagenes/manual_app/Screenshot_2026-05-25-18-37-08-051_com.example.harmonyhub.jpg" alt="Pantalla de acceso" width="23%">
+  <img src="tfg_documentacion/Imagenes/manual_app/Screenshot_2026-05-25-18-46-14-698_com.example.harmonyhub.jpg" alt="Pantalla principal" width="23%">
+  <img src="tfg_documentacion/Imagenes/manual_app/Screenshot_2026-05-25-18-49-39-980_com.example.harmonyhub.jpg" alt="Pantalla de recomendacion" width="23%">
+  <img src="tfg_documentacion/Imagenes/manual_app/Screenshot_2026-05-25-18-50-27-942_com.example.harmonyhub.jpg" alt="Pantalla de playlist generada" width="23%">
+</p>
+
+Estas capturas resumen el recorrido principal: acceso, entrada al check-in,
+recomendacion contextual y materializacion de la playlist final.
+
 ## Funcionalidades principales
 
 ### App Flutter
