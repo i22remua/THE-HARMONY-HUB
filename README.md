@@ -1,6 +1,23 @@
 # Harmony Hub
 
+[![Flutter](https://img.shields.io/badge/Flutter-App-02569B?logo=flutter&logoColor=white)](harmonyhub/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)](backend_fastapi/)
+[![Firebase](https://img.shields.io/badge/Firebase-Auth%20%26%20Firestore-FFCA28?logo=firebase&logoColor=black)](firebase.json)
+[![Spotify](https://img.shields.io/badge/Spotify-Playlist%20Integration-1DB954?logo=spotify&logoColor=white)](backend_fastapi/app/api/routes/spotify.py)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-Session%20ML-F7931E?logo=scikitlearn&logoColor=white)](backend_fastapi/app/ml/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 Aplicacion movil y backend inteligente para generar playlists adaptativas en Spotify a partir del estado emocional del usuario, su contexto ambiental y un modelo hibrido de recomendacion con aprendizaje progresivo.
+
+> Harmony Hub convierte un check-in emocional breve en una sesion musical contextual, explicable y reproducible en Spotify.
+
+## De un vistazo
+
+- recomendacion musical sensible a estado emocional, energia, estres y entorno
+- generacion de playlists reales en Spotify, no solo sugerencias abstractas
+- aprendizaje progresivo del perfil del usuario a partir de feedback
+- clasificador supervisado a nivel de sesion para ajustar la seleccion del modo
+- memoria academica completa del TFG incluida en el mismo repositorio
 
 ## Descripcion
 
@@ -35,6 +52,13 @@ backend_fastapi/      Backend FastAPI + catalogo + ML + Spotify
 tfg_documentacion/    Memoria del TFG en LaTeX
 firestore.rules       Reglas de seguridad de Firestore
 ```
+
+## Puntos fuertes del proyecto
+
+- **Contexto antes que popularidad**: la recomendacion parte del momento actual del usuario y no solo de listas genericas.
+- **Pipeline completo**: check-in, recomendacion, playlist real, escucha, feedback y aprendizaje quedan conectados de extremo a extremo.
+- **Modelo prudente**: el componente supervisado no actua siempre, sino solo cuando supera puertas minimas de datos, calidad y confianza operativa.
+- **Trazabilidad**: el proyecto conserva auditoria tecnica, documentacion academica y material de defensa para explicar decisiones y resultados.
 
 ## Funcionalidades principales
 
