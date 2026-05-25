@@ -1,5 +1,13 @@
 # Harmony Hub
 
+<p align="center">
+  <img src="harmonyhub/assets/branding/harmony_hub_icon.png" alt="Harmony Hub logo" width="132">
+</p>
+
+<p align="center">
+  <img src="assets/readme-banner.svg" alt="Harmony Hub banner" width="100%">
+</p>
+
 [![Flutter](https://img.shields.io/badge/Flutter-App-02569B?logo=flutter&logoColor=white)](harmonyhub/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)](backend_fastapi/)
 [![Firebase](https://img.shields.io/badge/Firebase-Auth%20%26%20Firestore-FFCA28?logo=firebase&logoColor=black)](firebase.json)

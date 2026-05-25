@@ -1,0 +1,65 @@
+<svg width="1600" height="520" viewBox="0 0 1600 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="120" y1="40" x2="1450" y2="470" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#102927"/>
+      <stop offset="0.42" stop-color="#1D4943"/>
+      <stop offset="0.76" stop-color="#3A6D65"/>
+      <stop offset="1" stop-color="#CA7E57"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="260" y1="110" x2="1130" y2="430" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8F3EB" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#F0DCCB" stop-opacity="0.72"/>
+    </linearGradient>
+    <filter id="blur" x="0" y="0" width="1600" height="520" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="520" rx="40" fill="url(#bg)"/>
+
+  <g opacity="0.3" filter="url(#blur)">
+    <circle cx="1210" cy="110" r="120" fill="#FFFFFF"/>
+    <circle cx="1380" cy="350" r="150" fill="#F8D4C0"/>
+    <circle cx="250" cy="430" r="140" fill="#FFFFFF"/>
+  </g>
+
+  <circle cx="188" cy="168" r="94" fill="rgba(255,255,255,0.13)"/>
+  <circle cx="188" cy="168" r="73" fill="rgba(255,255,255,0.10)"/>
+
+  <path d="M150 210C161 174 189 139 230 120C232 142 225 166 212 188C198 211 176 229 150 239C146 229 146 220 150 210Z" fill="#F8F3EB"/>
+  <path d="M208 229C228 189 268 163 316 160C308 211 268 252 215 260C205 251 202 240 208 229Z" fill="#F3D8C5"/>
+  <path d="M112 142C143 136 174 148 196 171C169 192 132 196 99 179C98 164 102 151 112 142Z" fill="#FFF7F0"/>
+
+  <rect x="360" y="104" width="148" height="34" rx="17" fill="rgba(255,255,255,0.14)"/>
+  <text x="434" y="126" text-anchor="middle" fill="#FFF9F3" font-family="Avenir, Montserrat, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="2.6">
+    HARMONY HUB
+  </text>
+
+  <text x="360" y="218" fill="#FFFFFF" font-family="Avenir, Montserrat, Helvetica, Arial, sans-serif" font-size="78" font-weight="800">
+    Emotion-aware music
+  </text>
+  <text x="360" y="302" fill="#FFFFFF" font-family="Avenir, Montserrat, Helvetica, Arial, sans-serif" font-size="78" font-weight="800">
+    sessions with real Spotify output
+  </text>
+
+  <text x="362" y="360" fill="url(#accent)" font-family="Avenir, Montserrat, Helvetica, Arial, sans-serif" font-size="28" font-weight="500">
+    Flutter app + FastAPI backend + contextual recommendation + session ML + adaptive learning
+  </text>
+
+  <g opacity="0.85">
+    <path d="M1056 147C1107 120 1167 127 1209 162C1250 197 1266 252 1248 304" stroke="rgba(255,255,255,0.52)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M1040 211C1081 189 1130 194 1164 222C1197 249 1210 293 1197 336" stroke="rgba(255,255,255,0.36)" stroke-width="10" stroke-linecap="round"/>
+    <path d="M1028 275C1060 258 1098 261 1124 282C1150 303 1160 335 1151 368" stroke="rgba(255,255,255,0.28)" stroke-width="8" stroke-linecap="round"/>
+  </g>
+
+  <rect x="1048" y="352" width="356" height="76" rx="26" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.16)"/>
+  <text x="1226" y="384" text-anchor="middle" fill="#FFFFFF" font-family="Avenir, Montserrat, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="1.8">
+    TFG PROJECT
+  </text>
+  <text x="1226" y="415" text-anchor="middle" fill="#F8F3EB" font-family="Avenir, Montserrat, Helvetica, Arial, sans-serif" font-size="24" font-weight="600">
+    Adaptive playlists from context,
+  </text>
+  <text x="1226" y="445" text-anchor="middle" fill="#F8F3EB" font-family="Avenir, Montserrat, Helvetica, Arial, sans-serif" font-size="24" font-weight="600">
+    feedback and functional music intent
+  </text>
+</svg>
