@@ -1,0 +1,22 @@
+1) Rellena primero el archivo "_datos_proyecto.tex" con tus datos:
+   - Título del TFG
+   - Tipo de TFG según la guía EPSC
+   - Nombre del/de la estudiante
+   - DNI/NIE
+   - Tutor/a o tutores/as
+   - Grado y curso académico
+
+2) El archivo principal del proyecto es "__memoria.tex". Es el archivo que se compila.
+
+3) La plantilla está estructurada por defecto para un TFG de tipo b: "Análisis y resolución de casos prácticos reales en el ámbito de la ingeniería".
+
+4) Rellena los archivos numerados del 1 al 9. No dejes textos entre corchetes en la versión final.
+
+5) Rellena "referencias.bib" con tus fuentes bibliográficas y cita dentro del texto usando \cite{clave}.
+
+6) Incluye los anexos que procedan:
+   - anexo_manual_usuario.tex
+   - anexo_codigo.tex
+   - planos.tex, presupuesto.tex o anexo_hojas_de_caracteristicas.tex solo si tu TFG lo necesita.
+
+7) Revisa el Anexo V de originalidad. En esta plantilla se genera en LaTeX a partir de tus datos.

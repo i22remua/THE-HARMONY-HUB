@@ -1,0 +1,71 @@
+\chapter{Introducción y contexto}
+\label{ch:introduccion}
+
+\section{Contexto general}
+\label{sec:contexto_general}
+
+En los últimos años se ha vuelto cada vez más evidente que el bienestar cotidiano no depende solo de grandes decisiones, sino también de pequeños mecanismos de autorregulación que usamos casi sin darnos cuenta para sobrellevar el día. La carga mental, la sobreexposición a estímulos, el ruido ambiental y la sensación de ir siempre con prisa forman parte de la rutina de muchas personas, especialmente en entornos urbanos y digitales. De hecho, la Organización Mundial de la Salud ha señalado que el ruido ambiental constituye un problema relevante de salud pública y que su impacto afecta al descanso, al rendimiento y al bienestar general \cite{who_noise_2018}.
+
+En medio de ese contexto, la música ocupa un papel relevante. No suele vivirse únicamente como entretenimiento: con frecuencia funciona como refugio, como impulso o como una forma de recuperar equilibrio. Además, distintos trabajos han mostrado que las prácticas artísticas pueden desempeñar un papel valioso en la promoción de la salud y el bienestar, mientras que estudios centrados en el uso de la música en contextos reales apuntan a que las personas la emplean para modular estados emocionales concretos \cite{who_arts_2019,thoma2012}.
+
+Sin embargo, existe una distancia clara entre ese potencial y la forma en la que las plataformas musicales más extendidas acompañan realmente al usuario. La mayoría de estos servicios están diseñados para recomendar canciones en función del historial de escucha, la popularidad o la permanencia dentro de la plataforma. Ese enfoque resulta útil para descubrir música o mantener el consumo, pero no siempre responde a una necesidad funcional concreta: qué escuchar cuando una persona necesita concentrarse, rebajar la tensión, sentirse acompañada o recuperar energía sin dedicar tiempo adicional a decidirlo.
+
+En ese cruce entre necesidad cotidiana, tecnología móvil y personalización musical se sitúa Harmony Hub. El proyecto parte de una idea sencilla, aunque ambiciosa: utilizar la interacción breve con una aplicación móvil para captar el momento actual del usuario y transformar esa información en una propuesta musical con intención, conectada además con una plataforma real de reproducción como Spotify.
+
+\section{Motivación}
+\label{sec:motivacion}
+
+La motivación de este trabajo nace de una observación frecuente: muchas personas ya usan la música para regularse, pero lo hacen de forma manual, improvisada y, en ocasiones, poco eficaz. Abrir una aplicación, saltar entre listas, probar varias canciones y confiar en que alguna encaje con el estado de ánimo del momento es una rutina habitual. Aunque la oferta musical disponible es inmensa, esa abundancia no siempre se traduce en claridad.
+
+Desde esa perspectiva, Harmony Hub surge como una propuesta orientada a acompañar mejor ese gesto cotidiano. No pretende convertir la música en una solución mágica ni ocupar el lugar de herramientas clínicas o terapéuticas. Lo que busca, más bien, es ofrecer una experiencia digital capaz de traducir señales sencillas del usuario ---como su estado de ánimo, nivel de energía, estrés percibido o intención de la sesión--- en una recomendación musical más coherente con su situación real.
+
+Además, el proyecto posee un interés académico y técnico claro dentro del ámbito de la Ingeniería Informática. Reúne desarrollo móvil, backend, persistencia de datos, integración con APIs externas, diseño de interacción y una capa de aprendizaje basada en feedback. Esa combinación permite abordar un caso práctico donde la tecnología no se plantea solo como infraestructura, sino como medio para construir una experiencia contextual y mejor adaptada a necesidades de bienestar.
+
+\section{Problema que se aborda}
+\label{sec:problema_abordado}
+
+El problema central que aborda este TFG puede formularse de la siguiente manera: las plataformas musicales generalistas ofrecen acceso masivo a contenido y sistemas sofisticados de recomendación, pero no están pensadas, al menos de forma principal, para ayudar al usuario a alcanzar un estado funcional o emocional concreto en un momento determinado, y en adición, aprender del comportamiento usual para mejorar la interacción.
+
+Esta limitación se percibe con especial claridad en situaciones cotidianas como empezar una sesión de estudio, bajar revoluciones después de un día exigente, combatir la fatiga mental o buscar una sensación de compañía emocional. En esos casos, el usuario no necesita solo ``música que le guste'', sino música que encaje con un contexto, una necesidad y una intención. La diferencia es sutil, pero importante: no se trata únicamente de afinidad musical, sino de pertinencia situacional.
+
+Además, muchas soluciones existentes dejan fuera parte del ciclo completo. Algunas permiten descubrir canciones; otras facilitan organizar playlists; otras registran hábitos o estados personales. Sin embargo, resulta menos habitual encontrar una herramienta que conecte, de forma fluida, los siguientes elementos dentro de una misma experiencia: un check-in breve, una interpretación contextual del momento, una generación de playlist reproducible en una plataforma real y, finalmente, una recogida de feedback que permita aprender de lo que ha funcionado y de lo que no.
+
+Por tanto, el problema no es la falta de música ni la falta de algoritmos de recomendación, sino la ausencia de una capa intermedia capaz de convertir el momento personal del usuario en una propuesta musical útil, comprensible y progresivamente más afinada.
+
+\section{Alcance del trabajo}
+\label{sec:alcance}
+
+El alcance de este trabajo se centra en el análisis, diseño y desarrollo de una solución funcional que materializa esa idea en forma de plataforma móvil. Harmony Hub permite al usuario registrarse, realizar un check-in emocional y contextual, obtener una recomendación de sesión, generar una playlist asociada dentro de Spotify, consultar el historial de uso y aportar feedback para alimentar el aprendizaje posterior del sistema.
+
+Desde el punto de vista técnico, el proyecto incluye una aplicación móvil desarrollada con Flutter, un backend construido con FastAPI, persistencia en servicios asociados a Firebase/Firestore e integración con la API de Spotify. Además, incorpora una capa de personalización basada en reglas, contexto y feedback histórico del usuario, así como un catálogo musical estructurado propio, \texttt{msd\_tracks}, sobre el que se apoya la selección principal de canciones. La integración con Spotify se reserva sobre todo para la autenticación, el acceso al perfil musical básico y la materialización final de playlists reproducibles. A ello se suma un modelo de aprendizaje supervisado a nivel de sesión que solo se activa cuando existe evidencia suficiente para justificar su uso. En la versión actual del sistema conviven, por tanto, dos ritmos de adaptación: un aprendizaje individual progresivo del perfil musical del usuario, ya operativo y visible en la experiencia, y un clasificador supervisado global que solo interviene cuando supera puertas objetivas de datos y calidad y, además, alcanza confianza suficiente en la sesión concreta.
+
+En coherencia con ese enfoque, la validación experimental del aprendizaje se plantea sobre un único perfil longitudinal de usuario. Esta decisión no reduce el alcance funcional de la plataforma, que sigue siendo multiusuario, pero sí simplifica la interpretación de la adaptación progresiva del sistema y facilita explicar con mayor claridad cuándo aprende, cuándo se abstiene y por qué. La evidencia disponible distingue dos planos: un perfil musical individual ya afinado por el uso acumulado y un modelo supervisado global que ya puede intervenir cuando supera sus puertas de calidad y confianza en el contexto de sesión evaluado.
+
+En términos de evidencia disponible, esa validación longitudinal ya no se apoya
+en unas pocas sesiones aisladas, sino en un conjunto supervisado que ha
+alcanzado 65 ejemplos etiquetados, con cobertura completa de los cinco estados
+emocionales principales trabajados en la aplicación. Sobre esa base, el
+proyecto no se limita a mostrar aprendizaje individual visible, sino que activa
+también el clasificador supervisado global bajo puertas explícitas de calidad y
+un umbral operativo de confianza. Esta situación refuerza el interés académico
+del proyecto porque permite observar, dentro de una misma arquitectura, tres
+niveles de comportamiento diferenciados: recomendación heurística trazable,
+aprendizaje individual progresivo y participación real del componente
+supervisado cuando existe evidencia suficiente para ello.
+
+Conviene subrayar también los límites del proyecto. Harmony Hub no se plantea como dispositivo médico, herramienta diagnóstica ni sustituto de apoyo psicológico profesional. Tampoco persigue resolver la recomendación musical de forma universal ni competir con motores comerciales de gran escala. Su propósito es más acotado y, a la vez, más concreto: explorar cómo una aplicación móvil puede acompañar mejor momentos cotidianos de regulación emocional y bienestar a través de playlists adaptativas y una interacción breve, comprensible y usable.
+
+\section{Estructura de la memoria}
+\label{sec:estructura_memoria}
+
+La memoria se organiza como un recorrido progresivo que va desde el problema de partida hasta la validación del sistema implementado. Esta estructura pretende facilitar una lectura acumulativa: primero se justifica por qué resulta pertinente construir Harmony Hub, después se define qué debe resolver, a continuación se explica cómo se diseña y desarrolla la solución, y finalmente se contrasta qué resultados ofrece y cuáles son sus límites.
+
+En el Capítulo~\ref{ch:objetivos} se formulan el objetivo general y los objetivos específicos que orientan el trabajo. El Capítulo~\ref{ch:antecedentes} sitúa la propuesta dentro del contexto de las plataformas musicales, las aplicaciones orientadas al bienestar y los sistemas de personalización basados en datos, con el fin de delimitar el hueco funcional que Harmony Hub busca cubrir.
+
+El Capítulo~\ref{ch:analisis_problema} recoge el análisis del problema, la especificación de requisitos, la descripción de la información manejada y los casos de uso principales. Sobre esa base, el Capítulo~\ref{ch:diseno_solucion} presenta el diseño lógico y arquitectónico del sistema, incluyendo sus diagramas, el flujo principal de generación de sesión musical y la organización de los componentes que sostienen la recomendación y el aprendizaje.
+
+El Capítulo~\ref{ch:desarrollo_implementacion} describe la materialización técnica del proyecto en Flutter, FastAPI, Firestore y Spotify, así como las decisiones adoptadas en persistencia, seguridad, privacidad y modelado del aprendizaje. El Capítulo~\ref{ch:pruebas_validacion} expone las pruebas realizadas, la evidencia verificada y la discusión de los resultados obtenidos a partir de la validación funcional, técnica y longitudinal del sistema.
+
+Por su parte, el Capítulo~\ref{ch:planificacion_recursos} resume la organización temporal del proyecto, sus fases de desarrollo, las desviaciones introducidas durante la ejecución y los recursos finalmente empleados. El Capítulo~\ref{ch:conclusiones} cierra la memoria con una síntesis del trabajo realizado, sus principales aportaciones y las líneas de evolución que resultan más justificadas a partir del estado final alcanzado.
+
+La memoria se completa con varios anexos de carácter técnico y práctico. Estos materiales complementarios permiten documentar con mayor detalle cuestiones de uso, implementación y apoyo al análisis sin sobrecargar la lectura principal del documento.

@@ -1,0 +1,266 @@
+{
+  "total_tracks": 5441,
+  "top_genres": [
+    {
+      "label": "pop",
+      "count": 1870,
+      "percent": 34.37
+    },
+    {
+      "label": "dance",
+      "count": 816,
+      "percent": 15.0
+    },
+    {
+      "label": "indie pop",
+      "count": 761,
+      "percent": 13.99
+    },
+    {
+      "label": "acoustic",
+      "count": 682,
+      "percent": 12.53
+    },
+    {
+      "label": "ambient",
+      "count": 274,
+      "percent": 5.04
+    },
+    {
+      "label": "latin pop",
+      "count": 167,
+      "percent": 3.07
+    },
+    {
+      "label": "classical",
+      "count": 99,
+      "percent": 1.82
+    },
+    {
+      "label": "jazz",
+      "count": 61,
+      "percent": 1.12
+    },
+    {
+      "label": "rnb",
+      "count": 49,
+      "percent": 0.9
+    },
+    {
+      "label": "indie folk",
+      "count": 34,
+      "percent": 0.62
+    },
+    {
+      "label": "modern classical",
+      "count": 33,
+      "percent": 0.61
+    },
+    {
+      "label": "dream pop",
+      "count": 30,
+      "percent": 0.55
+    },
+    {
+      "label": "downtempo",
+      "count": 28,
+      "percent": 0.51
+    },
+    {
+      "label": "folk",
+      "count": 23,
+      "percent": 0.42
+    },
+    {
+      "label": "soul",
+      "count": 19,
+      "percent": 0.35
+    }
+  ],
+  "top_clusters": [
+    {
+      "label": "energy_peak",
+      "count": 1489,
+      "percent": 27.37
+    },
+    {
+      "label": "energy_dance",
+      "count": 896,
+      "percent": 16.47
+    },
+    {
+      "label": "energy_pop",
+      "count": 726,
+      "percent": 13.34
+    },
+    {
+      "label": "relax_acoustic",
+      "count": 663,
+      "percent": 12.19
+    },
+    {
+      "label": "relax_soft",
+      "count": 573,
+      "percent": 10.53
+    },
+    {
+      "label": "focus_instrumental",
+      "count": 368,
+      "percent": 6.76
+    },
+    {
+      "label": "focus_soft",
+      "count": 50,
+      "percent": 0.92
+    },
+    {
+      "label": "relax_warm",
+      "count": 49,
+      "percent": 0.9
+    },
+    {
+      "label": "focus_electronic",
+      "count": 42,
+      "percent": 0.77
+    },
+    {
+      "label": "focus_cinematic",
+      "count": 39,
+      "percent": 0.72
+    },
+    {
+      "label": "focus_ambient",
+      "count": 39,
+      "percent": 0.72
+    },
+    {
+      "label": "energy_supportive",
+      "count": 35,
+      "percent": 0.64
+    },
+    {
+      "label": "focus_piano",
+      "count": 34,
+      "percent": 0.62
+    },
+    {
+      "label": "energy_house",
+      "count": 29,
+      "percent": 0.53
+    },
+    {
+      "label": "relax_dreamy",
+      "count": 28,
+      "percent": 0.51
+    }
+  ],
+  "top_activation_styles": [
+    {
+      "label": "peak",
+      "count": 2642,
+      "percent": 48.56
+    },
+    {
+      "label": "progressive",
+      "count": 1760,
+      "percent": 32.35
+    },
+    {
+      "label": "flat",
+      "count": 839,
+      "percent": 15.42
+    },
+    {
+      "label": "rolling",
+      "count": 28,
+      "percent": 0.51
+    },
+    {
+      "label": "gentle_fall",
+      "count": 26,
+      "percent": 0.48
+    },
+    {
+      "label": "pulsing",
+      "count": 22,
+      "percent": 0.4
+    },
+    {
+      "label": "drifting",
+      "count": 20,
+      "percent": 0.37
+    },
+    {
+      "label": "steady",
+      "count": 16,
+      "percent": 0.29
+    },
+    {
+      "label": "slow_groove",
+      "count": 15,
+      "percent": 0.28
+    },
+    {
+      "label": "gliding",
+      "count": 9,
+      "percent": 0.17
+    },
+    {
+      "label": "swelling",
+      "count": 8,
+      "percent": 0.15
+    },
+    {
+      "label": "surging",
+      "count": 8,
+      "percent": 0.15
+    },
+    {
+      "label": "gradual_rise",
+      "count": 7,
+      "percent": 0.13
+    },
+    {
+      "label": "floating",
+      "count": 6,
+      "percent": 0.11
+    },
+    {
+      "label": "spring_loaded",
+      "count": 6,
+      "percent": 0.11
+    }
+  ],
+  "goal_archetypes": [
+    {
+      "label": "energia",
+      "count": 3327,
+      "percent": 61.15
+    },
+    {
+      "label": "relajacion",
+      "count": 1470,
+      "percent": 27.02
+    },
+    {
+      "label": "foco",
+      "count": 644,
+      "percent": 11.84
+    }
+  ],
+  "catalog_sources": [
+    {
+      "label": "local_file",
+      "count": 5441,
+      "percent": 100.0
+    }
+  ],
+  "feature_averages": {
+    "bpm": 117.868,
+    "energy_feature": 0.602,
+    "valence_feature": 0.489,
+    "danceability": 0.544,
+    "instrumentalness": 0.17,
+    "acousticness": 0.327
+  }
+}

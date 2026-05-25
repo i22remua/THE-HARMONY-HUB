@@ -1,0 +1,41 @@
+\chapter*{Abstract}
+\phantomsection
+\addcontentsline{toc}{chapter}{Abstract}
+\markboth{Abstract}{Abstract}
+
+Harmony Hub is a mobile application designed to transform a user's emotional and
+contextual state into a more useful musical experience for everyday wellbeing.
+The system combines a guided check-in, contextual recommendation logic, a
+structured music catalogue, Spotify-based playlist materialization and a
+feedback-based learning cycle. From a technical point of view, the solution is
+built around a Flutter mobile client, a FastAPI backend, document persistence
+in Firestore and a supervised session-level model that is only enabled when
+there is sufficient objective evidence to justify its use.
+
+The recommendation process does not rely exclusively on a machine learning
+model. Instead, it follows a hybrid approach: a heuristic layer guarantees
+operability from the first session, while a logistic regression model can later
+reorder candidate session modes when enough historical data, class balance and
+quality metrics are available. The musical ranking itself is primarily carried
+out over the project's own \texttt{msd\_tracks} catalogue, whereas Spotify is
+used mainly for authorization, profile context and final playlist
+materialization. This design allows the application to remain useful even under
+external constraints such as limited Spotify endpoints or insufficient training
+data. The result is not merely a musical suggestion, but a real playlist
+generated in the user's Spotify account and linked to a traceable session
+history.
+
+The project therefore explores how mobile software, external APIs, contextual
+data and progressive learning can be combined to support everyday moments of
+emotional regulation without positioning the app as a clinical tool. In its
+current state, the user-level progressive profile is already operational and
+visible in the experience, with longitudinal evidence across the five
+emotional states considered in the validation process. The supervised
+session-level model is also active under explicit quality gates and can
+contribute probabilistic reordering of candidate session modes while still
+preserving abstention when evidence is weak. The validation additionally shows
+that environmental sensing can be incorporated into both the recommendation
+context and the playlist generation pipeline. The outcome is a functional
+prototype that demonstrates the viability of a wellness-oriented,
+session-based and explainable music recommendation approach with real Spotify
+playlist creation, contextual traceability and progressive learning.

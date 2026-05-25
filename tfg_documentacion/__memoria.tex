@@ -1,0 +1,296 @@
+\documentclass[a4paper, 12pt]{book}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[utf8]{inputenc}
+
+\usepackage[left = 35mm, right = 25mm, top = 25mm, height = 206mm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\usepackage[square,numbers]{natbib}
+\usepackage[skip=12pt,font=small]{caption}  %Tamaño de la leyenda
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{afterpage}
+\usepackage{titlesec}
+\usepackage{color, colortbl}
+\usepackage{listings}
+%\usepackage{xcolor}
+\usepackage[dvipsnames,svgnames,table]{xcolor}
+\usepackage{float}
+\usepackage{eurosym}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage[hyphens]{url}
+\usepackage{eurosym}
+\usepackage{appendix}
+\usepackage{pdfpages}
+\usepackage{pdflscape} %poner pdf horizontal
+\usepackage[hidelinks,linktoc=all]{hyperref}%para el hiperlink de las secciones
+\usepackage[newfloat]{minted}
+\usepackage[nottoc]{tocbibind}
+\usepackage{glossaries}
+
+\usepackage{ulem} %subrayado y tachado
+\usepackage{pifont} % símbolos como tick y X
+\usepackage{comment} % comentar bloques grandes
+\usepackage{longtable}
+\usepackage{seqsplit} % dividir texto largo automáticamente
+
+
+\usepackage{tikz} % Diagramas de flujo
+\usetikzlibrary{shapes.geometric, arrows} %Libería de flechas
+
+% FONTs
+\usepackage{fontenc}
+\usepackage{textcomp}           % Needed for new symbols like € ?
+
+\usepackage[scaled]{berasans} % Font for the cover similar to Vera 33
+%\renewcommand*\familydefault{\sfdefault}  %% To use as the base font of the document is to be sans serif
+
+\usepackage{datetime}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\renewcommand{\texttt}[1]{#1}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+%\newdateformat{monthyeardate}{\monthname, \THEYEAR}
+\newcommand\Monthname[1][EMPTY]{
+  \ifnum1=#1Enero\else
+  \ifnum2=#1Febrero\else
+  \ifnum3=#1Marzo\else
+  \ifnum4=#1Abril\else
+  \ifnum5=#1Mayo\else
+  \ifnum6=#1Junio\else
+  \ifnum7=#1Julio\else
+  \ifnum8=#1Agosto\else
+  \ifnum9=#1Septiembre\else
+  \ifnum10=#1Octubre\else
+  \ifnum11=#1Noviembre\else
+  \ifnum12=#1Diciembre\else
+  \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+}
+\newdateformat{monthyeardate}{%
+  \Monthname[\THEMONTH], \THEYEAR}
+%\newdateformat{monthyeardate}{\Monthname[\THEMONTH], \THEYEAR}
+
+% Entorno para código
+\newenvironment{code}{\captionsetup{type=listing}}{}    
+
+% Cambiamos el caption de los listing a español
+\renewcommand{\listingname}{Código}    
+
+ % Cambiamos el idioma del índice de códigos
+\renewcommand*{\listlistingname}{Índice de Códigos}    
+
+\newfloat{diagrama}{htbp}{loc}
+\floatname{diagrama}{Diagrama}
+\newcommand{\listofdiagrams}{\listof{diagrama}{Índice de Diagramas de Flujo}}
+\floatstyle{plaintop}
+\restylefloat{table}
+
+\graphicspath{ {Imagenes/} }
+
+\input{_datos_proyecto}
+\input{Configuracion/confg_colores}
+\input{Configuracion/confg_codigo}
+\input{Configuracion/confg_diagrama_flujo}
+%----------------------------------------------------------------------------------------
+%	ENCABEZADOS Y PIE DE PAGINA
+%----------------------------------------------------------------------------------------
+
+\pagestyle{fancy}
+	\fancypagestyle{cuerpo}{
+      \fancyfoot{}
+      \fancyfoot[L]{Trabajo Fin de Grado} %Autor
+      \fancyfoot[C]{}
+      \fancyfoot[R]{- \thepage \ -}
+      \fancyhead{}
+      \fancyhead[L]{\leftmark} %Nombre del documento
+      \fancyhead[R]{\includegraphics[height=1.8cm]{logoUCO}} %Logo Universidad
+      \renewcommand{\headrulewidth}{0.4pt}
+      \renewcommand{\footrulewidth}{0.4pt}
+      \setlength{\headheight}{65pt}
+    }
+    \fancypagestyle{indice}{
+      \fancyfoot{}
+      \fancyfoot[L]{\AutorTFG} %Autor
+      \fancyfoot[R]{- \thepage \ -} %Asignatura
+      \fancyhead{}
+      \fancyhead[L]{Trabajo Fin de Grado} %Nombre del documento
+      \fancyhead[R]{\includegraphics[height=1.8cm]{logoUCO}} %Logo
+      \renewcommand{\headrulewidth}{0.4pt}
+      \renewcommand{\footrulewidth}{0.4pt}
+      \setlength{\headheight}{65pt}
+      }
+      
+    \fancypagestyle{plain}{% % <-- this is new
+     \fancyfoot{}
+      \fancyfoot[L]{Trabajo Fin de Grado} %Autor
+      \fancyfoot[C]{} %ecc
+      \fancyfoot[R]{- \thepage \ -}
+      \fancyhead{}
+      \fancyhead[L]{\leftmark} %Nombre del documento
+      \fancyhead[R]{\includegraphics[height=1.8cm]{logoUCO}} %Logo Universidad
+      \renewcommand{\headrulewidth}{0.4pt}
+      \renewcommand{\footrulewidth}{0.4pt}
+      \setlength{\headheight}{65pt}
+    }
+  
+\setcounter{secnumdepth}{4}
+
+\pagenumbering{empty}
+
+
+%%%%%%%%%
+% ANEXO %
+%%%%%%%%%
+
+% Para que ponga ANEXO en vez de APENDICE
+ \addto\captionsspanish{\renewcommand{\appendixname}{Anexo}} %para que ponga anexo y no apéndice.
+
+% \makeglossaries
+\raggedbottom  % Quita huecos grandes en blanco
+\setlength{\emergencystretch}{3em}
+\begin{document}
+
+%%%%%%%%%%%
+% PORTADA %
+%%%%%%%%%%%
+\input{Portada/cover}
+\newpage
+\thispagestyle{empty}   % Página en blanco entre la portada y el comienzo del documento
+\mbox{} 
+$\ $
+\thispagestyle{empty} % para que no se numere esta pagina
+%\newpage
+%$\ $
+%\thispagestyle{empty} % para que no se numere esta pagina
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ANEXO V - Originalidad %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{AnexoV/anexo_v}
+%\includepdf[pages=-]{AnexoV/AnexoV_DECLARACION_ORIGINALIDAD_TFG.PDF}
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
+
+%%%%%%%%%%%%%%%
+% DEDICATORIA %
+%%%%%%%%%%%%%%%
+\pagenumbering{Roman} % para comenzar la numeracion de paginas en numeros romanos
+\pagestyle{indice}
+\thispagestyle{indice}
+\mbox{}
+
+%%%%%%%%%%%%%%%%%%%
+% AGRADECIMIENTOS %
+%%%%%%%%%%%%%%%%%%%
+\input{0_agradecimientos}
+\input{0_abstract}
+\input{0_palabras_clave}
+
+%%%%%%%%%%%%%%%%%%
+% INDICE GENERAL %
+%%%%%%%%%%%%%%%%%%
+\newpage
+\thispagestyle{fancy} 
+
+\phantomsection
+\pdfbookmark[0]{Índice general}{indice-general}
+\tableofcontents
+
+\cleardoublepage
+\phantomsection
+\pdfbookmark[0]{Índice de figuras}{indice-figuras}
+\listoffigures
+
+\cleardoublepage
+\phantomsection
+\pdfbookmark[0]{Índice de tablas}{indice-tablas}
+\listoftables
+
+% Índice de diagramas de flujo. Descomenta este bloque si usas el entorno "diagrama".
+% \cleardoublepage
+% \phantomsection
+% \addcontentsline{toc}{chapter}{Índice de diagramas de flujo}
+% \listofdiagrams
+
+% Lista de acrónimos. Descomenta este bloque si defines acrónimos en lista_acronimos.tex.
+% \cleardoublepage
+% \phantomsection
+% \addcontentsline{toc}{chapter}{Lista de Acrónimos}
+% \include{lista_acronimos}
+% \printglossary[type=\acronymtype, title={Acrónimos}]
+
+%---------------------%
+%	CUERPO DE TEXTO   %
+%---------------------%
+
+\afterpage{\null\newpage}
+
+\newpage
+\newpage
+
+\pagestyle{cuerpo}
+\thispagestyle{cuerpo}
+
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                         ESTRUCTURA CONTENIDO                      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Estructura principal preparada para un TFG de tipo:
+% b) Análisis y resolución de casos prácticos reales en el ámbito de la ingeniería.
+% Si tu TFG pertenece a otra tipología, revisa el archivo GUIA_RELLENO.md y adapta
+% los capítulos indicados.
+
+%------------------%
+%     CAPÍTULOS    %
+%------------------%
+
+\input{1_introduccion}
+\input{2_objetivos}
+\input{3_antecedentes}
+\input{4_analisis_problema}
+\input{5_diseno_solucion}
+\input{6_desarrollo_implementacion}
+\input{7_pruebas_validacion}
+
+% Capítulo recomendable para documentar cronograma, recursos y coste.
+% Puedes comentarlo si tu tutor/a no lo considera necesario en la memoria final.
+\input{8_planificacion_recursos}
+
+\input{9_conclusiones_y_trabajos_futuros}
+
+%------------------%
+%   BIBLIOGRAFIA   %
+%------------------%
+
+\cleardoublepage
+\phantomsection
+\pdfbookmark[0]{Bibliografía}{bibliografia}
+\bibliographystyle{unsrtnat}
+\bibliography{referencias.bib}
+
+%------------------%
+%      ANEXOS      %
+%------------------%
+
+\appendix
+
+% Incluye los anexos que procedan para tu proyecto.
+\input{anexo_manual_usuario}
+\input{anexo_codigo}
+
+% Anexos opcionales de la plantilla original. Descomenta solo si los necesitas.
+% \input{planos}
+% \input{anexo_hojas_de_caracteristicas}
+
+\end{document}

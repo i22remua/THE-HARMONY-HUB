@@ -1,0 +1,167 @@
+\chapter{Ejemplos de código Latex}
+\label{ch:codigos_ejemplo}
+Aquí también se puede poner texto.
+
+\section{Acrónimos}
+Ejemplo de como poner un acrónimo \acrshort{iot}. Estos están definidos en el archivo ``anexo\_acronimos.text''.
+
+
+\section{Comillas}
+Mira el código para que veas como se hace bien el ``entrecomillado''. No se usan las comillas situadas en la tecla del dígito 2.
+
+\subsection{seccion prueba}
+asdf
+
+\subsubsection{seccion prueba}
+asdf
+
+\section{Listas}
+En esta sección se muestra como crear dos tipos de listas.
+
+\subsection{Lista Enumerada}
+\begin{enumerate}
+\item Color rojo
+\item Color verde
+\item Color amarillo
+\end{enumerate}
+
+
+
+\subsection{Lista NO-Enumerada}
+\begin{itemize}
+\item Color rojo
+\item Color verde
+\item Color amarillo
+\end{itemize}
+
+\section{Como incluir FIGURAS}
+
+\subsection{Figura única}
+\label{sec:figura_unica}
+
+\begin{figure}[H]
+  \centering
+  % include first image
+  \includegraphics[width=.8\linewidth]{Imagenes/logoUCO.pdf}  
+  \caption[Titulo de la figura para el índice de figuras. En este no se deben poner referencias a citas]{Título de la figura para el texto}
+  \label{fig:figura_unica}
+\end{figure}
+
+\subsection{Figura con subfiguras}
+
+En la Figura \ref{figT:subfiguras} se puede apreciar una figura compuesta por dos subfiguras.
+
+\begin{figure}[H]
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include first image
+  \includegraphics[width=.8\linewidth]{Imagenes/logoUCO.pdf}  
+  \caption{Título subfigura 1}
+  \label{fig:sub-first}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.8\linewidth]{Imagenes/logoUCO.pdf}  
+  \caption{Título subfigura 2}
+  \label{fig:sub-second}
+\end{subfigure}
+\caption{Titulo principal figura}
+\label{figT:subfiguras}
+\end{figure}
+
+\subsection{Figura con subfiguras en distintas líneas}
+\begin{figure}[H]
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include first image
+  \includegraphics[width=.8\linewidth]{Imagenes/logoUCO.pdf}  
+  \caption{Título subfigura 1}
+  \label{fig:sub-first}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.8\linewidth]{Imagenes/logoUCO.pdf}  
+  \caption{Título subfigura 2}
+  \label{fig:sub-second}
+\end{subfigure}
+
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include first image
+  \includegraphics[width=.8\linewidth]{Imagenes/logoUCO.pdf}  
+  \caption{Título subfigura 3}
+  \label{fig:sub-first}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.8\linewidth]{Imagenes/logoUCO.pdf}  
+  \caption{Título subfigura 4}
+  \label{fig:sub-second}
+\end{subfigure}
+
+\caption{Figuras en multiples lineas}
+\label{figT:subfiguras2}
+\end{figure}
+
+
+\section{Fórmulas Matemáticas}
+
+\subsection{Formulas referenciables}
+\begin{equation} \label{eq:erl} a = bq + r \end{equation} donde \eqref{eq:erl} es verdadera si $a$ y $b$ son enteros con $b \neq c$. 
+
+\subsection{Fórmulas que no se van a referenciar}
+\begin{align*} 
+X = 0,42 \ \tau_{625} + 0.35 \ \tau_{550} + 0.21 \ \tau_{445} \\
+Y = 0,20 \ \tau_{625} + 0.63 \ \tau_{550} + 0.17 \ \tau_{495} \\
+Z = 0,24 \ \tau_{495} + 0.94 \ \tau_{445} 
+\end{align*}
+
+Y con estos valores se calculan las coordenadas x e y:
+
+\begin{align*} 
+x = X / (X + Y + Z) \quad y = Y / (X + Y + Z)
+\end{align*}
+
+\section{Diagramas usando TikZ}
+\url{https://es.overleaf.com/learn/latex/LaTeX_Graphics_using_TikZ%3A_A_Tutorial_for_Beginners_(Part_1)%E2%80%94Basic_Drawing}
+
+\subsection{Ejemplo diagrama de flujo}
+
+\begin{diagrama}
+\centering
+ 
+    \begin{tikzpicture}[node distance=2cm]
+
+    \node (start) [startstop] {Start};
+    \node (in1) [io, below of=start] {Input};
+    \node (pro1) [process, below of=in1] {Process 1};
+    \node (dec1) [decision, below of=pro1, yshift=-0.5cm] {Decision 1};
+
+    \node (pro2a) [process, below of=dec1, yshift=-0.5cm] {Process 2a text text text text text text text};
+
+    \node (pro2b) [process, right of=dec1, xshift=2cm] {Process 2b};
+    \node (out1) [io, below of=pro2a] {Output};
+    \node (stop) [startstop, below of=out1] {Stop};
+
+    \draw [arrow] (start) -- (in1);
+    \draw [arrow] (in1) -- (pro1);
+    \draw [arrow] (pro1) -- (dec1);
+    \draw [arrow] (dec1) -- node[anchor=east] {yes} (pro2a);
+    \draw [arrow] (dec1) -- node[anchor=south] {no} (pro2b);
+    \draw [arrow] (pro2b) |- (pro1);
+    \draw [arrow] (pro2a) -- (out1);
+    \draw [arrow] (out1) -- (stop);
+
+    \end{tikzpicture}
+
+	\caption{Ejemplo diagrama}
+	\label{diagrama:ejemplo_diagrama}
+\end{diagrama}
+
+\section{Referencia a distintas secciones y figuras}
+En la sección \ref{sec:figura_unica} se puede ver la Figura \ref{fig:figura_unica}.
+
+En el capítulo \ref{ch:presupuesto} se puede ver el código para crear una tabla. La Tabla \ref{tabla:presupuesto} muestra un presupuesto.

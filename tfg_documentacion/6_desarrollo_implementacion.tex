@@ -1,0 +1,646 @@
+\chapter{Desarrollo e implementación}
+\label{ch:desarrollo_implementacion}
+
+Este capítulo describe cómo se ha materializado la solución propuesta en una
+base de código ejecutable. Mientras que el capítulo anterior se centraba en el
+diseño de la arquitectura, el motor de recomendación y el modelo de datos, aquí
+el foco se desplaza hacia la implementación efectiva: entorno de trabajo,
+tecnologías concretas, estructura del código, decisiones de integración ya
+aterrizadas en servicios reales y proceso de puesta en marcha. Por ello, este
+capítulo evita repetir la justificación conceptual del diseño y se centra en
+cómo quedó plasmado en el repositorio final.
+
+\section{Entorno de desarrollo}
+\label{sec:entorno_desarrollo}
+
+El desarrollo se ha realizado en un entorno local basado en macOS sobre
+arquitectura ARM, con terminal \texttt{zsh}, control de versiones con Git y una
+separación clara entre frontend móvil y backend API. La aplicación móvil se ha
+trabajado sobre Flutter estable, mientras que el backend se ha mantenido en un
+entorno virtual de Python independiente para aislar dependencias.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{|P{3.0cm}|P{3.0cm}|Y|}
+\hline
+\textbf{Elemento} & \textbf{Versión o entorno} & \textbf{Papel en el proyecto} \\
+\hline
+Sistema base & macOS / Darwin 25.3.0 arm64 & Desarrollo, pruebas locales y compilación de memoria y app. \\
+\hline
+Flutter SDK & Flutter 3.41.2 & Desarrollo del cliente móvil multiplataforma. \\
+\hline
+Dart SDK & Dart 3.11.0 & Lenguaje principal del frontend. \\
+\hline
+Python & Python 3.13.1 & Lenguaje principal del backend y del entrenamiento del modelo. \\
+\hline
+Servidor ASGI & Uvicorn 0.34.0 & Ejecución local del backend FastAPI. \\
+\hline
+Control de versiones & Git 2.45.1 & Seguimiento de cambios y evolución del código fuente. \\
+\hline
+Entorno Python & \texttt{.venv} local & Aislamiento de dependencias del backend y del pipeline ML. \\
+\hline
+\end{tabularx}
+\caption{Entorno de desarrollo utilizado durante la implementación.}
+\label{tab:entorno_desarrollo}
+\end{table}
+
+La elección de este entorno responde a una necesidad práctica: poder iterar con
+rapidez sobre frontend, backend y modelo supervisado sin mezclar dependencias
+ni comprometer la reproducibilidad del proyecto.
+
+\section{Tecnologías utilizadas}
+\label{sec:tecnologias}
+
+Harmony Hub combina un cliente móvil declarativo, un backend de servicios y una
+capa documental en la nube. La selección tecnológica no se hizo buscando el
+mayor número posible de herramientas, sino un conjunto razonablemente compacto
+que cubriera movilidad, persistencia, integración externa y aprendizaje
+supervisado.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.08}
+\setlength{\tabcolsep}{2.8pt}
+\begin{tabularx}{\textwidth}{|P{2.45cm}|P{3.2cm}|Y|}
+\hline
+\textbf{Tecnología} & \textbf{Uso en el proyecto} & \textbf{Justificación} \\
+\hline
+Flutter + Dart & Interfaz móvil, navegación, gestión de estado local y acceso a servicios de cliente. & Permite desarrollar una app móvil completa con una sola base de código y una iteración visual muy rápida. \\
+\hline
+FastAPI & API backend, orquestación del motor de recomendación e integración con Spotify. & Ofrece una estructura clara de rutas y servicios, baja fricción de desarrollo y buen encaje con Python. \\
+\hline
+Cloud Firestore & Persistencia documental de usuarios, check-ins, recomendaciones, playlists y feedback. & Encaja bien con el modelo orientado a documentos del proyecto y simplifica la sincronización entre cliente y backend. \\
+\hline
+Firebase Authentication & Gestión de identidad del usuario. & Reduce complejidad en autenticación básica y aporta integración directa con el ecosistema Firebase. \\
+\hline
+Spotify Web API & Obtención de perfil musical básico, autorización PKCE y creación de playlists reales. & Es la pieza que convierte la recomendación en una salida utilizable dentro del ecosistema musical cotidiano del usuario sin asumir la fase principal de ranking. \\
+\hline
+scikit-learn & Entrenamiento y validación del modelo supervisado de sesión. & Proporciona herramientas maduras para preprocesado, validación cruzada, métricas y clasificación probabilística. \\
+\hline
+\shortstack[l]{Cryptography +\\Flutter Secure Storage} & Cifrado del bloque emocional y almacenamiento local de claves. & Reducen la exposición de datos emocionales sensibles y ayudan a separar parte pública y privada de la sesión. \\
+\hline
+\shortstack[l]{Noise Meter +\\Permission Handler} & Medición opcional del entorno acústico en el dispositivo. & Permiten capturar contexto ambiental sin grabar ni persistir audio bruto. \\
+\hline
+\shortstack[l]{Dio +\\HTTPX} & Comunicación HTTP entre cliente y backend. & Mantienen una capa de comunicación explícita y fácil de depurar durante el desarrollo. \\
+\hline
+\end{tabularx}
+\caption{Tecnologías principales empleadas en la implementación de Harmony Hub.}
+\label{tab:tecnologias}
+\end{table}
+
+\section{Implementación de los módulos principales}
+\label{sec:implementacion_modulos}
+
+La implementación sigue la separación funcional introducida en el diseño, pero
+traducida a una estructura de carpetas y responsabilidades concretas.
+
+\subsection{Cliente móvil Flutter}
+\label{subsec:modulo_cliente_flutter}
+
+El cliente se organiza por features. Dentro de \texttt{harmonyhub/lib},
+cada bloque funcional dispone de sus propias capas de \texttt{data} y
+\texttt{presentation}: autenticación, check-in, recomendación, Spotify,
+feedback, historial, modos predefinidos y aprendizaje del usuario. Esta
+organización favorece que cada parte de la app pueda evolucionar con cierto
+aislamiento sin depender de una carpeta única de pantallas o servicios.
+
+En la práctica, el frontend implementa:
+
+\begin{itemize}
+    \item el flujo de acceso y validación de sesión;
+    \item la captura guiada del check-in con preguntas y respuestas cotidianas;
+    \item la medición opcional del entorno acústico desde el dispositivo;
+    \item la visualización de la recomendación previa a la generación real;
+    \item la apertura del flujo de creación de playlist y recogida de feedback;
+    \item la lectura de historial, modos y aprendizaje acumulado.
+\end{itemize}
+
+Una decisión de implementación importante ha sido mantener la lógica de red y
+persistencia fuera de las pantallas. Para ello, las vistas se apoyan en
+servicios específicos de check-in, recomendación, feedback y Spotify, de forma
+que la interfaz no concentre también la responsabilidad de hablar con backend o
+con Firestore.
+
+\subsection{Backend API y orquestación}
+\label{subsec:modulo_backend_api}
+
+El backend se articula en dos niveles. El primero es una capa de rutas HTTP
+definida en \texttt{backend\_fastapi/app/api/routes}, donde cada recurso
+principal cuenta con su propio punto de entrada:
+
+\begin{itemize}
+    \item \texttt{/checkins} para registrar sesiones iniciales;
+    \item \texttt{/recommendations} para generar la recomendación de sesión;
+    \item \texttt{/spotify} para autenticación, perfil y creación de playlists;
+    \item \texttt{/feedback} para cerrar la sesión y alimentar aprendizaje;
+    \item \texttt{/history} para exponer, cuando se necesita desde backend, una
+    vista del historial persistido real del usuario.
+\end{itemize}
+
+El segundo nivel es una capa de servicios ubicada en el directorio de servicios
+del backend. Aquí reside la mayor parte del comportamiento del sistema: motor
+heurístico de recomendación, generación de playlists, integración semántica,
+similitud vectorial, aprendizaje del usuario, extracción de ejemplos ML y
+comunicación con Firestore.
+
+Esta estructura evita que la ruta HTTP se convierta en un bloque monolítico. La
+ruta recibe, valida y delega; el servicio interpreta y ejecuta; la persistencia
+almacena o recupera. Ese reparto facilita depuración, ampliación del sistema y
+reutilización interna.
+
+\subsection{Motor de recomendación y generación de playlist}
+\label{subsec:modulo_recomendacion_implementacion}
+
+En la implementación real, el motor de recomendación no se reduce a una única
+función. Intervienen varios servicios con papeles distintos:
+
+\begin{itemize}
+\item \texttt{recommender\_service.py}, centrado en la generación y
+    puntuación de candidatos de modo de sesión y en la abstención controlada
+    del modelo supervisado cuando no supera sus puertas de datos o calidad, o
+    cuando la sesión concreta no alcanza confianza suficiente;
+    \item el servicio de modelo profesional de playlist, responsable de
+    transformar el modo elegido en un perfil musical operativo;
+    \item los servicios de generación personalizada, análisis semántico y
+    similitud vectorial, que ayudan a recuperar, valorar y reordenar canciones
+    candidatas.
+\end{itemize}
+
+En términos de código, la recomendación pasa por tres pasos encadenados:
+selección del modo de sesión, construcción del generation profile y
+materialización de la playlist. Entre el segundo y el tercer paso se apoya
+además en el catálogo msd\_tracks, que en el estado actual reúne 5\,441
+pistas y funciona como fuente principal de ranking. Esa división ha permitido
+modificar reglas, catálogo, aprendizaje individual o integración con Spotify
+sin rehacer el pipeline completo en cada iteración.
+
+\subsection*{Lectura de una traza típica de generación}
+
+Una ventaja práctica de la implementación es que el backend deja trazas lo
+bastante expresivas como para reconstruir el recorrido completo de una sesión
+musical. Esto resulta útil tanto para depuración como para validación, ya que
+permite observar cómo el sistema pasa de los candidatos de modo a la playlist
+realmente creada. Para ello se toma como referencia una ejecución completa
+realizada desde un dispositivo Android físico conectado a la misma red local
+que el backend, con autenticación real en Spotify, medición de entorno activa y
+cierre correcto del flujo con feedback.
+
+Para concretar el comportamiento descrito, resulta útil fijar un ejemplo
+completo de extremo a extremo para mostrar cómo se encadenan realmente las
+distintas capas del sistema. En la validación final se registró una sesión de
+relajación con usuario en estado neutral, estrés medio, energía media,
+preferencia instrumental, intensidad suave, exploración orientada a descubrir,
+popularidad alternativa y medición de entorno activa. El entorno inferido fue
+\texttt{Entorno mixto}, con categoría de ruido \texttt{loud}, confianza
+\texttt{0.95}, variabilidad \texttt{2.7474}, diferencia de picos
+\texttt{13.2875}, proporción transitoria \texttt{0.4333} y
+\texttt{burst\_count = 4}. Sobre esa base, el backend dejó una traza completa
+que permite reconstruir el flujo general en orden.
+
+\subsection*{Ejemplo ordenado de flujo completo}
+
+En una primera fase, el sistema resuelve la autenticación con Spotify mediante
+OAuth con PKCE. Las líneas \texttt{[AUTH] login\_url\_created},
+\texttt{authorize\_url: ...} y \texttt{state: ...} indican que el backend ha
+generado una URL de autorización con \texttt{client\_id},
+\texttt{redirect\_uri}, \texttt{scope}, \texttt{state} y
+\texttt{code\_challenge}. Después, el bloque
+\texttt{[AUTH] exchange\_received} seguido de
+\texttt{[AUTH] exchange\_code\_for\_token} muestra que la aplicación móvil ya
+ha recibido el \textit{authorization code} y lo está intercambiando por un
+\textit{access token}. Finalmente, \texttt{[AUTH] token\_received} y
+\texttt{[AUTH] token\_obtained} confirman que el backend dispone de un token
+\texttt{Bearer} válido, con alcance suficiente para consultar el perfil del
+usuario y crear playlists reales en su cuenta.
+
+En segundo lugar, la aplicación valida ese token y recupera el perfil del
+usuario. Las trazas \texttt{[PROFILE] me\_received},
+\texttt{[PROFILE] get\_spotify\_profile} y
+\texttt{[PROFILE] profile\_obtained} confirman que el backend ha consultado el
+endpoint \texttt{/me} de Spotify y ha recuperado correctamente el
+\texttt{spotify\_user\_id}, el \texttt{display\_name} y el mercado del usuario.
+Este paso es importante porque vincula la sesión actual con una identidad
+musical real, sobre la que después se materializará la playlist.
+
+En tercer lugar, una vez almacenado el check-in (\texttt{POST /checkins/}),
+entra en funcionamiento el clasificador supervisado de modo de sesión. En esta
+ejecución, el backend indica \texttt{[ML] model loaded} y
+\texttt{[ML] candidates: 3}, lo que significa que el modelo compara tres
+modos plausibles de la misma familia funcional:
+\texttt{relajacion\_neutral\_suave},
+\texttt{relajacion\_neutral\_media} y
+\texttt{relajacion\_neutral\_alta}. El diccionario mostrado en
+\texttt{[ML] context: ...} es especialmente revelador porque deja visible el
+conjunto completo de señales que alimentan al modelo: objetivo, mood, niveles
+de estrés y energía, preferencia vocal, intensidad, exploración, popularidad,
+duración deseada y variables ambientales derivadas del micrófono.
+
+Las probabilidades \texttt{[0.9454, 0.9479, 0.9479]} muestran que el modelo
+considera muy viables los tres candidatos. El valor
+\texttt{probability\_spread = 0.0025} se calcula como la diferencia entre la
+probabilidad máxima y la mínima, por lo que aquí expresa una separación muy
+pequeña entre alternativas. Esto significa que el ML está activo y confía en
+los candidatos, aunque no encuentra una diferencia supervisada fuerte entre
+ellos. El hecho de que \texttt{selected\_mode\_probability = 0.9479} supere
+con amplitud el umbral \texttt{min\_selected\_mode\_probability = 0.14}
+explica que el sistema no entre en abstención y permita a la capa supervisada
+ajustar la decisión heurística.
+
+En cuarto lugar aparece el bloque \texttt{[SESSION]}, donde ya no se observan
+probabilidades aisladas sino la decisión híbrida final. En esta traza,
+\texttt{ml\_enabled = True} confirma que la capa supervisada ha pasado las
+puertas globales necesarias. Cada línea \texttt{CANDIDATE} combina tres
+elementos: una puntuación heurística base, una probabilidad del modelo y un
+\texttt{ml\_delta} que transforma esa probabilidad en ajuste numérico. En el
+caso \texttt{relajacion\_neutral\_suave}, la heurística inicial ya era muy
+superior (\texttt{46.0}) a la de los modos vecinos (\texttt{17.0} y
+\texttt{6.0}); el ML añade a ese candidato un incremento de \texttt{8.91} y
+eleva la puntuación final a \texttt{54.91}. Aunque los modos medio y alto
+obtienen probabilidades prácticamente idénticas, su base heurística era mucho
+menor, de modo que el candidato suave conserva la primera posición. Por eso la
+traza final indica \texttt{selected\_mode = relajacion\_neutral\_suave} y
+\texttt{selection\_source = session\_ml}: el ML participa de forma real, pero
+lo hace reforzando una ventaja heurística ya bien fundamentada.
+
+En quinto lugar, el bloque \texttt{[ENV]} permite comprobar que el entorno no
+actúa como una variable decorativa, sino como parte operativa de la
+personalización. El sistema marca \texttt{use\_environment = True},
+\texttt{environment\_context = Entorno mixto} y
+\texttt{environment\_influence\_strength = 0.95}. Esta última magnitud se
+deduce a partir de la confianza, la variabilidad, la diferencia de picos, la
+proporción transitoria y el número de ráfagas detectadas, y en este caso queda
+saturada en el máximo operativo previsto por el sistema. El aspecto más
+significativo de la traza es el campo \texttt{target\_adjustment}: el perfil
+musical previo partía de \texttt{valence = 0.55}, \texttt{energy = 0.12} y
+\texttt{danceability = 0.10}, pero tras aplicar el ruido \texttt{loud} dentro
+de un objetivo de relajación, la energía pasa a \texttt{0.348}. Es decir, el
+sistema entiende que una relajación eficaz en un ambiente sonoro fuerte no debe
+basarse en música excesivamente tenue, sino en una calma con algo más de
+presencia. A esto se añade el bloque \texttt{noise\_queries}, que incorpora
+consultas como \texttt{stable calm focus}, \texttt{warm ambient} o
+\texttt{soft but present chill}. En cambio, \texttt{context\_queries} aparece
+vacío porque el contexto \texttt{Entorno mixto} no activa una familia
+específica de consultas contextuales adicionales.
+
+En sexto lugar, el bloque \texttt{[LEARNING]} documenta el estado del
+aprendizaje musical acumulado para el mood actual. La línea
+\texttt{mood\_gate\_passed = True} indica que el sistema ya dispone de
+evidencia suficiente para aplicar aprendizaje específico en el mood neutral. El
+valor \texttt{mood\_quality\_score = 81.63} resume consistencia, fuerza
+observacional y cobertura de géneros positivos, mientras que
+\texttt{mood\_application\_factor = 1.0} expresa que ese aprendizaje no se
+aplica de forma parcial, sino completa.
+
+En séptimo lugar, tras cerrarse correctamente la recomendación
+(\texttt{POST /recommendations/generate ... 200 OK}), el backend entra en la
+fase de generación musical propiamente dicha. El bloque \texttt{[INPUT]} fija
+de nuevo el contexto de trabajo mediante \texttt{recommendation\_id},
+\texttt{goal}, \texttt{mood}, \texttt{stress}, \texttt{energy},
+\texttt{outcome}, uso del entorno y preferencias declaradas. A partir de ahí,
+la línea \texttt{[LEARNING] mode=... | subtype=... | curve=... |
+profile\_mode=...} sintetiza el \textit{generation profile}. En el ejemplo
+validado, el subtipo resultante es \texttt{stable\_relaxation}, la curva de
+activación es \texttt{peak\_then\_settle} y el modo de perfil es
+\texttt{stable\_weighted}, con \texttt{session\_weight = 0.169} y
+\texttt{stable\_weight = 0.225}. Esto significa que el sistema sigue teniendo
+en cuenta la señal reciente de la sesión, pero se apoya algo más en el patrón
+estable aprendido del usuario. En la implementación, esta capa de
+subtipos se ha ampliado además con variantes específicas de voz, como
+\texttt{guided\_focus} para sesiones de foco con presencia vocal controlada y
+\texttt{comfort\_relaxation} para sesiones de relajación con voz cálida y tono
+de acompañamiento. De este modo, la preferencia vocal ya no opera solo como
+filtro de canciones, sino también como parte estructural del perfil musical
+interno.
+
+En octavo lugar, la traza entra en la fase de selección de canciones. La línea
+\texttt{[AFFINITY] source = msd\_only} recuerda que la
+fuente principal del ranking es el catálogo estructurado local y no una
+recuperación dinámica viva desde Spotify. A continuación,
+\texttt{[CATALOG] dataset\_candidates = 60 | top\_track = Sunset Lover - Petit
+Biscuit | top\_score = 123.85} resume el estado del ranking principal: sesenta
+canciones han entrado como candidatas desde el catálogo MSD, y la pista mejor
+puntuada resulta coherente con una sesión de relajación instrumental y
+alternativa.
+
+En noveno lugar se produce la materialización sobre Spotify. El bloque
+\texttt{[MATERIALIZATION] playable = 15 | cached = 1 | fresh = 14 |
+failed = 2 | searches = 16 | rate\_limited = False} indica que quince
+candidatos del ranking pudieron vincularse a URIs reales de Spotify, uno ya
+estaba cacheado, catorce se resolvieron mediante búsquedas nuevas y dos no
+llegaron a materializarse. Esta capa es importante porque separa claramente dos
+problemas distintos: el sistema puede rankear bien dentro del catálogo local y,
+después, todavía tener que convertir ese ranking en canciones realmente
+reproducibles en la plataforma externa.
+
+En décimo lugar aparece el ensamblado final de la sesión:
+\texttt{[PLAYLIST] selected\_tracks = 10 | uris = 10 | target\_ms = 2400000 |
+actual\_ms = 2725096 | missing\_duration = 0}. Esto significa que la playlist
+se ha construido con diez canciones válidas, todas con URI disponible, y con
+una duración final aproximada de 45 minutos frente a un objetivo inicial de 40.
+Aunque la duración final supera el objetivo, el sistema no deja huecos sin
+resolver ni canciones sin duración conocida. Después, el bloque
+\texttt{[MATERIALIZATION] add\_items\_to\_playlist} seguido de
+\texttt{playlist\_id = ...} y \texttt{uris\_count = 10} marca la escritura
+real en Spotify, y la línea \texttt{[PLAYLIST] created id = ... |
+name = Harmony Hub · Relajacion | query\_signal\_count = 2} cierra la sesión
+confirmando que la salida final ya no es una recomendación abstracta, sino una
+playlist real creada en la cuenta autenticada del usuario.
+
+Por último, el flujo se cierra con feedback y mantenimiento automático del
+modelo. La respuesta \texttt{POST /feedback/ ... 200 OK} confirma que la
+valoración de la sesión se ha persistido correctamente. Inmediatamente después,
+el backend deja las trazas \texttt{[ML MAINTENANCE] start},
+\texttt{train} y \texttt{done}, indicando que se ha detectado un nuevo ejemplo
+supervisado (\texttt{labeled\_examples = 65}) y que el sistema ha ejecutado el
+reentrenamiento posterior. Así, una única sesión queda enlazada con todo el
+ciclo del producto: autenticación, check-in, recomendación híbrida, uso
+efectivo del entorno, ranking sobre catálogo local, materialización en
+Spotify, feedback del usuario y actualización posterior del componente
+supervisado.
+
+Esta lectura deja ver con bastante claridad la separación entre capas del
+sistema. Primero se decide el modo de sesión, después se construye el perfil
+musical operativo, a continuación se consulta y reordena el catálogo local, y
+solo al final se materializa la playlist en Spotify. El cierre con feedback
+activa además una segunda traza, ya no de recomendación musical, sino de
+mantenimiento del aprendizaje supervisado, lo que permite enlazar una misma
+sesión con su efecto posterior sobre el perfil y sobre el modelo.
+
+\subsection{Persistencia, historial y aprendizaje}
+\label{subsec:modulo_persistencia_aprendizaje}
+
+La persistencia combina escrituras directas desde el cliente y escrituras
+derivadas desde backend. El cliente registra check-ins, recomendaciones
+visibles, playlists generadas y feedback, mientras que el backend consolida
+estructuras agregadas para aprendizaje, trazabilidad y entrenamiento.
+
+En términos de implementación, esto permite dos ventajas:
+
+\begin{itemize}
+    \item mantener disponible el historial funcional de la app aunque una
+    sesión concreta termine en abstención local del modelo;
+    \item separar la experiencia operativa del usuario de los artefactos
+    internos de entrenamiento y aprendizaje.
+\end{itemize}
+
+El historial reconstruye sesiones enlazando documentos públicos y privados,
+mientras que el aprendizaje progresivo deriva patrones de uso y ejemplos de
+entrenamiento a partir del ciclo cerrado de recomendación, escucha y feedback.
+En la versión final se corrigió además una inconsistencia arquitectónica
+importante: el historial visible de la app ya no depende de colecciones
+temporales en memoria del backend, sino de documentos persistidos en Firestore.
+La interfaz Flutter reconstruye el histórico directamente desde esas
+colecciones, y el endpoint \texttt{/history/me} quedó alineado para exponer esa
+misma fuente persistida en su parte pública.
+
+\section{Integraciones y servicios externos}
+\label{sec:integraciones}
+
+Las integraciones externas ya justificadas en el diseño se materializan en tres
+frentes concretos:
+
+\begin{itemize}
+    \item \textbf{Firebase Authentication}, usado como origen de identidad
+    estable para el cliente y como base sobre la que se apoyan las reglas de
+    acceso en Firestore.
+    \item \textbf{Cloud Firestore}, empleado como persistencia documental
+    operativa tanto para el flujo visible de usuario como para estructuras de
+    aprendizaje, ejemplos supervisados y trazabilidad.
+    \item \textbf{Spotify Web API}, utilizada para OAuth con PKCE, perfil
+    musical básico del usuario y materialización final de playlists.
+\end{itemize}
+
+La implementación intenta además que estas dependencias no se conviertan
+en puntos únicos de fallo. El backend sigue pudiendo rankear sobre el catálogo
+MSD aunque Spotify limite búsquedas o retrase la materialización, y el cliente conserva historial y
+documentos propios incluso cuando una sesión concreta termina en abstención local
+del clasificador por falta de confianza.
+
+\subsection*{Medición del entorno acústico}
+
+La app utiliza el micrófono del dispositivo únicamente para obtener una ventana
+breve de medición y derivar un perfil agregado del entorno. La implementación no
+persiste audio en bruto ni fragmentos grabados; solo conserva métricas
+resumidas, como media, mediana, rango, variabilidad o contexto inferido.
+Además, se añadieron dos señales de calidad de medición:
+\texttt{sample\_density\_hz} y \texttt{stability\_score}. A partir de ellas, y
+de una \texttt{confidence} agregada, el sistema calcula una intensidad de
+influencia ambiental que no se limita a activar o desactivar el entorno, sino
+que pondera cuánto debe pesar en la sesión. Esa decisión se persiste después
+mediante campos como \texttt{environment\_usage\_status} y
+\texttt{environment\_usage\_rationale}, lo que mejora bastante la trazabilidad
+del sistema.
+
+La evidencia operativa recogida durante la validación con dispositivo Android
+físico muestra sesiones con \texttt{use\_environment = True}, contexto
+ambiental inferido, fuerza de influencia positiva y consultas auxiliares
+derivadas del entorno medido. Esto permite afirmar que la medición acústica no
+se limita a una etiqueta visible en interfaz o a un dato almacenado en
+Firestore, sino que participa realmente en la construcción del perfil musical,
+en el refuerzo de consultas y en la selección final de canciones de la
+playlist.
+
+\subsection*{Pipeline de entrenamiento supervisado}
+
+El modelo de sesión se entrena fuera del flujo interactivo principal, pero ya
+no depende exclusivamente de que un desarrollador ejecute
+comandos manuales. Tras cada feedback útil para entrenamiento, el backend
+dispara una tarea de mantenimiento que audita el número de ejemplos etiquetados,
+compara el estado actual con los metadatos previos y decide si procede
+reentrenar. Cuando se detectan ejemplos nuevos, o incluso un reinicio o
+reducción del dataset respecto a metadatos antiguos, el sistema vuelve a
+entrenar automáticamente y actualiza dos artefactos: el modelo serializado y un
+fichero de auditoría.
+
+El script \texttt{train\_ranking\_model.py} sigue existiendo como mecanismo
+manual de recuperación o depuración, pero el flujo ordinario del prototipo ya
+queda cubierto por ese mantenimiento automático. En ambos casos, la fase de
+entrenamiento calcula observabilidad por mood, estado de puertas de calidad y
+motivo de disponibilidad o abstención del modelo.
+
+En el estado actual del repositorio, este pipeline ya genera no solo el modelo
+serializado y sus metadatos, sino también artefactos de auditoría y
+explicabilidad. La situación real del clasificador global ya no es de
+abstención completa: dispone de 65 ejemplos de sesión, con un balance
+suficiente para la configuración operativa final, puerta global activa,
+cobertura completa por mood y umbral de confianza configurable. Esta
+observación es importante porque refleja que el pipeline no solo está terminado
+e integrado, sino también activado en ejecución real dentro del flujo del
+producto.
+
+\section{Seguridad, privacidad y tratamiento de datos}
+\label{sec:seguridad_privacidad}
+
+La implementación incorpora varias medidas orientadas a reducir la exposición de
+datos personales y emocionales.
+
+\subsection*{Separación entre bloque público y bloque privado}
+
+Los campos más sensibles del check-in y del feedback no se guardan únicamente en
+el documento funcional principal. Se separan en colecciones privadas paralelas
+(\texttt{checkins\_private} y \texttt{feedback\_private}), mientras que el
+documento público conserva solo el mínimo necesario para trazabilidad y uso de
+la aplicación.
+
+\subsection*{Cifrado en cliente del bloque emocional}
+
+El cliente móvil cifra la carga emocional usando AES-GCM de 256 bits antes de
+persistirla. La clave asociada al usuario se almacena localmente mediante
+\texttt{flutter\_secure\_storage}, y el bloque cifrado conserva
+\texttt{ciphertext}, \texttt{nonce} y \texttt{mac}. Esta decisión no sustituye
+por completo otras capas de seguridad, pero sí reduce exposición innecesaria de
+estados emocionales explícitos.
+
+\subsection*{Control de acceso en Firestore}
+
+Las reglas de Firestore restringen el acceso por propietario y validan la
+forma de los documentos aceptados. Esto se aprecia especialmente en las
+colecciones privadas y en los documentos que referencian al usuario autenticado.
+De este modo, el proyecto no delega toda la protección en el cliente, sino que
+la refuerza también en la política de acceso documental.
+
+En concreto, \texttt{firestore.rules} combina comprobaciones de identidad y de
+esquema. Funciones como \texttt{isOwnerByField()},
+\texttt{isRequestOwnerByField()} e \texttt{isOwnerByDocId(docId)} impiden que
+un usuario lea o escriba documentos ajenos, mientras que
+\texttt{onlyHasKeys(...)} fuerza que colecciones como \texttt{checkins},
+\texttt{feedback} y \texttt{generated\_playlists} solo acepten los campos
+previstos por el diseño. Además, las colecciones
+\texttt{user\_generation\_preferences}, \texttt{training\_examples} y
+\texttt{training\_session\_examples} permanecen cerradas a escritura desde el
+cliente, de modo que el aprendizaje agregado y los ejemplos supervisados quedan
+reservados al backend o a cuentas con privilegios administrativos.
+
+\subsection*{Gestión de permisos y minimización de datos}
+
+El acceso al micrófono se solicita únicamente cuando el usuario activa la
+medición del entorno, y la salida persistida se limita a métricas resumidas del
+ambiente. De forma análoga, la integración con Spotify se activa solo tras la
+autorización explícita del usuario y dentro del alcance que necesita la app
+para leer contexto musical y crear playlists.
+
+En conjunto, estas decisiones no eliminan por completo el riesgo asociado al
+tratamiento de información sensible, pero sí reducen de forma apreciable la
+superficie de exposición. La separación entre bloque funcional y bloque privado,
+el cifrado previo a la persistencia, las reglas de acceso por propietario y la
+minimización del dato capturado permiten que Harmony Hub trate estados
+emocionales y valoraciones de sesión con un criterio de prudencia técnica
+coherente con la naturaleza del problema abordado.
+
+\section{Síntesis operativa del proyecto}
+\label{sec:estado_actual_proyecto}
+
+En el momento de cierre de esta memoria, Harmony Hub puede describirse ya como
+una solución funcional completa y trazable de extremo a extremo. Esta
+conclusión se apoya en tres hechos verificados durante la fase final de
+validación.
+
+En primer lugar, los datos de entrada del usuario están controlados y
+formalizados. El contexto de sesión ya no depende de descripciones libres o de
+interpretaciones implícitas, sino de un check-in guiado con opciones cerradas
+para estado emocional, objetivo, energía, estrés, preferencias musicales,
+duración y resultado esperado. A esta capa se añade, cuando el usuario activa
+la medición, un bloque acústico estructurado con categoría de ruido, contexto
+ambiental, confianza, estabilidad y otras señales agregadas. El resultado es un
+contexto consistente que puede validarse, persistirse y reutilizarse en todo el
+pipeline.
+
+En segundo lugar, el entorno acústico ya puede defenderse como parte efectiva
+de la personalización. La validación ha mostrado sesiones reales con uso del
+entorno activado, contexto ambiental inferido, fuerza de influencia elevada y
+consultas auxiliares no vacías asociadas tanto al ruido como al contexto
+detectado. Por tanto, el entorno no se queda en una función accesoria de
+interfaz, sino que influye de forma operativa en la recomendación y en la
+generación final de la playlist.
+
+En tercer lugar, el flujo completo resulta trazable desde el check-in hasta el
+feedback. La persistencia en Firestore enlaza documentos de sesión,
+recomendación, playlist y valoración posterior, mientras que el backend añade
+ejemplos supervisados de sesión, metadatos del clasificador y auditoría de
+mantenimiento automático. Esta doble traza, funcional y técnica, permite
+explicar no solo qué playlist se generó, sino también con qué contexto, con qué
+modo, con qué peso del entorno y con qué consecuencias posteriores sobre el
+aprendizaje del sistema.
+
+Desde la perspectiva de entrega, el estado actual del repositorio permite
+sostener que Harmony Hub ya no es una prueba de concepto desconectada, sino una
+arquitectura híbrida integrada donde conviven captura de contexto,
+recomendación explicable, uso real del entorno, activación supervisada cuando
+existe evidencia suficiente, materialización completa en Spotify y cierre
+posterior del ciclo de aprendizaje.
+
+\section{Despliegue o puesta en marcha}
+\label{sec:despliegue}
+
+La solución está preparada para ejecutarse en local separando frontend, backend
+y reglas documentales.
+
+\subsection*{Puesta en marcha del frontend}
+
+En el entorno de desarrollo, el cliente móvil puede arrancarse con los
+comandos:
+
+\begin{minted}[fontsize=\small, breaklines]{bash}
+cd harmonyhub
+flutter pub get
+flutter run
+\end{minted}
+
+Este proceso instala dependencias, resuelve paquetes y ejecuta la aplicación en
+emulador o dispositivo conectado.
+
+\subsection*{Puesta en marcha del backend}
+
+El backend se levanta en un entorno virtual independiente:
+
+\begin{minted}[fontsize=\small, breaklines]{bash}
+cd backend_fastapi
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+\end{minted}
+
+Con ello se expone la API REST necesaria para check-ins, recomendaciones,
+feedback, historial y flujo Spotify. En la validación entregable, la
+aplicación se utilizó instalada en un dispositivo Android físico y conectada a
+un backend activo en la misma red local.
+
+\subsection*{Entrenamiento del modelo supervisado}
+
+En el uso normal del sistema, el modelo ya se audita y se reentrena
+automáticamente en segundo plano tras el cierre del feedback, siempre que haya
+ejemplos nuevos o que el dataset actual haya quedado desalineado respecto a los
+metadatos previos. Aun así, para tareas de mantenimiento o depuración sigue
+siendo posible lanzar el entrenamiento manualmente mediante:
+
+\begin{minted}[fontsize=\small, breaklines]{bash}
+cd backend_fastapi
+source .venv/bin/activate
+python -m app.ml.train_ranking_model
+\end{minted}
+
+Este proceso genera el artefacto serializado del modelo y un fichero de
+metadatos que informa de métricas, volumen de datos, observabilidad por
+mood y estado de las puertas de activación. El mantenimiento automático
+deja además un segundo artefacto de auditoría que registra si hubo
+reentrenamiento, por qué motivo se ejecutó o por qué se omitió.
+
+En consecuencia, el entrenamiento manual queda reservado a recuperación,
+depuración o demostración académica del pipeline, mientras que el uso ordinario
+de la app mantiene el modelo alineado con el conjunto real de ejemplos sin
+intervención explícita del usuario final.
+
+\subsection*{Reglas de Firestore}
+
+La política documental del proyecto también forma parte de la puesta en marcha.
+Las reglas se asocian desde \texttt{firebase.json} al archivo
+\texttt{firestore.rules} y pueden desplegarse con:
+
+\begin{minted}[fontsize=\small, breaklines]{bash}
+firebase deploy --only firestore:rules
+\end{minted}

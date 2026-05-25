@@ -1,0 +1,342 @@
+\chapter{Planificación y recursos}
+\label{ch:planificacion_recursos}
+
+\section{Enfoque de planificación}
+\label{sec:enfoque_planificacion}
+
+La planificación de Harmony Hub se ha organizado mediante una adaptación ligera
+de Scrum al contexto de un TFG. No se ha aplicado Scrum como marco empresarial
+formal, sino como metodología de trabajo incremental para ordenar el backlog,
+priorizar entregables, revisar avances con frecuencia y reducir el riesgo de
+construir funcionalidades sin validación progresiva.
+
+Esta decisión resulta coherente con la naturaleza del proyecto por tres
+motivos. En primer lugar, Harmony Hub combina frontend móvil, backend, modelo
+supervisado, persistencia en la nube e integración con un servicio externo como
+Spotify, por lo que era preferible avanzar por incrementos verificables en vez
+de seguir una planificación rígida de una sola pasada. En segundo lugar, parte
+del comportamiento final dependía de pruebas reales y de la evolución del flujo
+de uso, especialmente en la recomendación y en la interfaz. En tercer lugar, el
+TFG exigía compaginar desarrollo técnico, validación y documentación, de modo
+que una organización iterativa facilitaba equilibrar implementación y memoria.
+
+Como soporte práctico de esta organización se utilizó también un tablero de
+Trello, accesible en
+\url{https://trello.com/invite/b/69f0d52f02062b866ef2c7b1/ATTI8242c2e81725ea5b57b648b8e983e91652F5E110/harmony-hub}.
+Ese tablero actuó como vista operativa del backlog y del avance cotidiano,
+mientras que la memoria recoge la versión consolidada y argumentada de esa
+misma planificación.
+
+\section{Adaptación de Scrum al TFG}
+\label{sec:adaptacion_scrum_tfg}
+
+La adaptación realizada conserva la lógica básica de Scrum, pero simplificada
+para un proyecto individual. En este capítulo, los términos principales se usan
+con el siguiente significado práctico: backlog de producto como lista
+priorizada de tareas, sprint como iteración corta de trabajo y
+sprint planning como selección del alcance inmediato de cada iteración.
+
+\begin{itemize}
+    \item \textbf{Backlog de producto}. Se definió una lista inicial priorizada con historias y tareas agrupadas en bloques: autenticación, integración con Spotify, check-in, motor de recomendación, feedback, aprendizaje, seguridad de datos, rediseño de interfaz y documentación.
+    \item \textbf{Sprints cortos}. El trabajo se estructuró en iteraciones de aproximadamente dos semanas, suficientes para construir incrementos reales y revisarlos antes de pasar al siguiente bloque.
+    \item \textbf{Planificación de sprint}. Al inicio de cada iteración se seleccionaban objetivos concretos y un alcance limitado, priorizando siempre el flujo principal antes que las extensiones.
+    \item \textbf{Revisión continua}. Cada incremento se validó mediante compilación, ejecución manual de la app o comprobación de logs del backend.
+    \item \textbf{Retrospectiva informal}. Tras cada bloque se registraron incidencias, limitaciones detectadas y cambios de prioridad, por ejemplo al reforzar el motor heurístico, revisar reglas de Firestore o rediseñar pantallas completas.
+\end{itemize}
+
+Al tratarse de un proyecto individual, las funciones de priorización,
+seguimiento y desarrollo quedaron concentradas en una sola persona. Aun así, se
+mantuvo el valor metodológico del enfoque iterativo: backlog priorizado,
+iteraciones, validación continua y entregables incrementales.
+
+En la práctica, el tablero de Trello permitió trasladar esta adaptación a un
+formato visual sencillo, útil para reagrupar tareas, mover bloques entre
+estados y mantener visible la relación entre backlog, incidencias y trabajo en
+curso.
+
+\section{Backlog funcional priorizado}
+\label{sec:backlog_funcional_priorizado}
+
+La Tabla~\ref{tab:backlog_priorizado} resume los grandes bloques del backlog
+ordenados por prioridad funcional.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{|P{1.45cm}|P{3.55cm}|P{2.45cm}|Y|}
+\hline
+\textbf{Prioridad} & \textbf{Bloque de trabajo} & \textbf{Valor principal} & \textbf{Justificación} \\
+\hline
+Alta & Autenticación y acceso inicial & Entrada al sistema & Sin acceso autenticado no existe flujo funcional utilizable. \\
+\hline
+Alta & Integración con Spotify & Generación real de playlists & La propuesta de valor del proyecto depende de conectar cuenta, consultar perfil y crear playlists reales. \\
+\hline
+Alta & Check-in contextual & Captura de entrada & El motor de recomendación necesita inputs de estado emocional, objetivo y contexto para operar. \\
+\hline
+Alta & Motor de recomendación heurístico & Núcleo funcional mínimo & Permite generar sesiones útiles incluso antes de disponer de un modelo supervisado maduro. \\
+\hline
+Media & Persistencia, historial y feedback & Trazabilidad y aprendizaje & Cierran el ciclo de uso y habilitan la recopilación de ejemplos para aprendizaje posterior. \\
+\hline
+Media & Componente supervisado de sesión & Personalización incremental & Mejora la priorización de modos, pero no bloquea la operatividad del sistema. \\
+\hline
+Media & Seguridad y privacidad del dato & Viabilidad ética y técnica & El proyecto trata información emocional y requiere separación entre bloque público y cifrado. \\
+\hline
+Media & Rediseño integral de interfaz & Calidad de experiencia & Relevante para la presentación final y para reducir fricción en el uso. \\
+\hline
+Baja & Optimización fina y mejoras estéticas secundarias & Refinamiento & Se abordaron después de asegurar el flujo principal y la consistencia funcional. \\
+\hline
+\end{tabularx}
+\caption{Backlog funcional priorizado durante el desarrollo de Harmony Hub.}
+\label{tab:backlog_priorizado}
+\end{table}
+
+\section{Fases de desarrollo}
+\label{sec:fases_desarrollo}
+
+Aunque la ejecución práctica se organizó mediante iteraciones cortas, el
+proyecto puede describirse también a través de una secuencia de fases que ayuda
+a interpretar su evolución global. Esta lectura complementa la planificación
+por sprints y permite relacionar con mayor claridad cada bloque de trabajo con
+el tipo de resultado perseguido.
+
+\begin{itemize}
+    \item \textbf{Preparación técnica y estudio previo}. Se definió el alcance inicial, se revisó la viabilidad tecnológica y se estableció la base de trabajo con Flutter, FastAPI, Firebase y Spotify.
+    \item \textbf{Análisis y especificación}. Se concretaron requisitos, actores, casos de uso, necesidades de persistencia y criterios de privacidad para el tratamiento del dato emocional.
+    \item \textbf{Diseño del sistema}. Se modelaron la arquitectura general, la separación entre cliente y backend, las colecciones documentales de Firestore, los flujos principales y la lógica híbrida de recomendación.
+    \item \textbf{Implementación funcional}. Se desarrollaron el acceso autenticado, la conexión con Spotify, el check-in contextual, la recomendación de sesión, la generación de playlists, el historial y el cierre con feedback.
+    \item \textbf{Aprendizaje y validación}. Se incorporaron la capa de aprendizaje individual, el conjunto supervisado de sesión, el mantenimiento automático del modelo y las pruebas funcionales, técnicas y longitudinales.
+    \item \textbf{Refinamiento y documentación}. Finalmente se ajustaron interfaz, trazabilidad, consistencia entre módulos y memoria, con el fin de consolidar una versión entregable y coherente del sistema.
+\end{itemize}
+
+\section{Planificación por iteraciones}
+\label{sec:planificacion_iteraciones}
+
+La ejecución del proyecto se organizó en una secuencia de iteraciones con un
+objetivo principal por sprint. La Tabla~\ref{tab:sprints_harmony_hub} recoge la
+estructura general seguida.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{1.7cm}|P{2.4cm}|Y|P{2.7cm}|}
+\hline
+\textbf{Sprint} & \textbf{Meta principal} & \textbf{Entregables o tareas destacadas} & \textbf{Resultado esperado} \\
+\hline
+Sprint 0 & Definición y base técnica & Análisis del problema, objetivos, selección tecnológica, preparación de repositorio, estructura Flutter/FastAPI y configuración inicial de Firebase. & Base de trabajo estable y backlog inicial definido. \\
+\hline
+Sprint 1 & Flujo de acceso y conexión & Registro, inicio de sesión, recuperación de contraseña, conexión con Spotify y validación de cuenta enlazada. & Entrada real al sistema y acceso a datos del perfil musical. \\
+\hline
+Sprint 2 & Check-in y flujo principal & Captura de inputs, medición opcional del entorno, persistencia inicial y navegación hacia recomendación. & Flujo contextual desde la entrada emocional hasta la propuesta de sesión. \\
+\hline
+Sprint 3 & Motor de recomendación e integración backend & Perfiles de generación, búsquedas, ranking heurístico, creación de playlist y persistencia de sesión. & Generación funcional de playlists reales en Spotify. \\
+\hline
+Sprint 4 & Feedback, historial y aprendizaje & Cierre de sesión con feedback, historial, modos guardados, aprendizaje del usuario y ejemplos para entrenamiento. & Ciclo completo de uso y base de datos de sesiones consolidada. \\
+\hline
+Sprint 5 & Modelo supervisado y validación & Entrenamiento del clasificador de sesión, calidad del modelo, revisión de reglas, pruebas funcionales y correcciones. & Personalización progresiva validada y estado técnico verificado. \\
+\hline
+Sprint 6 & Rediseño y cierre documental & Rediseño de pantallas clave, coherencia visual, ajuste de flujos, memoria y revisión final. & Prototipo final presentable y documentación alineada con la implementación real. \\
+\hline
+\end{tabularx}
+\caption{Planificación del proyecto por iteraciones inspiradas en Scrum.}
+\label{tab:sprints_harmony_hub}
+\end{table}
+
+\section{Cronograma resumido}
+\label{sec:cronograma}
+
+Para esta memoria se documenta el cronograma en formato tabular, ya que los
+diagramas temporales se reservarán para una fase posterior en la que el texto y
+los bloques del proyecto queden completamente estabilizados. La
+Tabla~\ref{tab:cronograma_resumido_scrum} resume la distribución temporal
+orientativa de las iteraciones.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{1.9cm}|P{2.4cm}|Y|}
+\hline
+\textbf{Iteración} & \textbf{Duración orientativa} & \textbf{Bloque de trabajo dominante} \\
+\hline
+Sprint 0 & 1 semana & Definición del alcance, arquitectura inicial y preparación del entorno. \\
+\hline
+Sprint 1 & 2 semanas & Acceso, autenticación y conexión con Spotify. \\
+\hline
+Sprint 2 & 2 semanas & Check-in contextual, navegación y persistencia inicial. \\
+\hline
+Sprint 3 & 2 semanas & Motor heurístico, backend y creación de playlists. \\
+\hline
+Sprint 4 & 2 semanas & Feedback, historial, aprendizaje y datos de entrenamiento. \\
+\hline
+Sprint 5 & 2 semanas & Entrenamiento del modelo, pruebas y correcciones. \\
+\hline
+Sprint 6 & 2 semanas & Rediseño de interfaz, revisión final y documentación. \\
+\hline
+\end{tabularx}
+\caption{Cronograma resumido del proyecto siguiendo una estructura iterativa.}
+\label{tab:cronograma_resumido_scrum}
+\end{table}
+
+Más que fijar fechas cerradas, esta planificación ha servido para mantener una
+secuencia lógica: primero asegurar la viabilidad funcional mínima, después
+añadir trazabilidad y aprendizaje, y por último refinar calidad visual,
+robustez y documentación.
+
+\section{Desviaciones respecto a la planificación inicial}
+\label{sec:desviaciones_planificacion}
+
+La planificación inicial proporcionó una guía útil, pero la evolución real del
+proyecto exigió introducir varios ajustes para mantener la coherencia entre
+ambición funcional, viabilidad técnica y calidad final del entregable. Estas
+desviaciones no alteraron el propósito general de Harmony Hub, aunque sí
+reordenaron prioridades y forzaron decisiones de diseño más prudentes en
+algunos bloques.
+
+Una primera desviación relevante afectó al papel de Spotify dentro del sistema.
+En un planteamiento temprano se contemplaba una dependencia mayor de búsquedas y
+afinidad dinámica sobre el catálogo externo. La experiencia de integración, las
+limitaciones de materialización y la necesidad de preservar la trazabilidad
+llevaron a reforzar un catálogo propio como base principal del ranking musical,
+reservando Spotify para autenticación, contexto musical básico y creación final
+de playlists reproducibles.
+
+También se produjeron ajustes en persistencia e historial. La necesidad de
+separar bloque público y bloque privado, alinear reglas de Firestore con los
+documentos generados y mantener un historial consistente con los datos
+persistidos obligó a refinar la estructura documental y algunos endpoints del
+backend. Este trabajo añadió complejidad respecto a la previsión inicial, pero
+mejoró la coherencia técnica y la protección del dato personal.
+
+En la capa de aprendizaje, la desviación principal consistió en abandonar una
+lectura simplificada del progreso basada solo en acumulación de sesiones. La
+evidencia longitudinal mostró que era más riguroso distinguir entre aprendizaje
+individual del perfil y activación del clasificador supervisado global. Como
+consecuencia, la solución adoptó una política de puertas de calidad y de
+abstención explícita, lo que reorientó parte del trabajo de validación hacia la
+interpretación del balance entre clases y la madurez específica por mood.
+
+Por último, el rediseño de interfaz y la revisión documental adquirieron más
+peso del previsto al final del proyecto. Lejos de constituir un añadido
+superficial, ambos bloques resultaron necesarios para que la solución
+expresara con claridad la lógica de aprendizaje, la trazabilidad de uso y la
+separación entre lo ya maduro y lo que aún permanece en validación prudente.
+
+\section{Seguimiento y control del avance}
+\label{sec:seguimiento_control_avance}
+
+El seguimiento del avance se ha apoyado en cuatro mecanismos sencillos pero
+efectivos:
+
+\begin{itemize}
+    \item \textbf{Criterios de terminado}. Cada sprint se consideraba cerrado cuando el incremento compilaba, podía recorrerse funcionalmente y quedaba documentado a nivel de código o memoria.
+    \item \textbf{Validación técnica continua}. Se utilizaron comprobaciones de análisis estático del cliente, compilación del backend, revisión de logs y compilación de la memoria.
+    \item \textbf{Repriorización}. Cuando aparecían limitaciones relevantes, como restricciones de Spotify o problemas de permisos en Firestore, el backlog se reajustaba para corregir primero el bloqueo.
+    \item \textbf{Integración con la memoria}. La documentación no se dejó para el final, sino que se fue actualizando conforme se estabilizaban arquitectura, pruebas y decisiones de diseño.
+\end{itemize}
+
+Este enfoque ha permitido que la planificación no quedara separada de la
+realidad técnica del proyecto. En lugar de medir solo horas o tareas, se han
+cerrado incrementos funcionales verificables.
+
+Además, el tablero de Trello se utilizó como mecanismo auxiliar de control del
+avance. Su función principal no fue sustituir la planificación formal, sino
+servir como soporte visual para revisar prioridades, detectar bloqueos y
+mantener coherencia entre el trabajo diario y la estructura por iteraciones
+documentada en este capítulo.
+
+\section{Recursos empleados}
+\label{sec:recursos_empleados}
+
+Los recursos empleados pueden agruparse en cuatro categorías: recursos
+humanos, recursos hardware, recursos software y servicios externos. Esta
+separación permite describir mejor qué papel ha desempeñado cada elemento
+dentro de la ejecución real del proyecto.
+
+\subsection*{Recursos humanos}
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{3.2cm}|Y|}
+\hline
+\textbf{Elemento} & \textbf{Uso dentro del proyecto} \\
+\hline
+Responsable del desarrollo & Análisis, diseño, implementación, pruebas, validación y documentación integral del sistema. \\
+\hline
+Tutor académico & Supervisión metodológica, revisión del enfoque y orientación general del trabajo. \\
+\hline
+\end{tabularx}
+\caption{Recursos humanos empleados en el proyecto.}
+\label{tab:recursos_humanos}
+\end{table}
+
+\subsection*{Recursos hardware}
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{3.2cm}|Y|}
+\hline
+\textbf{Elemento} & \textbf{Uso dentro del proyecto} \\
+\hline
+Ordenador personal de desarrollo & Programación, entrenamiento del modelo, compilación de la memoria y ejecución local del backend. \\
+\hline
+Dispositivo móvil y emulador Android & Pruebas funcionales de la app Flutter, validación visual de la interfaz y comprobación del flujo real de uso. \\
+\hline
+\end{tabularx}
+\caption{Recursos hardware empleados en el proyecto.}
+\label{tab:recursos_hardware}
+\end{table}
+
+\subsection*{Recursos software}
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{3.2cm}|Y|}
+\hline
+\textbf{Elemento} & \textbf{Uso dentro del proyecto} \\
+\hline
+Flutter y Dart & Desarrollo del cliente móvil multiplataforma. \\
+\hline
+FastAPI y Python & Implementación del backend, servicios y scripts de entrenamiento. \\
+\hline
+Firebase / Firestore & Autenticación, persistencia de datos, reglas de acceso y soporte documental del historial. \\
+\hline
+scikit-learn & Entrenamiento, validación y auditoría del modelo supervisado de sesión. \\
+\hline
+Trello & Seguimiento visual del backlog, de las iteraciones y del avance diario. \\
+\hline
+\LaTeX & Redacción y maquetación de la memoria final. \\
+\hline
+\end{tabularx}
+\caption{Recursos software empleados en el proyecto.}
+\label{tab:recursos_software}
+\end{table}
+
+\subsection*{Servicios externos}
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{3.2cm}|Y|}
+\hline
+\textbf{Elemento} & \textbf{Uso dentro del proyecto} \\
+\hline
+Spotify Web API & Autenticación musical, acceso al perfil básico, búsqueda de coincidencias y creación de playlists reproducibles. \\
+\hline
+Cuenta de Spotify de prueba & Validación del flujo real de generación de playlists. \\
+\hline
+Proyecto Firebase del TFG & Persistencia documental, reglas de seguridad y trazabilidad del uso. \\
+\hline
+\end{tabularx}
+\caption{Servicios externos empleados en el proyecto.}
+\label{tab:recursos_servicios}
+\end{table}

@@ -1,0 +1,362 @@
+\chapter{Pruebas y validación}
+\label{ch:pruebas_validacion}
+
+Este capítulo recoge únicamente evidencias verificadas durante el desarrollo de
+Harmony Hub. No se incluyen resultados no comprobados ni afirmaciones sobre
+comportamientos que no hayan quedado respaldados por ejecución real de la app,
+por validaciones técnicas reproducibles o por métricas obtenidas del sistema.
+
+\section{Plan de pruebas}
+\label{sec:plan_pruebas}
+
+La validación del proyecto se ha organizado en cuatro capas complementarias:
+comprobaciones técnicas de consistencia estática sobre frontend y backend,
+pruebas manuales del flujo funcional principal, ejecución de casos reales de
+generación de playlist y revisión del estado del componente supervisado a
+partir de sus metadatos, sus puertas de activación y el resumen observacional
+por mood.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{|P{0.9cm}|P{2.2cm}|Y|P{2.4cm}|P{2.8cm}|P{1.9cm}|}
+\hline
+\textbf{ID} & \textbf{Precondición} & \textbf{Pasos} & \textbf{Respuesta esperada} & \textbf{Respuesta obtenida} & \textbf{Evidencia} \\
+\hline
+P01 & Código cliente actualizado y dependencias resueltas. & Ejecutar \texttt{dart analyze} sobre el proyecto Flutter. & Ausencia de errores de análisis en el cliente. & Superada. El análisis devolvió No issues found. & Salida de consola verificada \\
+\hline
+P02 & Backend actualizado y entorno Python disponible. & Ejecutar \texttt{python3 -m compileall app} en el backend. & Ausencia de errores de compilación sintáctica. & Superada. La compilación recorrió rutas, esquemas y servicios sin error. & Salida de consola verificada \\
+\hline
+P03 & Usuario autenticado y cuenta de Spotify conectada. & Ejecutar login, conexión con Spotify, check-in, recomendación, creación de playlist y feedback. & Flujo continuo sin bloqueo funcional. & Superada en validación manual. Todos los flujos principales quedaron operativos. & Observación manual del flujo completo \\
+\hline
+P04 & Sesión iniciada, Spotify autorizado y datos de check-in de relajación preparados. & Ejecutar el caso C1 con objetivo relajación, entorno quiet, preferencia instrumental e intensidad suave. & Recomendación coherente y playlist real creada en Spotify. & Superada. Se generó la playlist Harmony Hub · Relajacion y el flujo finalizó con feedback. & Logs de backend y caso C1 en Tabla~\ref{tab:casos_funcionales_playlist} \\
+\hline
+P05 & Sesión iniciada, Spotify autorizado y datos de check-in de foco preparados. & Ejecutar el caso C2 con objetivo foco, entorno medido, preferencia con voz e intensidad suave. & Recomendación orientada a concentración, activación del modelo de sesión y playlist real creada en Spotify. & Superada. Se generó la playlist Harmony Hub · Foco con trazas \texttt{ml\_enabled = True} y \texttt{use\_environment = True}. & Logs de backend y caso C2 en Tabla~\ref{tab:casos_funcionales_playlist} \\
+\hline
+P06 & Sesión iniciada, Spotify autorizado y datos de check-in de energía preparados. & Ejecutar el caso C3 con objetivo energía, usuario cansado y sin entorno acústico. & Playlist real creada manteniendo operatividad, incluso si el caso es difícil. & Superada. La playlist se generó y el sistema completó el flujo activando mecanismos de refuerzo sin bloquear la sesión. & Logs de backend y caso C3 en Tabla~\ref{tab:casos_funcionales_playlist} \\
+\hline
+P07 & Modelo entrenado, metadatos disponibles en el backend y configuración runtime cargada. & Revisar el archivo de metadatos del modelo supervisado y la configuración operativa del backend. & Umbrales explícitos, motivo de disponibilidad, resumen observacional por mood y umbral operativo de decisión. & Superada. Los metadatos exponen volumen de datos, cobertura mínima por clase y puerta global activa, mientras que la configuración runtime fija el umbral operativo de confianza. & Archivo \texttt{\seqsplit{session\_mode\_model\_metadata.json}} y configuración de backend \\
+\hline
+P08 & Backend actualizado y suite de pruebas disponible. & Ejecutar \texttt{python -m unittest discover -s tests} en el backend. & Todas las pruebas automáticas deben pasar. & Superada. La suite ejecutó 38 pruebas y finalizó con estado \texttt{OK}. & Salida de consola verificada \\
+\hline
+\end{tabularx}
+\caption{Plan de pruebas ejecutado sobre Harmony Hub con precondiciones, pasos y evidencia.}
+\label{tab:plan_pruebas}
+\end{table}
+
+\section{Pruebas funcionales}
+\label{sec:pruebas_funcionales}
+
+Las pruebas funcionales se han centrado en comprobar que el sistema cumple los
+requisitos descritos en el Capítulo \ref{ch:analisis_problema}. La evidencia
+obtenida confirma que el flujo principal de la aplicación se encuentra operativo
+de extremo a extremo.
+
+En validación manual se comprobó correctamente el acceso autenticado del usuario
+(\textbf{RF1}), la navegación posterior a la conexión con Spotify
+(\textbf{RF7}), la realización del check-in contextual (\textbf{RF3} y
+\textbf{RF4}), la generación de una recomendación de sesión (\textbf{RF5}), la
+trazabilidad mediante identificador de recomendación (\textbf{RF6}), la
+creación de playlists reales en Spotify (\textbf{RF8}), el cierre con feedback
+(\textbf{RF10}) y el acceso a historial, aprendizaje, modos y perfil
+(\textbf{RF9}, \textbf{RF11} y \textbf{RF12}).
+
+La comprobación funcional más relevante ha sido la ejecución de tres casos
+completos de generación:
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{1.2cm}|P{2.5cm}|P{2.2cm}|Y|P{2.6cm}|}
+\hline
+\textbf{Caso} & \textbf{Objetivo y contexto} & \textbf{Modo recomendado} & \textbf{Observaciones verificadas} & \textbf{Resultado} \\
+\hline
+C1 & Relajación, usuario estresado, energía baja-media, entorno quiet, preferencia instrumental e intensidad suave. & Relajación / estresado / suave & Se generó playlist Harmony Hub · Relajacion. El backend construyó perfil con géneros semilla ambient, chill y classical; además cerró la sesión con feedback sin error funcional. & Correcto \\
+\hline
+C2 & Foco, usuario estresado, energía media, entorno medido con picos intermitentes, preferencia con voz e intensidad suave, ejecutado desde dispositivo Android físico. & Foco / estresado / media & Se activó el modelo supervisado a nivel de sesión, el entorno se incorporó a la recomendación y a la generación, y se creó la playlist Harmony Hub · Foco en Spotify. Las trazas mostraron \texttt{ml\_enabled = True}, \texttt{selection\_source = session\_ml} y \texttt{use\_environment = True}. & Correcto \\
+\hline
+C3 & Energía, usuario cansado, energía baja, sin uso de entorno, intensidad suave y perfil de popularidad mainstream. & Energía / cansado / suave & Se generó playlist Harmony Hub · Energia. El sistema completó el ranking principal sobre msd\_tracks y materializó la sesión final en Spotify sin bloqueo funcional. & Correcto \\
+\hline
+\end{tabularx}
+\caption{Casos funcionales reales ejecutados para la generación de playlists.}
+\label{tab:casos_funcionales_playlist}
+\end{table}
+
+Estos tres casos permiten afirmar que el flujo de generación está implementado
+y es operativo. Además, permiten comprobar que el comportamiento final no
+depende de un único tipo de sesión, sino que se mantiene correcto en
+relajación, foco y energía, con construcción de perfil, ranking sobre catálogo
+MSD, materialización final en Spotify y activación efectiva de la capa
+supervisada cuando la evidencia acumulada lo permite.
+
+El caso C2 resulta especialmente relevante como evidencia de cierre del
+proyecto, ya que reúne en una misma ejecución autenticación PKCE, lectura del
+perfil real de Spotify, recomendación con modelo supervisado activo, uso
+efectivo del entorno acústico medido desde el móvil, materialización final de
+la playlist y mantenimiento automático posterior del conjunto supervisado.
+
+En consecuencia, la validación funcional final permite sostener tres
+afirmaciones que describen con precisión el estado actual del sistema. En
+primer lugar, el entorno acústico ya no debe considerarse una variable
+experimental o residual, sino una señal realmente utilizada por la generación
+musical cuando se activa desde el cliente. En segundo lugar, las entradas del
+usuario están acotadas, validadas y trazadas a lo largo de todo el flujo, desde
+el check-in hasta la playlist y el feedback. En tercer lugar, la aplicación
+ejecuta ya un recorrido completo y reproducible de extremo a extremo, con
+persistencia documental, trazabilidad entre recomendación y playlist, y
+retroalimentación posterior del aprendizaje.
+
+\subsection*{Cobertura de los casos de uso}
+
+La revisión funcional también permite contrastar si los casos de uso descritos
+en el Capítulo~\ref{ch:analisis_problema} han quedado realmente cubiertos por
+la aplicación y por su backend asociado.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{1.0cm}|P{4.2cm}|Y|P{1.8cm}|}
+\hline
+\textbf{ID} & \textbf{Caso de uso} & \textbf{Evidencia verificada} & \textbf{Estado} \\
+\hline
+CU1 & Registrarse e iniciar sesión & Flujo disponible en cliente mediante Firebase Authentication y validado durante las pruebas manuales de acceso. & Cumplido \\
+\hline
+CU2 & Recuperar contraseña & Implementado mediante envío de correo de restablecimiento desde \texttt{AuthService} y accesible desde la pantalla de autenticación. & Cumplido \\
+\hline
+CU3 & Conectar cuenta con Spotify & Flujo OAuth con PKCE operativo a través de \texttt{/spotify/login-url}, \texttt{/spotify/exchange} y \texttt{/spotify/me}. & Cumplido \\
+\hline
+CU4 & Realizar una sesión musical contextual & Comprobado en los tres casos funcionales ejecutados, con check-in, recomendación, playlist y trazabilidad. & Cumplido \\
+\hline
+CU5 & Consultar historial personal & Disponible en la app mediante \texttt{history\_firestore\_service} y validado sobre colecciones de check-ins, playlists y feedback. & Cumplido \\
+\hline
+CU6 & Guardar un modo rápido & Implementado sobre la colección \texttt{saved\_preset\_modes} y disponible en el módulo de presets del cliente. & Cumplido \\
+\hline
+CU7 & Enviar feedback sobre una sesión & Validado en el cierre de sesión, con persistencia pública y privada y efecto posterior sobre el aprendizaje. & Cumplido \\
+\hline
+CU8 & Consultar aprendizaje personal & Cubierto por la pantalla de aprendizaje y por los documentos agregados en \texttt{user\_generation\_preferences}. & Cumplido \\
+\hline
+\end{tabularx}
+\caption{Comprobación de cobertura de los casos de uso principales.}
+\label{tab:cobertura_casos_uso}
+\end{table}
+
+\section{Pruebas no funcionales}
+\label{sec:pruebas_no_funcionales}
+
+Las pruebas no funcionales se han abordado desde cinco perspectivas: calidad
+técnica del código, robustez frente a dependencias externas, trazabilidad de la
+sesión, seguridad del dato y preparación del componente de aprendizaje.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{1.4cm}|Y|P{2.8cm}|P{3.1cm}|}
+\hline
+\textbf{ID} & \textbf{Comprobación} & \textbf{Requisito asociado} & \textbf{Resultado verificado} \\
+\hline
+NF1 & Análisis estático del cliente Flutter. & RNF1, RNF6 & Superado. \texttt{dart analyze} no devolvió incidencias. \\
+\hline
+NF2 & Compilación completa del backend Python. & RNF6, RNF7 & Superado. \texttt{compileall} recorrió rutas, servicios, esquemas y scripts sin error. \\
+\hline
+NF3 & Continuidad del sistema cuando Spotify limita búsquedas o reduce respuestas externas. & RNF5, RNF8 & Superado. El sistema mantiene el ranking sobre catálogo MSD, limita reintentos excesivos y preserva la trazabilidad del flujo. \\
+\hline
+NF4 & Persistencia protegida de datos emocionales en colecciones públicas y privadas. & RNF3, RNF4 & Superado. La arquitectura separa bloque público y bloque cifrado en Firestore. \\
+\hline
+NF5 & Disponibilidad condicionada del modelo supervisado por calidad, volumen de datos y umbral mínimo de confianza. & RNF7, RNF8, RNF9 & Superado. Existe control explícito mediante data gate, quality gate, umbral operativo de decisión y mantenimiento automático del modelo tras el feedback. \\
+\hline
+\end{tabularx}
+\caption{Resumen de pruebas no funcionales verificadas.}
+\label{tab:pruebas_no_funcionales}
+\end{table}
+
+La evidencia reunida combina análisis estático, compilación satisfactoria,
+suite automática de backend, trazas de ejecución y validación manual de flujos
+completos sobre la aplicación móvil. Con ello se ha cubierto de forma
+suficiente la validación funcional y técnica requerida para la entrega final.
+
+\section{Correcciones realizadas tras las pruebas}
+\label{sec:correcciones_pruebas}
+
+Las pruebas no solo han servido para confirmar comportamientos correctos, sino
+también para localizar y corregir fallos concretos del sistema.
+
+Una de las incidencias detectadas apareció en el cierre de feedback desde el
+cliente móvil. La app intentaba escribir en la colección \texttt{feedback} con
+un documento que no coincidía exactamente con las reglas activas de Firestore,
+lo que provocaba un error de permisos. La corrección consistió en alinear el
+payload enviado por el cliente con el esquema realmente permitido por
+\texttt{firestore.rules}, incluyendo los campos obligatorios y el nombre exacto
+del indicador de bloque cifrado.
+
+Otra corrección relevante ha afectado al flujo de generación de playlist cuando
+las búsquedas externas entran en rate limit. En lugar de quedar bloqueado
+durante esperas muy largas, el sistema acota reintentos, conserva el ranking
+musical construido sobre el catálogo MSD y mantiene un flujo de materialización
+controlado cuando es viable. Esto resulta coherente con la arquitectura final:
+Spotify ya no actúa como fuente principal de descubrimiento dinámico, sino como
+capa de autorización, contexto musical básico y materialización final.
+
+La validación del componente aprendido llevó a refinar la política
+de activación del modelo. La versión actual no se basa en desbloquear el
+aprendizaje tras un número fijo de sesiones, sino en exigir evidencia
+suficiente a nivel global y también para el estado emocional concreto que se
+pretende recomendar. Esto permitió alinear mejor el comportamiento del sistema
+con una explicación académica más prudente y más fiel al estado real de los
+datos.
+
+En esa misma línea se corrigió el comportamiento binario del aprendizaje por
+mood. Antes, si el estado emocional actual no superaba su puerta local,
+los pesos de aprendizaje podían caer a cero incluso cuando ya existía memoria
+global del usuario. La implementación actual sustituye ese salto rígido por una
+aplicación progresiva, apoyada en
+\texttt{mood\_learning\_application\_factor}, lo que permite representar mejor
+la transición entre contexto puro, aprendizaje parcial y perfil estable.
+
+También se automatizó el mantenimiento del modelo supervisado. El cierre del
+feedback dispara ahora una auditoría en segundo plano que compara el número de
+ejemplos etiquetados con los metadatos previos y decide si debe reentrenar o
+si puede omitir la operación. Esto eliminó la dependencia de comandos manuales
+para mantener el artefacto alineado con el conjunto real de
+\texttt{training\_session\_examples}.
+
+Una corrección adicional, relevante para la coherencia funcional del sistema,
+afectó al enlace entre la recomendación mostrada y la playlist realmente
+generada. En una versión intermedia del cliente, la llamada de generación podía
+arrastrar la preferencia de intensidad original del check-in en lugar de la
+intensidad final contenida en \texttt{recommended\_mode}. La versión actual ya
+alinea ambos pasos, de forma que la playlist se construye a partir del modo de
+sesión realmente recomendado y no de una preferencia previa potencialmente
+distinta.
+
+También se corrigió una incoherencia en el historial expuesto desde backend.
+El endpoint \texttt{/history/me} inicialmente reconstruía una vista parcial
+basada en estructuras en memoria, lo que podía divergir del estado persistido
+real de Firestore. La implementación actual lo alinea con la fuente documental
+persistida del usuario y deja el descifrado de los bloques privados en la capa
+cliente, que es donde reside la clave local.
+
+Durante la validación también se revisaron elementos de interfaz y
+persistencia que bloqueaban la experiencia, como desajustes de navegación,
+problemas de overflow visual y la correspondencia entre reglas de
+Firestore y documentos generados desde el cliente.
+
+\section{Caso de prueba longitudinal del componente de aprendizaje}
+\label{sec:caso_prueba_ml_evidencia}
+
+Además de validar la operatividad general de la aplicación, resultaba
+necesario comprobar que el componente de aprendizaje pudiera observarse como un
+proceso acumulativo en el tiempo y no solo como una afirmación teórica. Para
+ello se contrastaron trazas de inferencia, crecimiento del conjunto de
+entrenamiento y metadatos persistidos de un ciclo real de mantenimiento sobre
+la colección \texttt{training\_session\_examples}.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{1.6cm}|P{3.2cm}|Y|P{2.2cm}|}
+\hline
+\textbf{Fase} & \textbf{Comprobación} & \textbf{Evidencia observada} & \textbf{Resultado} \\
+\hline
+\textbf{T1} & Mantenimiento automático tras el feedback & El backend deja trazas \texttt{[ML MAINTENANCE] start}, \texttt{train} o \texttt{skip}, y persiste un artefacto de auditoría con fecha, ejemplos actuales y motivo de reentrenado u omisión. & Correcto \\
+\hline
+\textbf{T2} & Estado real del conjunto supervisado & La colección \texttt{training\_session\_examples} alcanzó \texttt{65} ejemplos etiquetados, con balance \texttt{53} útiles frente a \texttt{12} no útiles. & Correcto \\
+\hline
+\textbf{T3} & Disponibilidad del modelo global & Los metadatos indican \texttt{model\_gate\_passed = true}, \texttt{data\_gate\_passed = true} y \texttt{quality\_gate\_passed = true}, mientras que la configuración operativa del backend fija un umbral \texttt{min\_selected\_mode\_probability = 0.14}; en conjunto, esto confirma la activación del clasificador de sesión en ejecución real. & Correcto \\
+\hline
+\textbf{T4} & Aprendizaje individual observable & En la capa de aprendizaje por perfil, el sistema ya muestra aplicación completa (\texttt{mood\_learning\_application\_factor = 1.0}) y modo \texttt{stable\_weighted} para los bloques maduros de triste, estresado, cansado, neutral y feliz. & Correcto \\
+\hline
+\textbf{T5} & Activación integrada del flujo final & Una sesión real de foco/estresado ejecutada desde móvil físico dejó trazas \texttt{ml\_enabled = True}, \texttt{selection\_source = session\_ml}, \texttt{use\_environment = True} y finalizó con playlist creada correctamente en Spotify. & Correcto \\
+\hline
+\textbf{T6} & Distinción entre capas de aprendizaje & La evidencia confirma que la madurez del perfil individual y la activación del clasificador global son procesos relacionados pero no idénticos: el primero estabiliza pesos y afinidades del usuario, mientras que el segundo aporta reordenación probabilística sobre candidatos de modo. & Correcto \\
+\hline
+\end{tabularx}
+\caption{Caso de prueba longitudinal del componente de aprendizaje con evidencia real de mantenimiento, activación supervisada y aprendizaje individual.}
+\label{tab:caso_prueba_ml_longitudinal}
+\end{table}
+
+La tabla anterior permite verificar tres hechos relevantes. En primer lugar, el
+aprendizaje supervisado global ya puede activarse con evidencia operativa real
+y trazable. En segundo lugar, el mantenimiento automático del backend hace que
+esa activación no dependa de una intervención manual, sino de una auditoría
+reproducible tras el feedback. En tercer lugar, la activación del clasificador
+global no elimina la capa individual del usuario, donde siguen apareciendo
+modos como \texttt{stable\_weighted} y factores de aplicación completa para los
+cinco moods observados en el perfil único.
+
+\section{Síntesis final de la validación del aprendizaje}
+\label{sec:sintesis_final_aprendizaje}
+
+La evidencia acumulada permite cerrar la validación con una lectura clara del
+estado actual del sistema. Harmony Hub ya muestra aprendizaje individual del
+perfil plenamente observable en los cinco estados emocionales trabajados
+(triste, estresado, cansado, neutral y
+feliz), con trazas longitudinales que permiten ver tanto la maduración
+gradual de algunos bloques como la transición desde fases prudentes de
+aplicación parcial hasta modos estables con factor completo.
+
+Además, la implementación ya no se limita a conservar el clasificador
+supervisado como componente integrado pero inactivo. El conjunto actual, con 65
+ejemplos etiquetados, balance suficiente entre clases y cobertura completa por
+mood, permite activar el modelo global en ejecución real y observar cómo
+participa en la selección del modo de sesión cuando la confianza supera el
+umbral operativo configurado. Por tanto, la validación final no concluye ya
+solo que el sistema aprende, sino que demuestra también que la capa
+supervisada interviene de manera trazable y compatible con el carácter híbrido
+de la arquitectura.
+
+\section{Resultados y discusión}
+\label{sec:resultados_discusion}
+
+La validación realizada permite sostener, en primer lugar, que Harmony Hub ha
+alcanzado un grado de operatividad suficiente como sistema funcional completo.
+El flujo formado por autenticación, check-in, recomendación, generación de
+playlist, persistencia, historial y cierre con feedback se ha ejecutado de
+extremo a extremo sobre la aplicación móvil y el backend real, con evidencia
+reproducible tanto en la interfaz como en las trazas técnicas del sistema.
+
+Esa misma validación permite defender además que el proyecto ya cumple tres
+propiedades que al inicio solo podían plantearse como objetivo de diseño. La
+primera es que el entorno acústico funciona de forma efectiva dentro del
+pipeline de personalización, ya que se ha observado en ejecución real con uso
+activado, fuerza de influencia positiva y consultas auxiliares asociadas al
+contexto detectado. La segunda es que los inputs del usuario se mantienen
+controlados y consistentes, al recogerse mediante opciones cerradas y al quedar
+validados y persistidos en estructuras documentales alineadas entre cliente y
+backend. La tercera es que el flujo completo del sistema resulta trazable de
+extremo a extremo, porque cada sesión deja enlazados su check-in, su
+recomendación, su playlist generada, su feedback y su efecto posterior sobre el
+aprendizaje.
+
+En segundo lugar, los resultados confirman que la capa de aprendizaje no debe
+interpretarse como un bloque único, sino como dos mecanismos complementarios.
+El aprendizaje individual del perfil musical ofrece una adaptación observable y
+estable en los cinco estados emocionales principales del proyecto, mientras que
+el clasificador supervisado global ya puede entrar en ejecución real cuando la
+sesión presenta condiciones compatibles con su puerta de calidad y con su
+umbral operativo de confianza. Esta distinción aporta valor metodológico porque
+permite mostrar, dentro de una misma solución, tanto personalización
+progresiva como intervención supervisada prudente.
+
+En tercer lugar, la discusión de resultados pone de manifiesto una consecuencia
+relevante del diseño adoptado: incluso con el modelo global activo, la utilidad
+del sistema no depende de que toda la decisión recaiga sobre el clasificador.
+La arquitectura híbrida basada en catálogo estructurado, reglas contextuales,
+perfil aprendido y materialización real en Spotify mantiene un comportamiento
+explicable y estable. El modelo supervisado añade capacidad de reordenación,
+pero sigue operando dentro de un marco trazable de umbrales, deltas y
+abstenciones locales.
+
+Por último, la validación también delimita con claridad los márgenes de mejora.
+La principal restricción ya no se encuentra en la implementación del flujo
+funcional ni en la ausencia de evidencia longitudinal, sino en la posibilidad de
+seguir refinando la separación estadística entre clases y la calibración del
+modelo conforme crezcan los datos supervisados. A partir de esta observación,
+el proyecto puede considerarse cerrado como sistema híbrido entregable y, al
+mismo tiempo, abierto como base experimentable para futuras iteraciones
+centradas en fortalecer todavía más el componente global.

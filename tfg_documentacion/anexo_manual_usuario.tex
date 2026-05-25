@@ -1,0 +1,141 @@
+\chapter{Manual de usuario}
+\label{anexo:manual_usuario}
+
+Este anexo describe el uso básico de Harmony Hub desde el punto de vista de una
+persona usuaria final.
+
+\section{Requisitos previos}
+\label{sec:manual_usuario_requisitos}
+
+Para utilizar la aplicación se necesita:
+
+\begin{itemize}
+    \item un dispositivo Android con la aplicación instalada;
+    \item conexión a Internet;
+    \item una cuenta de usuario autenticable en la app;
+    \item una cuenta de Spotify para generar playlists reales;
+    \item permiso de micrófono únicamente si se quiere analizar el entorno.
+\end{itemize}
+
+No es necesario conceder acceso al micrófono para completar el flujo principal,
+ya que el análisis del entorno es opcional.
+
+\section{Instalación o acceso}
+\label{sec:manual_usuario_instalacion}
+
+En el entregable actual, la aplicación se encuentra instalada en un dispositivo
+Android físico. El acceso para la persona usuaria consiste simplemente en abrir
+la app, iniciar sesión y trabajar con ella desde el móvil.
+
+Para que el flujo completo funcione con generación de playlists reales, el
+backend debe estar activo en la infraestructura de demostración y accesible
+desde la misma red que el dispositivo. Esta dependencia no afecta al uso normal
+de la interfaz, pero sí a la creación de playlists y al cierre completo del
+ciclo con Spotify.
+
+Una vez abierta la app, el flujo inicial es:
+
+\begin{enumerate}
+    \item iniciar sesión o registrarse;
+    \item acceder a la pantalla principal;
+    \item conectar la cuenta de Spotify cuando la app lo solicite;
+    \item volver al inicio para comenzar un check-in.
+\end{enumerate}
+
+\section{Uso básico}
+\label{sec:manual_usuario_uso_basico}
+
+El flujo de uso normal puede resumirse en seis pasos:
+
+\begin{enumerate}
+    \item \textbf{Iniciar un check-in.} El usuario accede a la pantalla de
+    check-in y responde preguntas breves sobre su momento actual.
+    \item \textbf{Indicar el objetivo de la sesión.} Puede elegir, por ejemplo,
+    foco, relajación o energía.
+    \item \textbf{Ajustar preferencias.} La app permite indicar intensidad,
+    preferencia vocal, nivel de exploración, popularidad deseada y resultado
+    esperado.
+    \item \textbf{Analizar el entorno si se desea.} Opcionalmente puede medir
+    el contexto acústico del momento.
+    \item \textbf{Generar la recomendación.} La aplicación muestra la sesión
+    sugerida y, si el usuario la acepta, permite crear la playlist real.
+    \item \textbf{Cerrar con feedback.} Tras escuchar la playlist, el usuario
+    puede valorar si le resultó útil y cómo terminó la sesión.
+\end{enumerate}
+
+\section{Funcionalidades principales}
+\label{sec:manual_usuario_funcionalidades}
+
+\subsection*{Check-in contextual}
+
+Permite describir el momento actual del usuario mediante una interacción breve.
+Es la puerta de entrada del sistema y condiciona la recomendación posterior.
+
+\subsection*{Recomendación de sesión}
+
+La app devuelve un modo sugerido y una explicación funcional del perfil
+musical esperado. Esta recomendación puede apoyarse en reglas contextuales y,
+cuando existe evidencia suficiente, en aprendizaje acumulado.
+
+\subsection*{Generación de playlist en Spotify}
+
+Si la cuenta está conectada correctamente, la recomendación puede materializarse
+como playlist real dentro de Spotify. La aplicación crea la lista y enlaza su
+identificador con la sesión correspondiente.
+
+\subsection*{Historial}
+
+El usuario puede revisar sesiones anteriores, playlists generadas y parte de la
+trazabilidad funcional acumulada.
+
+\subsection*{Aprendizaje personal}
+
+La app muestra información resumida sobre el aprendizaje del sistema respecto a
+las preferencias del usuario, incluyendo pesos contextuales y estables cuando
+existe suficiente actividad acumulada.
+
+\subsection*{Modos guardados}
+
+Para situaciones recurrentes, el sistema permite conservar accesos o modos
+rápidos, de forma que no sea necesario repetir siempre la misma interacción
+desde cero.
+
+\section{Resolución de problemas frecuentes}
+\label{sec:manual_usuario_problemas}
+
+\subsection*{No se puede conectar Spotify}
+
+Comprobar que:
+
+\begin{itemize}
+    \item la cuenta de Spotify ha aceptado la autorización;
+    \item la redirección OAuth está bien configurada;
+    \item el backend de demostración está en ejecución y accesible desde la red local;
+    \item la conexión de red está disponible.
+\end{itemize}
+
+\subsection*{La recomendación se genera, pero la playlist falla}
+
+Esto suele estar relacionado con restricciones externas de Spotify, problemas
+temporales de materialización o falta de conectividad con el backend. En ese
+caso conviene:
+
+\begin{itemize}
+    \item esperar unos minutos si hubo demasiadas búsquedas seguidas;
+    \item volver a intentar la generación más tarde;
+    \item comprobar que el móvil mantiene conectividad con la red de la demostración;
+    \item comprobar que la cuenta de Spotify sigue conectada.
+\end{itemize}
+
+\subsection*{El entorno no se analiza}
+
+Si no se ha concedido permiso de micrófono, la app seguirá funcionando, pero
+sin apoyo acústico del entorno. Basta con conceder permiso cuando se quiera
+utilizar esa funcionalidad.
+
+\subsection*{No se aprecia aprendizaje todavía}
+
+El sistema puede funcionar desde la primera sesión, pero la personalización
+aprendida necesita varias sesiones cerradas con feedback. Si el usuario todavía
+no ve cambios claros, conviene seguir completando sesiones y aportar feedback
+útil al final de cada una.

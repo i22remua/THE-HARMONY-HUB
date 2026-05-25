@@ -1,0 +1,244 @@
+{
+  "executed_at": "2026-05-25T16:04:05.127662+00:00",
+  "current_labeled_examples": 66,
+  "previous_metadata_examples": 65,
+  "trained": true,
+  "skipped_reason": null,
+  "train_result": {
+    "trained": true,
+    "reason": "trained",
+    "collection_name": "training_session_examples",
+    "total_examples": 66,
+    "class_counts": {
+      "1": 54,
+      "0": 12
+    },
+    "cv_folds": 5,
+    "metrics": {
+      "balanced_accuracy_mean": 0.5658,
+      "balanced_accuracy_std": 0.194,
+      "roc_auc_mean": 0.5818,
+      "roc_auc_std": 0.2128,
+      "f1_mean": 0.8194,
+      "f1_std": 0.079
+    },
+    "quality_score": 62.21,
+    "quality_gate_passed": true,
+    "quality_reason": "quality_gate_passed",
+    "decision_thresholds": {
+      "calibration_method": "oof_f1_threshold",
+      "cv_folds": 5,
+      "min_selected_mode_probability": 0.14,
+      "oof_recommended_threshold": 0.083,
+      "oof_positive_precision": 0.8154,
+      "oof_positive_recall": 0.9815,
+      "oof_positive_f1": 0.8908,
+      "oof_positive_coverage": 0.9697,
+      "oof_positive_base_rate": 0.8182,
+      "calibration_ready": true
+    },
+    "mood_coverage": {
+      "quality_gate_passed": true,
+      "coverage_ratio": 1.0,
+      "average_quality_score": 69.77,
+      "overall_quality_score": 88.91,
+      "moods_observed": 5,
+      "moods_ready": 5,
+      "overall_observation_strength": 0.9744,
+      "per_mood": {
+        "cansado": {
+          "total_examples": 12,
+          "positive_count": 10,
+          "negative_count": 2,
+          "unique_recommended_modes": 3,
+          "observation_strength": 0.8647,
+          "label_balance": 0.3333,
+          "mode_diversity": 0.7769,
+          "quality_score": 65.68,
+          "quality_gate_passed": true
+        },
+        "estresado": {
+          "total_examples": 16,
+          "positive_count": 13,
+          "negative_count": 3,
+          "unique_recommended_modes": 5,
+          "observation_strength": 0.9305,
+          "label_balance": 0.375,
+          "mode_diversity": 0.9179,
+          "quality_score": 73.29,
+          "quality_gate_passed": true
+        },
+        "feliz": {
+          "total_examples": 9,
+          "positive_count": 7,
+          "negative_count": 2,
+          "unique_recommended_modes": 6,
+          "observation_strength": 0.7769,
+          "label_balance": 0.4444,
+          "mode_diversity": 0.9502,
+          "quality_score": 70.39,
+          "quality_gate_passed": true
+        },
+        "neutral": {
+          "total_examples": 12,
+          "positive_count": 10,
+          "negative_count": 2,
+          "unique_recommended_modes": 4,
+          "observation_strength": 0.8647,
+          "label_balance": 0.3333,
+          "mode_diversity": 0.8647,
+          "quality_score": 67.87,
+          "quality_gate_passed": true
+        },
+        "triste": {
+          "total_examples": 17,
+          "positive_count": 14,
+          "negative_count": 3,
+          "unique_recommended_modes": 4,
+          "observation_strength": 0.9412,
+          "label_balance": 0.3529,
+          "mode_diversity": 0.8647,
+          "quality_score": 71.62,
+          "quality_gate_passed": true
+        }
+      }
+    },
+    "model_ready": true,
+    "feature_columns": [
+      "stress_level",
+      "energy_level",
+      "session_duration_min",
+      "goal",
+      "mood",
+      "noise_category",
+      "vocal_preference",
+      "intensity_preference",
+      "exploration_preference",
+      "popularity_preference",
+      "desired_outcome",
+      "recommended_mode",
+      "target_energy",
+      "target_valence",
+      "target_bpm_range",
+      "catalog_noise_category",
+      "use_environment"
+    ]
+  },
+  "audit": {
+    "collection": "training_session_examples",
+    "examples_total_in_firestore": 66,
+    "examples_with_label": 66,
+    "class_counts": {
+      "1": 54,
+      "0": 12
+    },
+    "minimum_total_examples_required": 40,
+    "minimum_examples_per_class_required": 8,
+    "model_available_now": true,
+    "top_goals": {
+      "energia": 28,
+      "relajacion": 22,
+      "foco": 16
+    },
+    "top_modes": {
+      "energia_triste_media": 13,
+      "relajacion_estresado_suave": 7,
+      "foco_estresado_media": 6,
+      "relajacion_neutral_suave": 6,
+      "energia_cansado_media": 5,
+      "relajacion_cansado_suave": 4,
+      "energia_neutral_media": 4,
+      "energia_feliz_alta": 3,
+      "foco_cansado_suave": 3,
+      "relajacion_triste_suave": 2
+    },
+    "metadata_summary": {
+      "trained_at": "2026-05-25T16:04:04.986259+00:00",
+      "total_examples": 66,
+      "class_counts": {
+        "1": 54,
+        "0": 12
+      },
+      "data_gate_passed": true,
+      "model_gate_passed": true,
+      "model_readiness_reason": "model_gate_passed",
+      "quality_gate_passed": true,
+      "readiness_reason": "quality_gate_passed",
+      "quality_score": 62.21,
+      "metrics": {
+        "balanced_accuracy_mean": 0.5658,
+        "balanced_accuracy_std": 0.194,
+        "roc_auc_mean": 0.5818,
+        "roc_auc_std": 0.2128,
+        "f1_mean": 0.8194,
+        "f1_std": 0.079
+      },
+      "mood_coverage": {
+        "quality_gate_passed": true,
+        "coverage_ratio": 1.0,
+        "average_quality_score": 69.77,
+        "overall_quality_score": 88.91,
+        "moods_observed": 5,
+        "moods_ready": 5,
+        "overall_observation_strength": 0.9744,
+        "per_mood": {
+          "cansado": {
+            "total_examples": 12,
+            "positive_count": 10,
+            "negative_count": 2,
+            "unique_recommended_modes": 3,
+            "observation_strength": 0.8647,
+            "label_balance": 0.3333,
+            "mode_diversity": 0.7769,
+            "quality_score": 65.68,
+            "quality_gate_passed": true
+          },
+          "estresado": {
+            "total_examples": 16,
+            "positive_count": 13,
+            "negative_count": 3,
+            "unique_recommended_modes": 5,
+            "observation_strength": 0.9305,
+            "label_balance": 0.375,
+            "mode_diversity": 0.9179,
+            "quality_score": 73.29,
+            "quality_gate_passed": true
+          },
+          "feliz": {
+            "total_examples": 9,
+            "positive_count": 7,
+            "negative_count": 2,
+            "unique_recommended_modes": 6,
+            "observation_strength": 0.7769,
+            "label_balance": 0.4444,
+            "mode_diversity": 0.9502,
+            "quality_score": 70.39,
+            "quality_gate_passed": true
+          },
+          "neutral": {
+            "total_examples": 12,
+            "positive_count": 10,
+            "negative_count": 2,
+            "unique_recommended_modes": 4,
+            "observation_strength": 0.8647,
+            "label_balance": 0.3333,
+            "mode_diversity": 0.8647,
+            "quality_score": 67.87,
+            "quality_gate_passed": true
+          },
+          "triste": {
+            "total_examples": 17,
+            "positive_count": 14,
+            "negative_count": 3,
+            "unique_recommended_modes": 4,
+            "observation_strength": 0.9412,
+            "label_balance": 0.3529,
+            "mode_diversity": 0.8647,
+            "quality_score": 71.62,
+            "quality_gate_passed": true
+          }
+        }
+      }
+    }
+  }
+}

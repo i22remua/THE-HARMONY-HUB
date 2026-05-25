@@ -1,0 +1,29 @@
+3.1
+- Añadida página en blanco entre portada y dedicatoria
+
+3.2
+- logo UCO actual
+- Cambio de lugar de la sección planos
+- Mejora formato tabla presupuesto
+- En la sección "ejemplos latex" se explica como poner el título de una figura para que sea distinto el que aparece en la lista de figuras del que aparece en el texto.
+- Se ha modificado la estructura de las referencias online en el archivo .bib para que aparezca la fecha del último acceso.
+
+3.3
+- Hojas de datasheet con varias páginas. Si se ponen varias páginas aparecía el título de la sección para cada una de ellas.
+
+3.4
+- Se ha actualizado la información de la portada para que tenga el mismo formato que la plantilla de la EPSC.
+
+3.5
+- Aplicar el formato letra T1 solo a la portada.
+
+3.6 (20/02/2026)
+- Se ha añadido el Anexo V (originalidad) después de la portada en formato PDF
+
+3.7 (14/03/2026)
+- Se ha añadido el Anexo V (originalidad) después de la portada en formato LATEX. Así puede ser firmado cuando se genere el PDF final.
+4.0 (adaptación asistida)
+- Reestructurada la plantilla para ajustarla al índice mínimo del TFG de tipo b de la Guía de Desarrollo del TFG GII 2025/2026.
+- Añadidos capítulos de antecedentes, análisis del problema, diseño, desarrollo, pruebas, planificación y conclusiones.
+- Añadida guía rápida de relleno en GUIA_RELLENO.md.
+- Actualizada portada para Ingeniería Informática y campos genéricos de datos del proyecto.

@@ -1,0 +1,195 @@
+\chapter{Manual de código y repositorio}
+\label{anexo:manual_codigo}
+
+Este anexo resume cómo está organizado el código de Harmony Hub y qué pasos son
+necesarios para ejecutar, comprobar y mantener el proyecto en su estado final.
+
+\section{Repositorio}
+\label{sec:repositorio}
+
+El código fuente se entrega junto a la memoria en formato de repositorio Git y
+como estructura completa de proyecto. La versión evaluada corresponde al estado
+final entregado del directorio \texttt{harmony-hub}, compuesto por dos bloques
+principales:
+
+\begin{itemize}
+    \item \texttt{harmonyhub/}: cliente móvil desarrollado con Flutter;
+    \item \texttt{backend\_fastapi/}: backend FastAPI, catálogo musical,
+    servicios de recomendación, capa de aprendizaje y pruebas automáticas.
+\end{itemize}
+
+\section{Estructura del proyecto}
+\label{sec:estructura_codigo}
+
+La organización general del repositorio puede resumirse así:
+
+\begin{verbatim}
+/harmony-hub
+  /backend_fastapi
+    /app
+      /api
+      /core
+      /data
+      /ml
+      /schemas
+      /services
+    /tests
+    /tools
+    requirements.txt
+  /harmonyhub
+    /lib
+      /app
+      /core
+      /features
+      /shared
+    pubspec.yaml
+  /tfg_documentacion
+  README.md
+\end{verbatim}
+
+Los directorios más relevantes desde el punto de vista técnico son los
+siguientes:
+
+\begin{itemize}
+    \item \texttt{backend\_fastapi/app/api}: rutas HTTP del backend.
+    \item \texttt{backend\_fastapi/app/services}: lógica de recomendación,
+    integración con Spotify, aprendizaje, Firestore y servicios auxiliares.
+    \item \texttt{backend\_fastapi/app/ml}: entrenamiento del modelo de sesión
+    y artefactos persistidos.
+    \item \texttt{backend\_fastapi/app/data}: catálogo local
+    \texttt{msd\_tracks.jsonl}.
+    \item \texttt{backend\_fastapi/tests}: suite automática del backend.
+    \item \texttt{backend\_fastapi/tools}: scripts manuales de importación,
+    mantenimiento y generación de informes.
+    \item \texttt{harmonyhub/lib/features}: organización funcional del cliente
+    móvil por pantallas y casos de uso.
+\end{itemize}
+
+\section{Instalación del entorno de desarrollo}
+\label{sec:instalacion_entorno_codigo}
+
+Para ejecutar el backend se necesita Python 3.13 o compatible, junto con un
+entorno virtual local. La instalación básica es:
+
+\begin{minted}[fontsize=\small, breaklines]{bash}
+cd backend_fastapi
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+\end{minted}
+
+Para el cliente móvil se necesita Flutter estable y el SDK de Dart asociado:
+
+\begin{minted}[fontsize=\small, breaklines]{bash}
+cd harmonyhub
+flutter pub get
+\end{minted}
+
+Además, el proyecto requiere disponer de:
+
+\begin{itemize}
+    \item un fichero \texttt{backend\_fastapi/.env} con las variables del
+    backend;
+    \item configuración válida de Firebase/Firestore;
+    \item credenciales de aplicación Spotify y redirección OAuth configurada;
+    \item un proyecto Flutter operativo con acceso a Firebase en el cliente.
+\end{itemize}
+
+\section{Ejecución}
+\label{sec:ejecucion_codigo}
+
+\subsection*{Backend}
+
+El backend puede arrancarse en local con:
+
+\begin{minted}[fontsize=\small, breaklines]{bash}
+cd backend_fastapi
+source .venv/bin/activate
+./.venv/bin/python -m uvicorn app.main:app --reload
+\end{minted}
+
+\subsection*{Frontend}
+
+La aplicación Flutter puede ejecutarse con:
+
+\begin{minted}[fontsize=\small, breaklines]{bash}
+cd harmonyhub
+flutter run
+\end{minted}
+
+\subsection*{Servicios necesarios}
+
+Para utilizar el flujo completo deben estar disponibles:
+
+\begin{itemize}
+    \item el backend FastAPI en local;
+    \item Firestore con reglas desplegadas y acceso autenticado;
+    \item una cuenta Spotify conectable desde la app;
+    \item conectividad de red para la materialización final de playlists.
+\end{itemize}
+
+\section{Pruebas automáticas}
+\label{sec:pruebas_automaticas_codigo}
+
+En el estado actual del proyecto se utilizan varias comprobaciones técnicas.
+
+\subsection*{Backend}
+
+\begin{minted}[fontsize=\small, breaklines]{bash}
+cd backend_fastapi
+source .venv/bin/activate
+./.venv/bin/python -m unittest discover -s tests
+\end{minted}
+
+La suite del backend valida servicios de recomendación, aprendizaje, catálogo,
+automatización de mantenimiento y componentes auxiliares. En el estado actual
+del repositorio, esta suite alcanza 38 pruebas superadas.
+
+\subsection*{Comprobación sintáctica de backend}
+
+\begin{minted}[fontsize=\small, breaklines]{bash}
+cd backend_fastapi
+./.venv/bin/python -m py_compile app/main.py
+\end{minted}
+
+\subsection*{Cliente Flutter}
+
+\begin{minted}[fontsize=\small, breaklines]{bash}
+cd harmonyhub
+dart analyze
+flutter test
+\end{minted}
+
+\section{Fragmentos de código relevantes}
+\label{sec:fragmentos_codigo}
+
+Más que incluir listados extensos, resulta más útil señalar los puntos de
+entrada clave del proyecto:
+
+\begin{itemize}
+    \item \texttt{backend\_fastapi/app/services/}\allowbreak
+    \texttt{recommender\_service.py}:
+    generación de candidatos de sesión y decisión contextual.
+    \item \texttt{backend\_fastapi/app/services/}\allowbreak
+    \texttt{professional\_playlist\_}\allowbreak
+    \texttt{model\_service.py}:
+    construcción del perfil musical operativo y ranking sobre catálogo.
+    \item \texttt{backend\_fastapi/app/services/}\allowbreak
+    \texttt{session\_mode\_ml\_service.py}:
+    carga del clasificador, puertas de calidad y reordenado supervisado.
+    \item \texttt{backend\_fastapi/app/ml/}\allowbreak
+    \texttt{train\_ranking\_model.py}:
+    entrenamiento del pipeline supervisado con regresión logística.
+    \item \texttt{harmonyhub/lib/features/checkin/}:
+    captura del contexto del usuario en el cliente.
+    \item \texttt{harmonyhub/lib/features/}\allowbreak
+    \texttt{recommendation/} y
+    \texttt{harmonyhub/lib/features/}\allowbreak
+    \texttt{spotify/}: presentación de la recomendación
+    y creación de la playlist real.
+\end{itemize}
+
+La lectura conjunta de estos módulos permite seguir el flujo técnico principal:
+captura del contexto, recomendación de sesión, proyección sobre
+\texttt{msd\_tracks}, materialización en Spotify, feedback y mantenimiento del
+aprendizaje.

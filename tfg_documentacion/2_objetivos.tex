@@ -1,0 +1,56 @@
+\chapter{Objetivos}
+\label{ch:objetivos}
+
+% Deben coincidir con los objetivos aprobados en la solicitud/anteproyecto del TFG.
+
+\section{Objetivo general}
+\label{sec:objetivo_general}
+
+El objetivo general de este Trabajo Fin de Grado es analizar, diseñar y desarrollar una plataforma móvil inteligente que ayude al usuario a convertir su estado emocional y contextual del momento en una experiencia musical más útil para su bienestar cotidiano, mediante recomendaciones de sesión, un catálogo musical estructurado y playlists adaptativas materializadas en Spotify.
+
+De forma más concreta, se persigue construir una solución funcional que no se limite a recomendar música por afinidad histórica, sino que sea capaz de interpretar el momento presente del usuario, acompañarlo con una propuesta musical coherente y aprender progresivamente a partir del uso y del feedback recibido.
+
+\section{Objetivos específicos}
+\label{sec:objetivos_especificos}
+
+\begin{enumerate}[label=OE\arabic*.]
+    \item Analizar el problema de la regulación cotidiana mediante música en entornos digitales y definir los requisitos funcionales y no funcionales que debe cumplir una solución centrada en este caso de uso.
+    \item Diseñar una arquitectura software compuesta por aplicación móvil, backend e integración con servicios externos que permita sostener de forma clara y escalable el flujo completo del sistema.
+    \item Implementar una aplicación móvil usable que permita al usuario registrarse, autenticarse, realizar un check-in breve, consultar su historial y navegar por la experiencia sin fricción innecesaria.
+    \item Desarrollar un mecanismo de recomendación de sesión capaz de transformar variables como el estado de ánimo, la energía, el estrés percibido o la intención del usuario en una propuesta musical contextualizada, explicable y apoyada en un catálogo propio.
+    \item Integrar la plataforma con Spotify para que las recomendaciones generadas puedan materializarse en playlists reales, reproducibles y asociadas a la cuenta del usuario sin delegar en la API externa la fase central de ranking musical.
+    \item Incorporar un ciclo de aprendizaje basado en feedback, persistencia de datos e indicadores objetivos que permita afinar progresivamente la personalización en dos niveles: un aprendizaje individual del perfil del usuario, visible en la experiencia, y un modelo supervisado a nivel de sesión cuya activación quede condicionada por puertas explícitas de datos, calidad global y confianza operativa en la sesión concreta.
+    \item Validar la solución construida mediante pruebas funcionales, revisión de flujos completos de uso y métricas objetivas en los componentes de aprendizaje, con el fin de comprobar que el sistema responde de forma coherente a los objetivos planteados.
+\end{enumerate}
+
+\section{Relación entre objetivos y resultados esperados}
+\label{sec:objetivos_resultados}
+
+El cumplimiento de los objetivos anteriores no se evaluará solo desde una perspectiva descriptiva, sino a través de resultados observables dentro del sistema desarrollado. Esto permite conectar cada objetivo con una evidencia concreta y, además, preparar mejor la validación posterior del proyecto.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{1.6cm}|p{6cm}|p{6cm}|}
+\hline
+\textbf{Objetivo} & \textbf{Resultado esperado} & \textbf{Evidencia de cumplimiento} \\
+\hline
+OE1 & Definición clara del problema, de los actores implicados y de los requisitos del sistema. & Capítulo~\ref{ch:analisis_problema}, con requisitos funcionales, no funcionales, casos de uso y restricciones. \\
+\hline
+OE2 & Propuesta arquitectónica coherente para articular frontend, backend, datos e integraciones externas. & Capítulo~\ref{ch:diseno_solucion}, con la arquitectura general, diseño funcional y decisiones técnicas justificadas. \\
+\hline
+OE3 & Aplicación móvil operativa con flujos de acceso, check-in, navegación principal, historial y perfil. & Capítulo~\ref{ch:desarrollo_implementacion}, demostración de pantallas implementadas y pruebas funcionales del flujo de uso. \\
+\hline
+OE4 & Generación de recomendaciones de sesión a partir del contexto declarado por el usuario. & Implementación del flujo check-in $\rightarrow$ recomendación y validación del comportamiento del sistema en el Capítulo~\ref{ch:pruebas_validacion}. \\
+\hline
+OE5 & Creación de playlists reales dentro de Spotify a partir de la recomendación generada. & Integración backend--Spotify, resolución de canciones desde el catálogo propio y comprobación del flujo completo desde la app hasta la cuenta del usuario. \\
+\hline
+OE6 & Persistencia del historial, recogida de feedback y activación controlada de aprendizaje progresivo. & Registro de sesiones y feedback, almacenamiento en base de datos, señales observables del aprendizaje individual del perfil y métricas objetivas del modelo de sesión, incluyendo puertas de calidad globales y específicas por mood. \\
+\hline
+OE7 & Evidencia de que la solución responde de forma estable a los objetivos del TFG. & Pruebas funcionales, revisión de incidencias corregidas, validación del flujo completo y análisis de métricas del sistema en el Capítulo~\ref{ch:pruebas_validacion}. \\
+\hline
+\end{tabular}
+\caption{Relación entre los objetivos específicos y los resultados esperados del proyecto.}
+\label{tab:objetivos_resultados}
+\end{table}
+
+De este modo, cada objetivo queda vinculado a una salida concreta del proyecto: análisis, arquitectura, implementación, integración, aprendizaje o validación. Ésta trazabilidad resulta especialmente útil en un trabajo como Harmony Hub, donde la calidad de la propuesta no depende solo de que la aplicación exista, sino de que el conjunto de piezas funcione como una experiencia coherente y justificable.

@@ -1,0 +1,159 @@
+\chapter{Conclusiones y trabajos futuros}
+\label{ch:conclusiones}
+
+% Este capítulo cubre el apartado "Conclusiones" de la guía: logros obtenidos y
+% sugerencias de mejoras o ampliaciones futuras.
+
+\section{Conclusiones}
+\label{sec:conclusiones}
+
+Harmony Hub ha permitido materializar una solución funcional para un problema
+que suele quedar desatendido en los servicios musicales generalistas: traducir
+un momento concreto del usuario a una propuesta musical con intención
+funcional, trazabilidad y capacidad de adaptación progresiva. El resultado no
+es únicamente una aplicación móvil conectada con Spotify, sino una arquitectura
+híbrida en la que conviven contexto, reglas explícitas, catálogo musical
+estructurado, aprendizaje individual del perfil y un clasificador supervisado
+global deliberadamente prudente.
+
+Desde el punto de vista técnico, el trabajo demuestra que es viable construir
+una experiencia completa a partir de un flujo breve de check-in, una capa de
+recomendación explicable y una materialización final en una plataforma real de
+escucha. Desde el punto de vista metodológico, el proyecto aporta una
+implementación donde el aprendizaje no se fuerza desde el principio, sino que
+se reparte en dos niveles: una capa individual que ya puede madurar y hacerse
+visible en la experiencia del usuario, y una capa supervisada global que solo
+entra cuando existe evidencia suficiente y que deja trazas auditables de
+cuándo actúa, cuándo se abstiene y por qué.
+
+La aportación principal del TFG no reside en competir con motores comerciales a
+gran escala, sino en integrar en una misma solución móvil la dimensión
+contextual, el uso cotidiano de la música para regularse y un aprendizaje
+progresivo que puede justificarse académicamente.
+
+El estado actual del proyecto refuerza además una idea importante para su
+defensa: el resultado alcanzado no es un sistema bloqueado por falta de ML,
+sino una aplicación que ya personaliza de forma observable mediante
+aprendizaje individual del perfil y que activa la capa supervisada global
+cuando la evidencia acumulada y la confianza local de la sesión lo justifican.
+La trazabilidad del sistema permite mostrar no solo cuándo interviene el
+modelo, sino también con qué probabilidad, con qué umbral y con qué peso
+respecto a la heurística base.
+
+\section{Cumplimiento de objetivos}
+\label{sec:cumplimiento_objetivos}
+
+Los objetivos planteados al inicio del trabajo pueden considerarse cumplidos en
+un grado suficiente para una entrega funcional y defendible. La Tabla
+\ref{tab:cumplimiento_objetivos} resume esta evaluación.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{3.1cm}|Y|P{2.2cm}|}
+\hline
+\textbf{Objetivo} & \textbf{Evidencia de cumplimiento} & \textbf{Estado} \\
+\hline
+Diseñar una app capaz de recoger el contexto del usuario mediante un check-in breve y usable. & La aplicación móvil implementa acceso, check-in guiado, medición opcional del entorno y navegación completa de sesión. Las pruebas funcionales verifican el flujo de extremo a extremo. & Cumplido \\
+\hline
+Generar recomendaciones de sesión y playlists reales adaptadas al contexto. & El backend construye candidatos de modo, genera un perfil musical y materializa playlists reales en Spotify. Se validaron casos operativos en relajación, foco y energía. & Cumplido \\
+\hline
+Incorporar persistencia, historial y trazabilidad completa entre recomendación, playlist y feedback. & Firestore almacena sesiones, playlists, feedback y documentos auxiliares de aprendizaje. La traza funcional queda enlazada mediante identificadores de sesión y recomendación. & Cumplido \\
+\hline
+Integrar aprendizaje progresivo basado en feedback real. & El sistema mantiene aprendizaje individual visible mediante pesos contextuales y estables, además de estructuras agregadas en \texttt{user\_generation\_preferences} y ejemplos de entrenamiento a nivel de sesión. & Cumplido \\
+\hline
+Explorar un modelo supervisado defendible y prudente para apoyar la selección de modo. & Se implementó un pipeline con regresión logística, validación cruzada cuando es posible, puertas de datos y calidad, mantenimiento automático, umbral operativo de confianza y evidencias de activación real en sesiones finales de validación. & Cumplido \\
+\hline
+\end{tabularx}
+\caption{Cumplimiento de los objetivos principales del TFG.}
+\label{tab:cumplimiento_objetivos}
+\end{table}
+
+El último objetivo puede considerarse cumplido porque el sistema ya no se
+limita a implementar el pipeline, sino que demuestra activación real del
+clasificador de sesión dentro del flujo operativo de la app. Aun así, conviene
+subrayar que este cumplimiento no sustituye el carácter híbrido del sistema:
+la recomendación sigue combinando heurística, aprendizaje individual y ajuste
+supervisado de forma trazable.
+
+\section{Limitaciones}
+\label{sec:limitaciones}
+
+El proyecto presenta varias limitaciones que conviene explicitar.
+
+En primer lugar, la integración con Spotify introduce una dependencia externa
+real. Aunque el sistema ya minimiza esa fragilidad apoyándose en el catálogo
+\texttt{msd\_tracks}, la materialización final de playlists sigue condicionada
+por permisos, disponibilidad de endpoints y posibles respuestas de
+rate limit. Esta limitación existe porque el proyecto necesita cerrar el ciclo
+en una plataforma musical real y, por tanto, no controla por completo la capa
+de ejecución final.
+
+En segundo lugar, la validación longitudinal del aprendizaje se ha centrado en
+un único perfil de usuario. Esta decisión ha sido útil para observar mejor la
+evolución temporal del sistema, pero limita la generalización experimental de
+los resultados en términos poblacionales. Se asumió este enfoque para
+priorizar la trazabilidad de la adaptación y evitar mezclar demasiadas
+variables humanas en una validación de alcance TFG.
+
+En tercer lugar, el conjunto supervisado actual ya no es pequeño para un TFG
+de este alcance, pero sigue estando lejos de un escenario multiusuario amplio.
+Los metadatos finales del modelo recogen 65 ejemplos de sesión, con 53 útiles
+frente a 12 no útiles. Esta base resulta suficiente para activar el
+clasificador dentro del sistema entregado, pero no equivale todavía a una
+validación exhaustiva en producción ni a una cobertura poblacional amplia. La
+limitación se explica por el coste real de obtener sesiones cerradas con
+feedback honesto y por la decisión metodológica de no inflar el dataset con
+datos artificiales.
+
+Por último, Harmony Hub debe entenderse como un prototipo funcional orientado a
+bienestar cotidiano y regulación ligera, no como una herramienta clínica ni
+como un sistema de prescripción terapéutica. Esta frontera es deliberada:
+permite mantener una propuesta técnicamente defendible, respetuosa con el dato
+emocional y coherente con las capacidades reales del proyecto.
+
+\section{Trabajos futuros}
+\label{sec:trabajos_futuros}
+
+Las líneas de evolución más interesantes del proyecto se concentran en cuatro
+frentes.
+
+La primera consiste en ampliar y equilibrar el conjunto de datos supervisados.
+El siguiente salto de calidad ya no depende tanto de acumular sesiones útiles,
+sino de recoger más contraejemplos honestos y mayor diversidad de resultados
+negativos o ambiguos. Solo así podrá evaluarse el clasificador global con una
+base empírica más sólida y comprobar mejor su comportamiento fuera del perfil
+único analizado.
+
+La segunda línea pasa por enriquecer el catálogo musical estructurado. Aunque
+el salto dado con \texttt{msd\_tracks} ya mejora mucho la reproducibilidad del
+ranking, sería valioso ampliar la base de datos con más canciones, géneros,
+perfiles funcionales y descriptores semánticos. Ese crecimiento permitiría
+profesionalizar el procesamiento de datos, revisar la calidad del etiquetado y
+reducir todavía más la dependencia de búsquedas externas o de materializaciones
+frágiles.
+
+La tercera se relaciona con la explicabilidad. El sistema ya dispone de una
+base interpretable con regresión logística, metadatos, auditoría y model
+card, pero podría avanzar hacia visualizaciones más ricas del porqué de cada
+recomendación y de cómo se combinan heurística, aprendizaje individual y
+clasificador supervisado.
+
+La cuarta línea se orienta a producto y evaluación. Sería relevante validar la
+aplicación con más usuarios, observar patrones de uso menos homogéneos y
+estudiar si ciertas configuraciones favorecen mayor utilidad percibida, mayor
+adherencia o una experiencia más clara para perfiles de uso distintos. En ese
+escenario tendría sentido abrir una colaboración piloto con agentes reales del
+ámbito del bienestar y la salud mental digital, por ejemplo plataformas como
+\textit{ifeel}, \textit{TherapyChat} o \textit{Headspace Health}, con el fin de
+contrastar la utilidad del sistema en contextos de acompañamiento no clínico,
+mejorar la calidad de la base de datos y someter el producto a criterios más
+exigentes de profesionalización.
+
+En conjunto, el trabajo deja una base sólida sobre la que seguir creciendo. La
+aplicación ya demuestra que la música puede tratarse como una herramienta de
+acompañamiento contextual con trazabilidad, prudencia técnica y capacidad real
+de aprendizaje. El recorrido futuro no consiste en rehacer lo construido, sino
+en ampliarlo con más datos, más contraste y más colaboración para acercarlo a
+un uso cada vez más útil, responsable y humano.

@@ -1,0 +1,271 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwnerByField() {
+      return signedIn() && resource.data.user_id == request.auth.uid;
+    }
+
+    function isRequestOwnerByField() {
+      return signedIn() && request.resource.data.user_id == request.auth.uid;
+    }
+
+    function isOwnerByDocId(docId) {
+      return signedIn() && request.auth.uid == docId;
+    }
+
+    function onlyHasKeys(allowed) {
+      return request.resource.data.keys().hasOnly(allowed);
+    }
+
+    function optionalCommentIsValid() {
+      return !request.resource.data.keys().hasAny(['comment'])
+        || request.resource.data.comment == null
+        || request.resource.data.comment is string;
+    }
+
+    function optionalRecommendationIdIsValid() {
+      return !request.resource.data.keys().hasAny(['recommendation_id'])
+        || request.resource.data.recommendation_id == null
+        || request.resource.data.recommendation_id is string;
+    }
+
+    function optionalGenerationModeIsValid() {
+      return !request.resource.data.keys().hasAny(['generation_mode'])
+        || request.resource.data.generation_mode == null
+        || request.resource.data.generation_mode is string;
+    }
+
+    function optionalUseForTasteProfileIsValid() {
+      return !request.resource.data.keys().hasAny(['use_for_taste_profile'])
+        || request.resource.data.use_for_taste_profile is bool;
+    }
+
+    function optionalPreferenceScopeIsValid() {
+      return !request.resource.data.keys().hasAny(['preference_scope'])
+        || request.resource.data.preference_scope == 'both'
+        || request.resource.data.preference_scope == 'session_only'
+        || request.resource.data.preference_scope == 'stable_only';
+    }
+
+    function optionalSelectedTracksIsValid() {
+      return !request.resource.data.keys().hasAny(['selected_tracks'])
+        || request.resource.data.selected_tracks is list;
+    }
+
+    // =========================
+    // USERS
+    // =========================
+    match /users/{userId} {
+      allow create: if isOwnerByDocId(userId);
+      allow read, update, delete: if isOwnerByDocId(userId);
+    }
+
+    // =========================
+    // CHECKINS (PÚBLICO MÍNIMO)
+    // =========================
+    match /checkins/{docId} {
+      allow create: if isRequestOwnerByField()
+        && onlyHasKeys([
+          'user_id',
+          'noise_category',
+          'measured_db',
+          'noise_mean_db',
+          'noise_median_db',
+          'noise_min_db',
+          'noise_max_db',
+          'environment_context',
+          'environment_variability',
+          'environment_peak_delta',
+          'transient_ratio',
+          'burst_count',
+          'measurement_duration_ms',
+          'sample_count',
+          'sample_density_hz',
+          'stability_score',
+          'environment_confidence',
+          'has_encrypted_emotion_data',
+          'private_ref_id',
+          'created_at'
+        ]);
+
+      allow read, update, delete: if isOwnerByField();
+    }
+
+    // =========================
+    // CHECKINS_PRIVATE
+    // =========================
+    match /checkins_private/{docId} {
+      allow create: if isRequestOwnerByField()
+        && onlyHasKeys([
+          'user_id',
+          'checkin_id',
+          'algorithm',
+          'schema_version',
+          'ciphertext',
+          'nonce',
+          'mac',
+          'created_at'
+        ]);
+
+      allow read, update, delete: if isOwnerByField();
+    }
+
+    // =========================
+    // FEEDBACK (PÚBLICO MÍNIMO)
+    // =========================
+    match /feedback/{docId} {
+      allow create: if isRequestOwnerByField()
+        && onlyHasKeys([
+          'user_id',
+          'recommendation_id',
+          'recommendation_title',
+          'helpful',
+          'effect',
+          'post_session_state',
+          'comment',
+          'use_for_taste_profile',
+          'preference_scope',
+          'has_encrypted_feedback_data',
+          'private_ref_id',
+          'created_at'
+        ])
+        && request.resource.data.recommendation_title is string
+        && request.resource.data.helpful is bool
+        && request.resource.data.effect is string
+        && request.resource.data.post_session_state is string
+        && optionalRecommendationIdIsValid()
+        && optionalCommentIsValid()
+        && optionalUseForTasteProfileIsValid()
+        && optionalPreferenceScopeIsValid();
+
+      allow read, update, delete: if isOwnerByField();
+    }
+
+    // =========================
+    // FEEDBACK_PRIVATE
+    // =========================
+    match /feedback_private/{docId} {
+      allow create: if isRequestOwnerByField()
+        && onlyHasKeys([
+          'user_id',
+          'feedback_id',
+          'algorithm',
+          'schema_version',
+          'ciphertext',
+          'nonce',
+          'mac',
+          'created_at'
+        ]);
+
+      allow read, update, delete: if isOwnerByField();
+    }
+
+    // =========================
+    // RECOMMENDATIONS
+    // =========================
+    match /recommendations/{docId} {
+      allow create: if isRequestOwnerByField();
+      allow read, update, delete: if isOwnerByField();
+    }
+
+    // =========================
+    // GENERATED PLAYLISTS
+    // =========================
+    match /generated_playlists/{docId} {
+      allow create: if isRequestOwnerByField()
+        && onlyHasKeys([
+          'user_id',
+          'spotify_user_id',
+          'recommendation_id',
+          'playlist_id',
+          'playlist_name',
+          'playlist_url',
+          'tracks_added',
+          'recommended_mode',
+          'generation_mode',
+          'goal',
+          'noise_category',
+          'ml_enabled',
+          'desired_outcome',
+          'feedback_count',
+          'session_taste_weight',
+          'stable_taste_weight',
+          'taste_profile_mode',
+          'environment_measured',
+          'use_environment',
+          'environment_context',
+          'environment_confidence',
+          'environment_stability_score',
+          'environment_sample_density_hz',
+          'environment_usage_status',
+          'environment_usage_rationale',
+          'selected_tracks',
+          'created_at'
+        ])
+        && optionalRecommendationIdIsValid()
+        && optionalGenerationModeIsValid()
+        && optionalSelectedTracksIsValid();
+
+      allow read, update, delete: if isOwnerByField();
+    }
+
+    // =========================
+    // SAVED PRESET MODES
+    // =========================
+    match /saved_preset_modes/{docId} {
+      allow create, update: if isRequestOwnerByField()
+        && onlyHasKeys([
+          'user_id',
+          'preset_mode_id',
+          'title',
+          'subtitle',
+          'description',
+          'goal',
+          'suggested_mood',
+          'suggested_outcome',
+          'spotify_playlist_url',
+          'created_at',
+          'updated_at'
+        ]);
+
+      allow read, delete: if isOwnerByField();
+    }
+
+    // =========================
+    // USER GENERATION PREFERENCES
+    // =========================
+    // Temporalmente de solo lectura desde cliente.
+    // El backend/admin puede seguir escribiendo.
+    match /user_generation_preferences/{docId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    // =========================
+    // TRAINING EXAMPLES
+    // =========================
+    match /training_examples/{docId} {
+      allow read, write: if false;
+    }
+
+    // =========================
+    // TRAINING SESSION EXAMPLES
+    // =========================
+    match /training_session_examples/{docId} {
+      allow read, write: if false;
+    }
+
+    // =========================
+    // DENEGAR TODO LO DEMÁS
+    // =========================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
