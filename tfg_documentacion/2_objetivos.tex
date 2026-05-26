@@ -30,7 +30,9 @@ El cumplimiento de los objetivos anteriores no se evaluará solo desde una persp
 
 \begin{table}[H]
 \centering
-\begin{tabular}{|p{1.6cm}|p{6cm}|p{6cm}|}
+\small
+\renewcommand{\arraystretch}{1.08}
+\begin{tabularx}{\textwidth}{|P{1.75cm}|P{4.55cm}|Y|}
 \hline
 \textbf{Objetivo} & \textbf{Resultado esperado} & \textbf{Evidencia de cumplimiento} \\
 \hline
@@ -44,11 +46,11 @@ OE4 & Generación de recomendaciones de sesión a partir del contexto declarado 
 \hline
 OE5 & Creación de playlists reales dentro de Spotify a partir de la recomendación generada. & Integración backend--Spotify, resolución de canciones desde el catálogo propio y comprobación del flujo completo desde la app hasta la cuenta del usuario. \\
 \hline
-OE6 & Persistencia del historial, recogida de feedback y activación controlada de aprendizaje progresivo. & Registro de sesiones y feedback, almacenamiento en base de datos, señales observables del aprendizaje individual del perfil y métricas objetivas del modelo de sesión, incluyendo puertas de calidad globales y específicas por mood. \\
+OE6 & Persistencia del historial, recogida de feedback y activación controlada de aprendizaje progresivo. & Registro de sesiones y feedback, almacenamiento en base de datos, señales observables del aprendizaje individual del perfil y métricas objetivas del modelo de sesión, incluyendo puertas de datos, calidad y confianza operativa. \\
 \hline
 OE7 & Evidencia de que la solución responde de forma estable a los objetivos del TFG. & Pruebas funcionales, revisión de incidencias corregidas, validación del flujo completo y análisis de métricas del sistema en el Capítulo~\ref{ch:pruebas_validacion}. \\
 \hline
-\end{tabular}
+\end{tabularx}
 \caption{Relación entre los objetivos específicos y los resultados esperados del proyecto.}
 \label{tab:objetivos_resultados}
 \end{table}

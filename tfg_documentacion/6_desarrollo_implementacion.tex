@@ -60,37 +60,20 @@ mayor número posible de herramientas, sino un conjunto razonablemente compacto
 que cubriera movilidad, persistencia, integración externa y aprendizaje
 supervisado.
 
-\begin{table}[H]
-\centering
-\scriptsize
-\renewcommand{\arraystretch}{1.08}
-\setlength{\tabcolsep}{2.8pt}
-\begin{tabularx}{\textwidth}{|P{2.45cm}|P{3.2cm}|Y|}
-\hline
-\textbf{Tecnología} & \textbf{Uso en el proyecto} & \textbf{Justificación} \\
-\hline
-Flutter + Dart & Interfaz móvil, navegación, gestión de estado local y acceso a servicios de cliente. & Permite desarrollar una app móvil completa con una sola base de código y una iteración visual muy rápida. \\
-\hline
-FastAPI & API backend, orquestación del motor de recomendación e integración con Spotify. & Ofrece una estructura clara de rutas y servicios, baja fricción de desarrollo y buen encaje con Python. \\
-\hline
-Cloud Firestore & Persistencia documental de usuarios, check-ins, recomendaciones, playlists y feedback. & Encaja bien con el modelo orientado a documentos del proyecto y simplifica la sincronización entre cliente y backend. \\
-\hline
-Firebase Authentication & Gestión de identidad del usuario. & Reduce complejidad en autenticación básica y aporta integración directa con el ecosistema Firebase. \\
-\hline
-Spotify Web API & Obtención de perfil musical básico, autorización PKCE y creación de playlists reales. & Es la pieza que convierte la recomendación en una salida utilizable dentro del ecosistema musical cotidiano del usuario sin asumir la fase principal de ranking. \\
-\hline
-scikit-learn & Entrenamiento y validación del modelo supervisado de sesión. & Proporciona herramientas maduras para preprocesado, validación cruzada, métricas y clasificación probabilística. \\
-\hline
-\shortstack[l]{Cryptography +\\Flutter Secure Storage} & Cifrado del bloque emocional y almacenamiento local de claves. & Reducen la exposición de datos emocionales sensibles y ayudan a separar parte pública y privada de la sesión. \\
-\hline
-\shortstack[l]{Noise Meter +\\Permission Handler} & Medición opcional del entorno acústico en el dispositivo. & Permiten capturar contexto ambiental sin grabar ni persistir audio bruto. \\
-\hline
-\shortstack[l]{Dio +\\HTTPX} & Comunicación HTTP entre cliente y backend. & Mantienen una capa de comunicación explícita y fácil de depurar durante el desarrollo. \\
-\hline
-\end{tabularx}
-\caption{Tecnologías principales empleadas en la implementación de Harmony Hub.}
-\label{tab:tecnologias}
-\end{table}
+Las tecnologías principales empleadas en la implementación pueden resumirse de
+la siguiente manera:
+
+\begin{itemize}
+\item \textbf{Flutter + Dart}: sostienen la interfaz móvil, la navegación, la gestión de estado local y el acceso a servicios de cliente, permitiendo una sola base de código con iteración visual rápida.
+\item \textbf{FastAPI}: articula la API backend, la orquestación del motor de recomendación y la integración con Spotify, con una estructura de rutas y servicios clara y ligera.
+\item \textbf{Cloud Firestore}: aporta persistencia documental para usuarios, check-ins, recomendaciones, playlists y feedback, encajando bien con el modelo orientado a documentos del proyecto.
+\item \textbf{Firebase Authentication}: resuelve la gestión básica de identidad del usuario y se integra de forma directa con el ecosistema Firebase.
+\item \textbf{Spotify Web API}: habilita la obtención del perfil musical básico, la autorización PKCE y la creación de playlists reales en la cuenta del usuario.
+\item \textbf{scikit-learn}: se utiliza para el entrenamiento y la validación del modelo supervisado de sesión, incluyendo preprocesado, validación cruzada, métricas y clasificación probabilística.
+\item \textbf{Cryptography + Flutter Secure Storage}: reducen la exposición de datos emocionales sensibles mediante cifrado del bloque emocional y almacenamiento local de claves.
+\item \textbf{Noise Meter + Permission Handler}: permiten medir opcionalmente el entorno acústico sin grabar ni persistir audio bruto.
+\item \textbf{Dio + HTTPX}: mantienen una capa de comunicación HTTP explícita y fácil de depurar entre cliente y backend.
+\end{itemize}
 
 \section{Implementación de los módulos principales}
 \label{sec:implementacion_modulos}
@@ -362,6 +345,11 @@ efectivo del entorno, ranking sobre catálogo local, materialización en
 Spotify, feedback del usuario y actualización posterior del componente
 supervisado.
 
+Conviene matizar que esa traza corresponde al instante concreto del caso
+ilustrado. En el estado final del repositorio, tras el último mantenimiento
+automático, el conjunto supervisado asciende ya a \texttt{66} ejemplos
+etiquetados, con \texttt{54} útiles y \texttt{12} no útiles.
+
 Esta lectura deja ver con bastante claridad la separación entre capas del
 sistema. Primero se decide el modo de sesión, después se construye el perfil
 musical operativo, a continuación se consulta y reordena el catálogo local, y
@@ -465,12 +453,39 @@ motivo de disponibilidad o abstención del modelo.
 En el estado actual del repositorio, este pipeline ya genera no solo el modelo
 serializado y sus metadatos, sino también artefactos de auditoría y
 explicabilidad. La situación real del clasificador global ya no es de
-abstención completa: dispone de 65 ejemplos de sesión, con un balance
+abstención completa: dispone de 66 ejemplos de sesión, con un balance
 suficiente para la configuración operativa final, puerta global activa,
 cobertura completa por mood y umbral de confianza configurable. Esta
 observación es importante porque refleja que el pipeline no solo está terminado
 e integrado, sino también activado en ejecución real dentro del flujo del
 producto.
+
+\subsection*{Cuándo se audita y cuándo se reentrena el modelo}
+
+El comportamiento final puede resumirse de forma muy concreta. Cada vez que una
+sesión termina con feedback útil para aprendizaje, el backend ejecuta una tarea
+de mantenimiento. Esa tarea siempre \textbf{audita} el estado del conjunto
+supervisado: cuenta cuántos ejemplos etiquetados existen en
+\texttt{training\_session\_examples}, compara ese volumen con
+\texttt{session\_mode\_model\_metadata.json} y registra el resultado en
+\texttt{session\_mode\_model\_audit.json}.
+
+El \textbf{reentrenamiento} no se lanza en todas las interacciones, sino solo
+cuando la auditoría detecta alguno de estos supuestos:
+
+\begin{itemize}
+\item hay ejemplos nuevos respecto al último metadato consolidado;
+\item el conjunto actual es menor que el registrado anteriormente, lo que obliga a realinear artefactos;
+\item el modelo previo no existe o ha quedado inconsistente.
+\end{itemize}
+
+Si ocurre alguno de esos casos, el backend vuelve a ejecutar el pipeline de
+entrenamiento, recalcula métricas, actualiza el modelo serializado y persiste
+nuevos metadatos. Si no ocurre, la auditoría queda igualmente registrada, pero
+el mantenimiento se cierra en modo \texttt{skip}. Esta separación entre
+auditoría obligatoria y reentrenamiento condicional permite explicar con
+claridad que el sistema vigila siempre su estado, pero solo consume el coste de
+entrenar cuando existe una razón técnica objetiva para hacerlo.
 
 \section{Seguridad, privacidad y tratamiento de datos}
 \label{sec:seguridad_privacidad}
@@ -504,16 +519,13 @@ De este modo, el proyecto no delega toda la protección en el cliente, sino que
 la refuerza también en la política de acceso documental.
 
 En concreto, \texttt{firestore.rules} combina comprobaciones de identidad y de
-esquema. Funciones como \texttt{isOwnerByField()},
-\texttt{isRequestOwnerByField()} e \texttt{isOwnerByDocId(docId)} impiden que
-un usuario lea o escriba documentos ajenos, mientras que
-\texttt{onlyHasKeys(...)} fuerza que colecciones como \texttt{checkins},
-\texttt{feedback} y \texttt{generated\_playlists} solo acepten los campos
-previstos por el diseño. Además, las colecciones
-\texttt{user\_generation\_preferences}, \texttt{training\_examples} y
-\texttt{training\_session\_examples} permanecen cerradas a escritura desde el
-cliente, de modo que el aprendizaje agregado y los ejemplos supervisados quedan
-reservados al backend o a cuentas con privilegios administrativos.
+esquema. Sus garantías principales son las siguientes:
+
+\begin{itemize}
+\item \texttt{isOwnerByField()}, \texttt{isRequestOwnerByField()} e \texttt{isOwnerByDocId(docId)} impiden que un usuario lea o escriba documentos ajenos.
+\item \texttt{onlyHasKeys(...)} obliga a que colecciones como \texttt{checkins}, \texttt{feedback} y \texttt{generated\_playlists} solo acepten los campos previstos por el diseño.
+\item \texttt{\seqsplit{user\_generation\_preferences}}, \texttt{\seqsplit{training\_examples}} y \texttt{\seqsplit{training\_session\_examples}} permanecen cerradas a escritura desde el cliente, de modo que el aprendizaje agregado y los ejemplos supervisados quedan reservados al backend o a cuentas con privilegios administrativos.
+\end{itemize}
 
 \subsection*{Gestión de permisos y minimización de datos}
 
@@ -572,75 +584,3 @@ arquitectura híbrida integrada donde conviven captura de contexto,
 recomendación explicable, uso real del entorno, activación supervisada cuando
 existe evidencia suficiente, materialización completa en Spotify y cierre
 posterior del ciclo de aprendizaje.
-
-\section{Despliegue o puesta en marcha}
-\label{sec:despliegue}
-
-La solución está preparada para ejecutarse en local separando frontend, backend
-y reglas documentales.
-
-\subsection*{Puesta en marcha del frontend}
-
-En el entorno de desarrollo, el cliente móvil puede arrancarse con los
-comandos:
-
-\begin{minted}[fontsize=\small, breaklines]{bash}
-cd harmonyhub
-flutter pub get
-flutter run
-\end{minted}
-
-Este proceso instala dependencias, resuelve paquetes y ejecuta la aplicación en
-emulador o dispositivo conectado.
-
-\subsection*{Puesta en marcha del backend}
-
-El backend se levanta en un entorno virtual independiente:
-
-\begin{minted}[fontsize=\small, breaklines]{bash}
-cd backend_fastapi
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-\end{minted}
-
-Con ello se expone la API REST necesaria para check-ins, recomendaciones,
-feedback, historial y flujo Spotify. En la validación entregable, la
-aplicación se utilizó instalada en un dispositivo Android físico y conectada a
-un backend activo en la misma red local.
-
-\subsection*{Entrenamiento del modelo supervisado}
-
-En el uso normal del sistema, el modelo ya se audita y se reentrena
-automáticamente en segundo plano tras el cierre del feedback, siempre que haya
-ejemplos nuevos o que el dataset actual haya quedado desalineado respecto a los
-metadatos previos. Aun así, para tareas de mantenimiento o depuración sigue
-siendo posible lanzar el entrenamiento manualmente mediante:
-
-\begin{minted}[fontsize=\small, breaklines]{bash}
-cd backend_fastapi
-source .venv/bin/activate
-python -m app.ml.train_ranking_model
-\end{minted}
-
-Este proceso genera el artefacto serializado del modelo y un fichero de
-metadatos que informa de métricas, volumen de datos, observabilidad por
-mood y estado de las puertas de activación. El mantenimiento automático
-deja además un segundo artefacto de auditoría que registra si hubo
-reentrenamiento, por qué motivo se ejecutó o por qué se omitió.
-
-En consecuencia, el entrenamiento manual queda reservado a recuperación,
-depuración o demostración académica del pipeline, mientras que el uso ordinario
-de la app mantiene el modelo alineado con el conjunto real de ejemplos sin
-intervención explícita del usuario final.
-
-\subsection*{Reglas de Firestore}
-
-La política documental del proyecto también forma parte de la puesta en marcha.
-Las reglas se asocian desde \texttt{firebase.json} al archivo
-\texttt{firestore.rules} y pueden desplegarse con:
-
-\begin{minted}[fontsize=\small, breaklines]{bash}
-firebase deploy --only firestore:rules
-\end{minted}

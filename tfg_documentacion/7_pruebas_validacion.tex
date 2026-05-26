@@ -16,7 +16,7 @@ generación de playlist y revisión del estado del componente supervisado a
 partir de sus metadatos, sus puertas de activación y el resumen observacional
 por mood.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \scriptsize
 \renewcommand{\arraystretch}{1.1}
@@ -265,15 +265,13 @@ la colección \texttt{training\_session\_examples}.
 \hline
 \textbf{T1} & Mantenimiento automático tras el feedback & El backend deja trazas \texttt{[ML MAINTENANCE] start}, \texttt{train} o \texttt{skip}, y persiste un artefacto de auditoría con fecha, ejemplos actuales y motivo de reentrenado u omisión. & Correcto \\
 \hline
-\textbf{T2} & Estado real del conjunto supervisado & La colección \texttt{training\_session\_examples} alcanzó \texttt{65} ejemplos etiquetados, con balance \texttt{53} útiles frente a \texttt{12} no útiles. & Correcto \\
+\textbf{T2} & Estado real del conjunto supervisado & La colección \texttt{training\_session\_examples} alcanzó \texttt{66} ejemplos etiquetados, con balance \texttt{54} útiles frente a \texttt{12} no útiles. & Correcto \\
 \hline
 \textbf{T3} & Disponibilidad del modelo global & Los metadatos indican \texttt{model\_gate\_passed = true}, \texttt{data\_gate\_passed = true} y \texttt{quality\_gate\_passed = true}, mientras que la configuración operativa del backend fija un umbral \texttt{min\_selected\_mode\_probability = 0.14}; en conjunto, esto confirma la activación del clasificador de sesión en ejecución real. & Correcto \\
 \hline
 \textbf{T4} & Aprendizaje individual observable & En la capa de aprendizaje por perfil, el sistema ya muestra aplicación completa (\texttt{mood\_learning\_application\_factor = 1.0}) y modo \texttt{stable\_weighted} para los bloques maduros de triste, estresado, cansado, neutral y feliz. & Correcto \\
 \hline
 \textbf{T5} & Activación integrada del flujo final & Una sesión real de foco/estresado ejecutada desde móvil físico dejó trazas \texttt{ml\_enabled = True}, \texttt{selection\_source = session\_ml}, \texttt{use\_environment = True} y finalizó con playlist creada correctamente en Spotify. & Correcto \\
-\hline
-\textbf{T6} & Distinción entre capas de aprendizaje & La evidencia confirma que la madurez del perfil individual y la activación del clasificador global son procesos relacionados pero no idénticos: el primero estabiliza pesos y afinidades del usuario, mientras que el segundo aporta reordenación probabilística sobre candidatos de modo. & Correcto \\
 \hline
 \end{tabularx}
 \caption{Caso de prueba longitudinal del componente de aprendizaje con evidencia real de mantenimiento, activación supervisada y aprendizaje individual.}
@@ -285,9 +283,64 @@ aprendizaje supervisado global ya puede activarse con evidencia operativa real
 y trazable. En segundo lugar, el mantenimiento automático del backend hace que
 esa activación no dependa de una intervención manual, sino de una auditoría
 reproducible tras el feedback. En tercer lugar, la activación del clasificador
-global no elimina la capa individual del usuario, donde siguen apareciendo
+global convive con la capa individual del usuario, donde siguen apareciendo
 modos como \texttt{stable\_weighted} y factores de aplicación completa para los
 cinco moods observados en el perfil único.
+
+\clearpage
+
+\subsection*{Evidencia directa desde los artefactos JSON del modelo}
+
+Además de las trazas de consola, el repositorio conserva tres artefactos JSON
+que permiten demostrar de forma directa qué ha aprendido el clasificador y cómo
+varía su estado al cerrarse una sesión nueva con feedback.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{|P{2.7cm}|P{5.2cm}|Y|}
+\hline
+\textbf{Artefacto JSON} & \textbf{Campos observados} & \textbf{Lectura evidenciable} \\
+\hline
+\textbf{Audit del modelo} & \texttt{current\_labeled\_examples = 66}, \texttt{previous\_metadata\_examples = 65}, \texttt{trained = true}. & Demuestra variación real tras una sesión nueva: el conjunto etiquetado crece en una unidad y el backend ejecuta reentrenamiento automático en lugar de limitarse a conservar un modelo estático. \\
+\hline
+\textbf{Metadatos del modelo} & \texttt{total\_examples = 66}, \texttt{class\_counts = \{54,12\}}, \texttt{data\_gate\_passed = true}, \texttt{quality\_gate\_passed = true}, \texttt{model\_gate\_passed = true}, \texttt{quality\_score = 62.21}. & Confirma el estado aprendido final del clasificador: ya no solo existe, sino que supera las puertas de datos y calidad y queda disponible para intervenir en ejecución real. \\
+\hline
+\textbf{Model card} & Coeficientes positivos y negativos más influyentes, por ejemplo \texttt{use\_environment = +1.0925}, \texttt{recommended\_mode = relajacion\_estresado\_suave = +0.6561} y \texttt{stress\_level = -0.4719}. & Hace visible qué patrones ha internalizado el modelo y permite defender que el aprendizaje no es opaco: se puede inspeccionar qué rasgos empujan o frenan la probabilidad de utilidad estimada. \\
+\hline
+\end{tabularx}
+\caption{Evidencia directa obtenida de los artefactos JSON persistidos por el componente supervisado.}
+\label{tab:evidencia_json_modelo}
+\end{table}
+
+La primera fila es especialmente valiosa porque muestra una variación temporal
+explícita. El archivo \texttt{\seqsplit{session\_mode\_model\_audit.json}}
+indica que, antes del último mantenimiento automático, el metadato consolidado
+del modelo reflejaba \texttt{65} ejemplos, mientras que después del cierre de
+la nueva sesión pasa a \texttt{66}. No se trata, por tanto, de una fotografía
+aislada del sistema, sino de una evidencia de actualización efectiva tras el
+feedback.
+
+La segunda fila permite ir más allá del simple contador. En
+\texttt{\seqsplit{session\_mode\_model\_metadata.json}} también aparecen las
+métricas \texttt{balanced\_accuracy\_mean = 0.5658},
+\texttt{roc\_auc\_mean = 0.5818} y \texttt{f1\_mean = 0.8194}, junto con un
+\texttt{quality\_score = 62.21}. Esto demuestra que el estado aprendido no solo
+crece en volumen, sino que queda reevaluado y respaldado por métricas que
+superan los mínimos operativos del proyecto.
+
+La tercera fila aporta una evidencia cualitativa complementaria. En lugar de
+limitarse a declarar que el modelo ``aprende'', el archivo
+\texttt{\seqsplit{session\_mode\_model\_card.json}} deja ver qué ha aprendido.
+Que \texttt{use\_environment} aparezca entre las señales positivas más fuertes
+resulta coherente con la arquitectura contextual de Harmony Hub; que
+\texttt{stress\_level} figure entre las señales negativas importantes también
+encaja con el hecho de que algunos modos dejan de ser útiles cuando el estrés
+sube demasiado. Este tipo de lectura hace al componente supervisado mucho más
+defendible desde el punto de vista académico.
+
+\clearpage
 
 \section{Síntesis final de la validación del aprendizaje}
 \label{sec:sintesis_final_aprendizaje}
@@ -301,7 +354,7 @@ gradual de algunos bloques como la transición desde fases prudentes de
 aplicación parcial hasta modos estables con factor completo.
 
 Además, la implementación ya no se limita a conservar el clasificador
-supervisado como componente integrado pero inactivo. El conjunto actual, con 65
+supervisado como componente integrado pero inactivo. El conjunto actual, con 66
 ejemplos etiquetados, balance suficiente entre clases y cobertura completa por
 mood, permite activar el modelo global en ejecución real y observar cómo
 participa en la selección del modo de sesión cuando la confianza supera el

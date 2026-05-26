@@ -310,19 +310,6 @@ profile} que orienta la selección sobre MSD y deja preparadas búsquedas de
 apoyo únicamente cuando el sistema necesita mecanismos de \textit{fallback} o
 \textit{rescue}.
 
-Junto a esta capa estructural, el proyecto incorpora un pequeño bloque de
-análisis textual y semántico para enriquecer letras, títulos y etiquetas cuando
-resulta útil para el ranking. En su forma de respaldo utiliza representaciones
-hash mediante \texttt{HashingVectorizer} \cite{sklearn_hashing_vectorizer}, y
-cuando el entorno dispone de dependencias adicionales puede apoyarse en
-embeddings multilingües de la familia \texttt{sentence-transformers}
-\cite{hf_sentence_transformers_mpnet} y en pipelines de clasificación textual
-de Hugging Face \cite{hf_transformers_pipelines}, incluyendo el modelo
-\texttt{emotion-english-distilroberta-base} para señales emocionales
-\cite{hartmann_2022_emotion_distilroberta}. Esta combinación no se emplea como
-un recomendador autónomo, sino como una capa auxiliar que mejora trazabilidad y
-coherencia semántica del catálogo cuando existen letras o texto descriptivo
-aprovechables.
 
 \subsection*{Ejemplo operativo del motor híbrido}
 
@@ -377,25 +364,25 @@ tipo concreto de ayuda musical que se quiere ofrecer.
 \centering
 \small
 \renewcommand{\arraystretch}{1.12}
-\begin{tabularx}{\textwidth}{|P{3.2cm}|P{4.0cm}|Y|}
+\begin{tabularx}{\textwidth}{|P{2.9cm}|P{4.1cm}|Y|}
 \hline
 \textbf{Subtype} & \textbf{Situación típica} & \textbf{Sentido funcional} \\
 \hline
-\texttt{deep\_focus} & Foco, preferencia instrumental y resultado orientado a mayor concentración. & Prioriza baja distracción, presencia instrumental clara y energía contenida. \\
+\texttt{\seqsplit{deep\_focus}} & Foco, preferencia instrumental y resultado orientado a mayor concentración. & Prioriza baja distracción, presencia instrumental clara y energía contenida. \\
 \hline
-\texttt{guided\_focus} & Foco con preferencia \texttt{con\_voz} y necesidad de concentración o acompañamiento moderado. & Mantiene estructura y estabilidad, pero tolera una voz cálida y guiada siempre que no vuelva la sesión demasiado bailable o tensa. \\
+\texttt{\seqsplit{guided\_focus}} & Foco con preferencia \texttt{con\_voz} y necesidad de concentración o acompañamiento moderado. & Mantiene estructura y estabilidad, pero tolera una voz cálida y guiada siempre que no vuelva la sesión demasiado bailable o tensa. \\
 \hline
-\texttt{steady\_focus} & Foco sin requisitos especiales adicionales. & Busca una concentración sostenida y equilibrada. \\
+\texttt{\seqsplit{steady\_focus}} & Foco sin requisitos especiales adicionales. & Busca una concentración sostenida y equilibrada. \\
 \hline
-\texttt{stable\_relaxation} & Relajación con deseo explícito de acabar más calmado. & Favorece calma estable, baja tensión y una curva de asentamiento progresivo. \\
+\texttt{\seqsplit{stable\_relaxation}} & Relajación con deseo explícito de acabar más calmado. & Favorece calma estable, baja tensión y una curva de asentamiento progresivo. \\
 \hline
-\texttt{comfort\_relaxation} & Relajación con voz y matiz de calma o acompañamiento. & Introduce una relajación más cercana y cálida, con presencia vocal suficiente sin perder tono reparador. \\
+\texttt{\seqsplit{comfort\_relaxation}} & Relajación con voz y matiz de calma o acompañamiento. & Introduce una relajación más cercana y cálida, con presencia vocal suficiente sin perder tono reparador. \\
 \hline
-\texttt{warm\_relaxation} & Relajación con resultado esperado de sentirse más acompañado. & Refuerza calidez emocional y sensación de compañía. \\
+\texttt{\seqsplit{warm\_relaxation}} & Relajación con resultado esperado de sentirse más acompañado. & Refuerza calidez emocional y sensación de compañía. \\
 \hline
-\texttt{soft\_activation} & Energía con intensidad suave y activación progresiva. & Eleva el impulso sin romper bruscamente el estado inicial del usuario. \\
+\texttt{\seqsplit{soft\_activation}} & Energía con intensidad suave y activación progresiva. & Eleva el impulso sin romper bruscamente el estado inicial del usuario. \\
 \hline
-\texttt{warm\_companionship} & Energía en usuario triste con deseo de sentirse más acompañado. & Combina activación moderada con cercanía emocional y presencia vocal más marcada. \\
+\texttt{\seqsplit{warm\_companionship}} & Energía en usuario triste con deseo de sentirse más acompañado. & Combina activación moderada con cercanía emocional y presencia vocal más marcada. \\
 \hline
 \end{tabularx}
 \caption{Subtipos funcionales internos utilizados para refinar el perfil musical de sesión.}
@@ -513,14 +500,18 @@ lineal ni explosivo, sino progresivo y acotado.
 
 Las entradas del clasificador pueden agruparse en cuatro bloques: contexto
 declarado del check-in, preferencias de sesión, señales ambientales y
-variables del candidato evaluado. Entre ellas aparecen \texttt{goal},
-\texttt{mood}, \texttt{stress\_level}, \texttt{energy\_level},
-\texttt{desired\_outcome}, \texttt{vocal\_preference},
-\texttt{intensity\_preference}, \texttt{exploration\_preference},
-\texttt{noise\_category}, \texttt{session\_duration\_min},
-\texttt{recommended\_mode} y los targets musicales asociados. Esta combinación
-permite que el modelo no prediga sobre el contexto desnudo, sino sobre
-alternativas concretas de sesión generadas por el motor heurístico.
+variables del candidato evaluado. Entre los campos más representativos se
+encuentran los siguientes:
+
+\begin{itemize}
+\item contexto declarado: \texttt{goal}, \texttt{mood}, \texttt{stress\_level} y \texttt{energy\_level};
+\item preferencias de sesión: \texttt{desired\_outcome}, \texttt{vocal\_preference}, \texttt{intensity\_preference}, \texttt{exploration\_preference} y \texttt{session\_duration\_min};
+\item señales ambientales: \texttt{noise\_category} y los descriptores derivados de la medición del entorno;
+\item variables del candidato: \texttt{recommended\_mode} y los targets musicales asociados.
+\end{itemize}
+
+Esta combinación permite que el modelo no prediga sobre el contexto desnudo,
+sino sobre alternativas concretas de sesión generadas por el motor heurístico.
 
 En el cierre actual del proyecto, este componente ya existe, se entrena, se
 audita, genera artefactos de explicabilidad y participa en inferencia real
@@ -767,10 +758,12 @@ la configuración operativa actual, la puerta de calidad exige:
 En forma lógica:
 
 \[
-\texttt{quality\_gate\_passed} =
-(balanced\ accuracy \geq 0.45)\ \land\
-(ROC\ AUC \geq 0.38)\ \land\
-(quality\ score \geq 49)
+\begin{aligned}
+\texttt{quality\_gate\_passed} ={}&
+(balanced\ accuracy \geq 0.45)\ \land \\
+& (ROC\ AUC \geq 0.38)\ \land \\
+& (quality\ score \geq 49)
+\end{aligned}
 \]
 
 Estas métricas no cumplen exactamente la misma función. La
@@ -781,6 +774,19 @@ a los no útiles; y el \textbf{F1} resume el equilibrio entre precisión y
 recobrado de la clase positiva. El \textbf{quality score} no sustituye a estas
 métricas, sino que las agrega en un único índice operativo sin permitir que una
 de ellas compense por completo una debilidad severa en otra.
+
+En el estado final del repositorio, los metadatos del modelo recogen:
+
+\begin{itemize}
+    \item \texttt{\seqsplit{balanced\_accuracy\_mean = 0.5658}};
+    \item \texttt{\seqsplit{roc\_auc\_mean = 0.5818}};
+    \item \texttt{\seqsplit{f1\_mean = 0.8194}};
+    \item \texttt{\seqsplit{quality\_score = 62.21}}.
+\end{itemize}
+
+Estos valores superan los mínimos de la configuración operativa
+(\texttt{0.45}, \texttt{0.38} y \texttt{49}), por lo que la puerta de calidad
+queda efectivamente activada en el entregable.
 
 Una vez superadas la puerta de datos y la puerta de calidad, todavía queda una
 tercera comprobación en tiempo real: la \textbf{puerta operativa de sesión}. Si
@@ -979,7 +985,7 @@ través de un diagrama de clases general. En él se aprecia cómo la aplicación
 articula alrededor de servicios, modelos y componentes de persistencia
 especializados, en lugar de concentrar demasiada lógica en una sola capa.
 
-\begin{figure}[H]
+\begin{figure}[p]
     \centering
     \includegraphics[width=\textwidth,height=0.9\textheight,keepaspectratio]{Imagenes/diagrama_clases_general.png}
     \caption{Diagrama de clases general de Harmony Hub.}
@@ -994,12 +1000,14 @@ punto de vista de actividades y decisiones. A continuación, la
 desde la interacción inicial del usuario hasta la creación de la playlist y el
 registro del feedback posterior.
 
-\begin{figure}[H]
+\begin{landscape}
+\begin{figure}[p]
     \centering
-    \includegraphics[width=0.40\linewidth,height=0.9\textheight,keepaspectratio]{Imagenes/diagrama_actividades_sesion.png}
+    \includegraphics[width=0.88\linewidth,height=0.8\textheight,keepaspectratio,angle=90]{Imagenes/diagrama_actividades_sesion.png}
     \caption{Diagrama de actividades del flujo principal de generación de sesión musical.}
     \label{fig:actividades_sesion}
 \end{figure}
+\end{landscape}
 
 Este diagrama permite leer el flujo desde una perspectiva menos estructural y
 más operativa. En él se distinguen con claridad tres momentos: la recogida del
@@ -1010,12 +1018,14 @@ la consolidación de nuevos ejemplos supervisados. La representación también
 resulta útil para mostrar que ciertos pasos son condicionales, como la medición
 del entorno, la solicitud de playlist o el envío de feedback posterior.
 
-\begin{figure}[H]
+\begin{landscape}
+\begin{figure}[p]
     \centering
-    \includegraphics[width=0.88\linewidth,height=0.95\textheight,keepaspectratio]{Imagenes/diagrama_secuencia_principal.png}
+    \includegraphics[width=0.95\linewidth,height=0.8\textheight,keepaspectratio]{Imagenes/diagrama_secuencia_principal.png}
     \caption{Diagrama de secuencia principal del flujo de generación de sesión musical.}
     \label{fig:secuencia_principal}
 \end{figure}
+\end{landscape}
 
 Ese flujo general se complementa con una vista más específica del tratamiento
 del feedback. La \textbf{Figura~\ref{fig:secuencia_feedback}} muestra cómo el
@@ -1023,12 +1033,14 @@ backend utiliza esa valoración para actualizar estadísticas, conservar ejemplo
 de entrenamiento y, además, separar el feedback público de la parte sensible
 cifrada antes de persistirlo en Firestore.
 
-\begin{figure}[H]
+\begin{landscape}
+\begin{figure}[p]
     \centering
-    \includegraphics[width=0.78\linewidth]{Imagenes/diagrama_secuencia_feedback.png}
+    \includegraphics[width=0.92\linewidth,height=0.8\textheight,keepaspectratio]{Imagenes/diagrama_secuencia_feedback.png}
     \caption{Diagrama de secuencia específico del proceso de feedback y actualización del aprendizaje.}
     \label{fig:secuencia_feedback}
 \end{figure}
+\end{landscape}
 
 La lógica operativa de este cierre puede resumirse en un pseudocódigo breve, en
 el que se observa cómo el feedback no solo registra la valoración de la sesión,
@@ -1189,17 +1201,17 @@ sesión.
 \centering
 \small
 \renewcommand{\arraystretch}{1.12}
-\begin{tabularx}{\textwidth}{|P{3.2cm}|P{3.0cm}|Y|}
+\begin{tabularx}{\textwidth}{|P{2.9cm}|P{3.1cm}|Y|}
 \hline
 \textbf{Modo interno} & \textbf{Condición principal} & \textbf{Interpretación funcional} \\
 \hline
-\texttt{context\_only} & La suma de pesos aprendidos es prácticamente nula. & El sistema trabaja casi exclusivamente con el check-in actual. Todavía no existe evidencia suficiente como para que el aprendizaje previo modifique de forma apreciable los targets musicales. \\
+\texttt{\seqsplit{context\_only}} & La suma de pesos aprendidos es prácticamente nula. & El sistema trabaja casi exclusivamente con el check-in actual. Todavía no existe evidencia suficiente como para que el aprendizaje previo modifique de forma apreciable los targets musicales. \\
 \hline
-\texttt{progressive\_contextual} & El mood actual aún no ha superado su puerta de madurez, pero ya existe cierta evidencia parcial. & Se aplica una parte del aprendizaje acumulado de forma prudente. El sistema no ignora el histórico, pero evita dejar que domine mientras la evidencia específica del mood siga siendo insuficiente. \\
+\texttt{\seqsplit{progressive\_contextual}} & El mood actual aún no ha superado su umbral de madurez local, pero ya existe cierta evidencia parcial. & Se aplica una parte del aprendizaje acumulado de forma prudente. El sistema no ignora el histórico, pero evita dejar que domine mientras la evidencia específica del mood siga siendo insuficiente. \\
 \hline
-\texttt{session\_weighted} & El peso de sesión es mayor o igual que el peso estable. & La sesión se corrige principalmente con señales recientes o más contextuales. Esto suele ocurrir cuando el patrón observado en sesiones próximas resulta más informativo que el histórico general. \\
+\texttt{\seqsplit{session\_weighted}} & El peso de sesión es mayor o igual que el peso estable. & La sesión se corrige principalmente con señales recientes o más contextuales. Esto suele ocurrir cuando el patrón observado en sesiones próximas resulta más informativo que el histórico general. \\
 \hline
-\texttt{stable\_weighted} & El peso estable supera al peso de sesión. & La corrección principal proviene del perfil histórico consolidado. El sistema sigue partiendo del check-in actual, pero desplaza con más fuerza los targets hacia aquello que ha demostrado funcionar mejor de forma recurrente para el usuario. \\
+\texttt{\seqsplit{stable\_weighted}} & El peso estable supera al peso de sesión. & La corrección principal proviene del perfil histórico consolidado. El sistema sigue partiendo del check-in actual, pero desplaza con más fuerza los targets hacia aquello que ha demostrado funcionar mejor de forma recurrente para el usuario. \\
 \hline
 \end{tabularx}
 \caption{Estados internos del perfil aprendido y su efecto sobre la personalización musical.}

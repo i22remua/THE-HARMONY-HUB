@@ -42,6 +42,33 @@ Una vez abierta la app, el flujo inicial es:
     \item volver al inicio para comenzar un check-in.
 \end{enumerate}
 
+\subsection*{Recorrido recomendado de uso}
+
+Para entender la aplicación de forma ordenada, el recorrido recomendado es el
+siguiente:
+
+\begin{enumerate}
+    \item \textbf{Acceso y autenticación.} Abrir la app, iniciar sesión o crear
+    una cuenta nueva.
+    \item \textbf{Conexión con Spotify.} Autorizar la cuenta externa para poder
+    crear playlists reales al final del flujo.
+    \item \textbf{Entrada al check-in.} Volver a la portada y pulsar
+    \textit{Empezar check-in}.
+    \item \textbf{Definición del contexto.} Responder al objetivo de la sesión,
+    estado emocional, energía, estrés y preferencias musicales.
+    \item \textbf{Medición opcional del entorno.} Activar, si se desea, el
+    análisis del ambiente para enriquecer la recomendación.
+    \item \textbf{Revisión de la recomendación.} Leer la explicación funcional
+    del modo sugerido y comprobar cómo se adapta al momento actual.
+    \item \textbf{Generación de playlist.} Crear la playlist final y abrirla en
+    Spotify para escucharla.
+    \item \textbf{Cierre con feedback.} Indicar si la sesión ha resultado útil
+    para alimentar el aprendizaje posterior del sistema.
+\end{enumerate}
+
+Las capturas incluidas en este anexo siguen precisamente ese orden, de forma
+que puedan leerse como una guía visual del uso real de Harmony Hub.
+
 \begin{figure}[htbp]
     \centering
     \begin{minipage}{0.31\textwidth}
@@ -187,6 +214,79 @@ aprendizaje posterior. La segunda imagen confirma además que la salida no se
 queda en una sugerencia abstracta, sino que acaba convertida en una playlist
 real dentro del ecosistema de Spotify.
 
+\subsection*{Errores frecuentes y cómo interpretarlos}
+
+Además del flujo correcto, resulta útil que la persona usuaria reconozca
+algunos fallos previsibles y sepa qué significan. Las capturas siguientes no
+representan errores arbitrarios, sino situaciones reales que pueden aparecer
+durante el uso de la app y que conviene interpretar correctamente.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_errores/Screenshot_2026-05-26-17-15-11-055_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_errores/Screenshot_2026-05-26-17-15-35-245_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \caption{Dos fallos posibles durante la conexión con Spotify: a la
+    izquierda, error de comunicación con el backend local; a la derecha,
+    cancelación o denegación del permiso por parte de Spotify.}
+    \label{fig:manual_errores_spotify}
+\end{figure}
+
+La figura~\ref{fig:manual_errores_spotify} reúne dos casos distintos. En la
+primera imagen, Harmony Hub no puede alcanzar el backend y por eso falla el
+inicio del flujo OAuth. En una demostración real, esta situación suele
+corregirse comprobando que el backend está activo y accesible desde la misma
+red que el móvil. En la segunda imagen, el backend sí responde, pero Spotify
+devuelve \texttt{access\_denied}; esto significa que la autorización fue
+cancelada o rechazada y basta con volver a iniciar la conexión y aceptar el
+permiso.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_errores/Screenshot_2026-05-26-17-18-25-628_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_errores/Screenshot_2026-05-26-17-18-40-964_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \caption{Validaciones inmediatas del bloque de autenticación: cuenta ya
+    existente y contraseña demasiado corta.}
+    \label{fig:manual_errores_auth}
+\end{figure}
+
+La figura~\ref{fig:manual_errores_auth} muestra dos validaciones sencillas pero
+útiles de cara a la experiencia de usuario. La primera evita crear una cuenta
+duplicada con un correo que ya existe. La segunda recuerda que la contraseña
+debe cumplir una longitud mínima antes de continuar. Ambas validaciones ayudan
+a prevenir errores de entrada sin esperar a fases posteriores del flujo.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.52\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imagenes/manual_errores/Screenshot_2026-05-26-17-20-39-922_com.example.harmonyhub.jpg}
+    \end{minipage}
+    \caption{Validación en la pantalla de feedback cuando se intenta guardar la
+    sesión sin indicar todavía si la recomendación ayudó o no.}
+    \label{fig:manual_error_feedback}
+\end{figure}
+
+Por último, la figura~\ref{fig:manual_error_feedback} refleja un caso ligado al
+aprendizaje posterior del sistema. Antes de guardar el cierre de sesión,
+Harmony Hub exige que la persona usuaria indique si la experiencia le ayudó al
+menos un poco. Esta comprobación tiene una doble utilidad: evita registros
+incompletos y garantiza que el backend solo reciba feedback interpretable para
+seguir ajustando el perfil aprendido y el componente supervisado.
+
 \section{Funcionalidades principales}
 \label{sec:manual_usuario_funcionalidades}
 
@@ -224,14 +324,16 @@ trazabilidad funcional acumulada.
         \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-46-35-030_com.example.harmonyhub.jpg}
     \end{minipage}
     \caption{Bloques secundarios accesibles desde la navegación: modos
-    preestablecidos e historial personal.}
+    guardados o accesos recurrentes, a la izquierda, e historial personal, a la
+    derecha.}
     \label{fig:manual_modos_historial}
 \end{figure}
 
 La navegación inferior permite acceder a bloques complementarios sin romper el
-flujo principal. En \textit{Modos} se muestran accesos rápidos o rutas útiles
-para situaciones recurrentes; en \textit{Historial} se resume la actividad
-previa del usuario y se facilita la revisión de sesiones ya realizadas.
+flujo principal. En \textit{Modos} se muestran modos guardados, accesos rápidos
+o rutas útiles para situaciones recurrentes; en \textit{Historial} se resume la
+actividad previa del usuario y se facilita la revisión de sesiones ya
+realizadas.
 
 \subsection*{Aprendizaje personal}
 
@@ -255,8 +357,8 @@ existe suficiente actividad acumulada.
         \centering
         \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-46-35-030_com.example.harmonyhub.jpg}
     \end{minipage}
-    \caption{Pantallas de aprendizaje, perfil y referencia de navegación entre
-    secciones.}
+    \caption{Pantallas de aprendizaje, perfil y modos guardados o accesos
+    recurrentes entre secciones.}
     \label{fig:manual_aprendizaje_perfil}
 \end{figure}
 
@@ -264,6 +366,8 @@ En \textit{Aprendizaje} se muestran indicadores resumidos sobre sesiones
 valoradas, afinidad positiva y otras señales útiles para entender si el sistema
 ya dispone de una base suficiente para personalizar mejor. En \textit{Perfil}
 se agrupan opciones relacionadas con Spotify, privacidad y ayuda rápida de uso.
+La tercera captura muestra el bloque de \textit{Modos}, donde aparecen modos
+guardados o accesos recurrentes para reutilizar rutas funcionales frecuentes.
 
 \subsection*{Modos guardados}
 
