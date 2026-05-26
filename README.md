@@ -61,6 +61,15 @@ tfg_documentacion/    Memoria del TFG en LaTeX
 firestore.rules       Reglas de seguridad de Firestore
 ```
 
+## Estructura del repositorio
+
+- `harmonyhub/`: aplicacion movil Flutter.
+- `backend_fastapi/app/`: logica principal del backend, recomendacion, Spotify, Firestore y servicios de aprendizaje.
+- `backend_fastapi/app/ml/`: pipeline supervisado, artefactos del modelo y metadatos de auditoria.
+- `backend_fastapi/tools/`: utilidades manuales de auditoria, verificacion e importacion del catalogo.
+- `backend_fastapi/tests/`: pruebas automatizadas del backend.
+- `tfg_documentacion/`: memoria academica, anexos y figuras del TFG.
+
 ## Puntos fuertes del proyecto
 
 - **Contexto antes que popularidad**: la recomendacion parte del momento actual del usuario y no solo de listas genericas.
@@ -100,6 +109,7 @@ recomendacion contextual y materializacion de la playlist final.
 - catalogo musical local tipo MSD
 - materializacion de canciones en Spotify
 - mantenimiento y auditoria del modelo
+- utilidades manuales de importacion y verificacion en `backend_fastapi/tools/`
 
 ### Documentacion del TFG
 
@@ -166,10 +176,8 @@ flutter test
 
 ## Documentacion relevante
 
-- [backend_fastapi/DEFENSA_FUNCIONAMIENTO_HARMONY_HUB.md](backend_fastapi/DEFENSA_FUNCIONAMIENTO_HARMONY_HUB.md)
-- [backend_fastapi/ML_AND_RECOMMENDER_ACADEMIC_TECHNICAL_EXPLANATION.md](backend_fastapi/ML_AND_RECOMMENDER_ACADEMIC_TECHNICAL_EXPLANATION.md)
 - [backend_fastapi/CATALOG_SUMMARY_REPORT.md](backend_fastapi/CATALOG_SUMMARY_REPORT.md)
-- [backend_fastapi/ML_SINGLE_PROFILE_EVIDENCE_TABLES.md](backend_fastapi/ML_SINGLE_PROFILE_EVIDENCE_TABLES.md)
+- [backend_fastapi/tools/README.md](backend_fastapi/tools/README.md)
 - [tfg_documentacion/](tfg_documentacion/)
 
 ## Nota sobre configuracion local
