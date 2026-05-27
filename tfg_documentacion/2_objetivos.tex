@@ -14,13 +14,11 @@ De forma más concreta, se persigue construir una solución funcional que no se 
 \label{sec:objetivos_especificos}
 
 \begin{enumerate}[label=OE\arabic*.]
-    \item Analizar el problema de la regulación cotidiana mediante música en entornos digitales y definir los requisitos funcionales y no funcionales que debe cumplir una solución centrada en este caso de uso.
-    \item Diseñar una arquitectura software compuesta por aplicación móvil, backend e integración con servicios externos que permita sostener de forma clara y escalable el flujo completo del sistema.
-    \item Implementar una aplicación móvil usable que permita al usuario registrarse, autenticarse, realizar un check-in breve, consultar su historial y navegar por la experiencia sin fricción innecesaria.
-    \item Desarrollar un mecanismo de recomendación de sesión capaz de transformar variables como el estado de ánimo, la energía, el estrés percibido o la intención del usuario en una propuesta musical contextualizada, explicable y apoyada en un catálogo propio.
-    \item Integrar la plataforma con Spotify para que las recomendaciones generadas puedan materializarse en playlists reales, reproducibles y asociadas a la cuenta del usuario sin delegar en la API externa la fase central de ranking musical.
-    \item Incorporar un ciclo de aprendizaje basado en feedback, persistencia de datos e indicadores objetivos que permita afinar progresivamente la personalización en dos niveles: un aprendizaje individual del perfil del usuario, visible en la experiencia, y un modelo supervisado a nivel de sesión cuya activación quede condicionada por puertas explícitas de datos, calidad global y confianza operativa en la sesión concreta.
-    \item Validar la solución construida mediante pruebas funcionales, revisión de flujos completos de uso y métricas objetivas en los componentes de aprendizaje, con el fin de comprobar que el sistema responde de forma coherente a los objetivos planteados.
+    \item Investigar y diseñar un enfoque de aprendizaje automático capaz de relacionar el estado emocional y contextual del usuario con características musicales funcionales, manteniendo una formulación técnicamente defendible y compatible con el alcance del TFG.
+    \item Diseñar una interfaz de usuario móvil intuitiva y táctil que facilite la evaluación diaria del estado de ánimo, la navegación por la experiencia y la visualización de señales de feedback y aprendizaje.
+    \item Implementar la integración de servicios en la nube mediante una API REST que aloje el motor de recomendación, la persistencia del catálogo musical estructurado y la gestión del feedback recogido.
+    \item Desarrollar un módulo de procesamiento del entorno acústico que capture señales del dispositivo móvil y las traduzca a categorías útiles para condicionar la recomendación musical en tiempo real.
+    \item Implementar mecanismos de seguridad adecuados para la gestión de datos sensibles del usuario y para la comunicación entre la aplicación móvil, Firebase, Firestore y el backend en la nube.
 \end{enumerate}
 
 \section{Relación entre objetivos y resultados esperados}
@@ -32,27 +30,28 @@ El cumplimiento de los objetivos anteriores no se evaluará solo desde una persp
 \centering
 \small
 \renewcommand{\arraystretch}{1.08}
-\begin{tabularx}{\textwidth}{|P{1.75cm}|P{4.55cm}|Y|}
+\begin{tabularx}{\textwidth}{|P{1.75cm}|P{4.7cm}|Y|}
 \hline
 \textbf{Objetivo} & \textbf{Resultado esperado} & \textbf{Evidencia de cumplimiento} \\
 \hline
-OE1 & Definición clara del problema, de los actores implicados y de los requisitos del sistema. & Capítulo~\ref{ch:analisis_problema}, con requisitos funcionales, no funcionales, casos de uso y restricciones. \\
+OE1 & Modelo de aprendizaje automático defendible para relacionar contexto emocional y rasgos musicales. & Capítulos~\ref{ch:diseno_solucion} y~\ref{ch:pruebas_validacion}, con el modelo supervisado de sesión, las puertas de activación, el aprendizaje individual del perfil y las métricas finales del sistema. \\
 \hline
-OE2 & Propuesta arquitectónica coherente para articular frontend, backend, datos e integraciones externas. & Capítulo~\ref{ch:diseno_solucion}, con la arquitectura general, diseño funcional y decisiones técnicas justificadas. \\
+OE2 & Aplicación móvil usable con flujo completo de acceso, check-in, recomendación, feedback y navegación auxiliar. & Capítulos~\ref{ch:desarrollo_implementacion} y~\ref{ch:pruebas_validacion}, además del manual de usuario y las capturas incluidas en anexos. \\
 \hline
-OE3 & Aplicación móvil operativa con flujos de acceso, check-in, navegación principal, historial y perfil. & Capítulo~\ref{ch:desarrollo_implementacion}, demostración de pantallas implementadas y pruebas funcionales del flujo de uso. \\
+OE3 & Infraestructura backend operativa con API REST, persistencia de datos y materialización real en Spotify. & Capítulos~\ref{ch:diseno_solucion} y~\ref{ch:desarrollo_implementacion}, con endpoints implementados, estructura de Firestore y flujo completo de recomendación y playlist. \\
 \hline
-OE4 & Generación de recomendaciones de sesión a partir del contexto declarado por el usuario. & Implementación del flujo check-in $\rightarrow$ recomendación y validación del comportamiento del sistema en el Capítulo~\ref{ch:pruebas_validacion}. \\
+OE4 & Captura y aprovechamiento del entorno acústico como señal funcional adicional en la recomendación. & Capítulos~\ref{ch:desarrollo_implementacion} y~\ref{ch:pruebas_validacion}, donde se muestra la medición del entorno, su clasificación y su influencia en la recomendación final. \\
 \hline
-OE5 & Creación de playlists reales dentro de Spotify a partir de la recomendación generada. & Integración backend--Spotify, resolución de canciones desde el catálogo propio y comprobación del flujo completo desde la app hasta la cuenta del usuario. \\
-\hline
-OE6 & Persistencia del historial, recogida de feedback y activación controlada de aprendizaje progresivo. & Registro de sesiones y feedback, almacenamiento en base de datos, señales observables del aprendizaje individual del perfil y métricas objetivas del modelo de sesión, incluyendo puertas de datos, calidad y confianza operativa. \\
-\hline
-OE7 & Evidencia de que la solución responde de forma estable a los objetivos del TFG. & Pruebas funcionales, revisión de incidencias corregidas, validación del flujo completo y análisis de métricas del sistema en el Capítulo~\ref{ch:pruebas_validacion}. \\
+OE5 & Gestión razonable de seguridad y privacidad en credenciales, datos emocionales y comunicación entre componentes. & Capítulos~\ref{ch:diseno_solucion} y~\ref{ch:desarrollo_implementacion}, junto con las reglas de Firestore, la autenticación de usuarios y la separación entre credenciales sensibles y repositorio público. \\
 \hline
 \end{tabularx}
 \caption{Relación entre los objetivos específicos y los resultados esperados del proyecto.}
 \label{tab:objetivos_resultados}
 \end{table}
 
-De este modo, cada objetivo queda vinculado a una salida concreta del proyecto: análisis, arquitectura, implementación, integración, aprendizaje o validación. Ésta trazabilidad resulta especialmente útil en un trabajo como Harmony Hub, donde la calidad de la propuesta no depende solo de que la aplicación exista, sino de que el conjunto de piezas funcione como una experiencia coherente y justificable.
+De este modo, cada objetivo queda vinculado a una salida concreta del proyecto:
+aprendizaje, interfaz, infraestructura, procesamiento contextual o seguridad.
+Esta trazabilidad resulta especialmente útil en un trabajo como Harmony Hub,
+donde la calidad de la propuesta no depende solo de que la aplicación exista,
+sino de que el conjunto de piezas funcione como una experiencia coherente,
+justificable y tecnológicamente consistente con el alcance real del TFG.
