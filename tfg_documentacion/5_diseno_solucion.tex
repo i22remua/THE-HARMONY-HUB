@@ -32,6 +32,71 @@ Spotify. Por último, Firestore funciona como soporte de persistencia documental
 algo especialmente útil en un sistema donde conviven documentos públicos,
 bloques privados cifrados e información incremental de aprendizaje.
 
+Esta arquitectura no se planteó solo para repartir tecnologías, sino para
+ordenar con claridad el flujo de datos del proyecto. Harmony Hub necesita
+combinar interacción móvil, servicios externos, persistencia documental y una
+capa de recomendación con aprendizaje progresivo. Por eso resulta importante
+que cada componente tenga una responsabilidad bien delimitada y que la
+comunicación entre ellos sea comprensible tanto a nivel funcional como a nivel
+técnico.
+
+La aplicación móvil actúa como puerta de entrada del contexto: recoge el
+check-in, activa opcionalmente la medición del entorno y muestra la respuesta
+final al usuario. El backend recibe esa información, genera candidatos de modo,
+aplica la lógica heurística y, si corresponde, permite intervenir al modelo
+supervisado de sesión. Firestore conserva el historial, las playlists, el
+feedback, los perfiles aprendidos y los artefactos auxiliares necesarios para
+la trazabilidad. Spotify queda situado en la fase de autenticación musical y en
+la materialización final de playlists, no en la toma principal de decisiones
+musicales.
+
+La Figura~\ref{fig:arquitectura_harmony_hub} resume esta organización y
+visibiliza tanto los componentes principales como las direcciones de flujo entre
+ellos.
+
+\begin{figure}[htbp]
+\centering
+\begingroup
+\shorthandoff{<>}
+\begin{tikzpicture}[
+    node distance=1.1cm and 1.3cm,
+    box/.style={draw, rounded corners=2pt, align=center, text width=3.6cm, minimum height=1.6cm, fill=gray!10},
+    data/.style={draw, rounded corners=2pt, align=center, text width=3.6cm, minimum height=1.5cm, fill=cyan!10},
+    ext/.style={draw, rounded corners=2pt, align=center, text width=3.6cm, minimum height=1.5cm, fill=green!10},
+    flow/.style={->, thick}
+]
+\node[box] (app) {\textbf{Aplicación móvil Flutter}\\check-in, navegación, feedback\\y medición opcional del entorno};
+\node[data, below=0.1cm of app] (context) {\textbf{Contexto de sesión}\\estado de ánimo, energía, estrés\\preferencias y entorno};
+
+\node[box, right=1.5cm of app] (backend) {\textbf{Backend FastAPI}\\API REST, orquestación\\integración y trazabilidad};
+\node[box, below=0.1cm of backend] (engine) {\textbf{Motor híbrido}\\heurística, catálogo y ML\\selección de modo};
+
+\node[data, right=1.5cm of backend] (firestore) {\textbf{Cloud Firestore}\\sesiones, playlists, feedback\\perfiles y ejemplos};
+\node[ext, below=0.1cm of firestore] (spotify) {\textbf{Spotify Web API}\\OAuth y PKCE\\materialización de playlists};
+
+\draw[flow] (app) -- (backend);
+\draw[flow] (app) -- (context);
+\draw[flow] (context) -- (engine);
+\draw[flow] (backend) -- (engine);
+\draw[flow] (engine) -- (spotify);
+\draw[<->, thick] (backend) -- (firestore);
+\draw[<->, thick] (engine) -- (firestore);
+\end{tikzpicture}
+\endgroup
+\caption{Arquitectura general de Harmony Hub y flujo principal entre sus componentes.}
+\label{fig:arquitectura_harmony_hub}
+\end{figure}
+
+Desde el punto de vista del flujo de datos, el recorrido principal puede
+describirse en seis pasos: captura del check-in en la app, envío del contexto
+al backend, generación de la recomendación sobre el catálogo propio, consulta y
+actualización de persistencia en Firestore, materialización de la playlist en
+Spotify y devolución del resultado al usuario junto con la recogida posterior
+de feedback. Esta secuencia es importante porque deja claro que el sistema no
+es únicamente una interfaz conectada a una API externa, sino una solución
+distribuida donde la decisión principal se produce dentro de la lógica propia
+del proyecto.
+
 \section{Diseño modular y separación de responsabilidades}
 \label{sec:diseno_modular}
 
@@ -87,7 +152,7 @@ recomendación y la integración con Spotify como un diseño conjunto: el primer
 decide qué tipo de sesión conviene, y la segunda se encarga de materializar esa
 propuesta en una playlist reproducible.
 
-\subsection*{Diseño del motor de recomendación}
+\subsection{Diseño del motor de recomendación}
 
 El motor de recomendación trabaja por niveles. Primero interpreta el check-in
 del usuario como un contexto de sesión; después genera varios candidatos de
@@ -126,7 +191,7 @@ datos y calidad más exigentes. Esta separación explica por qué el sistema pue
 aprendizaje útil y visible en la experiencia final aunque el modelo global siga
 absteniéndose de intervenir.
 
-\subsection*{Puntuación heurística, coherencia funcional y restricciones de contexto}
+\subsection{Puntuación heurística, coherencia funcional y restricciones de contexto}
 
 La puntuación heurística es la primera capa de decisión real del sistema. Su
 papel consiste en valorar si un candidato de sesión es coherente con el momento
@@ -241,7 +306,7 @@ FIN ALGORITMO
 \label{lst:pseudocodigo_recomendacion}
 \end{listing}
 
-\subsection*{Uso del catálogo MSD en la generación musical}
+\subsection{Uso del catálogo MSD en la generación musical}
 
 La base musical de Harmony Hub se apoya en un catálogo local estructurado en
 \texttt{msd\_tracks}. Este catálogo deriva de una adaptación del
@@ -311,7 +376,7 @@ apoyo únicamente cuando el sistema necesita mecanismos de \textit{fallback} o
 \textit{rescue}.
 
 
-\subsection*{Ejemplo operativo del motor híbrido}
+\subsection{Ejemplo operativo del motor híbrido}
 
 Un ejemplo representativo permite observar cómo cooperan la heurística, el
 modelo supervisado y el catálogo MSD. Considérese un check-in con objetivo de
@@ -389,7 +454,7 @@ tipo concreto de ayuda musical que se quiere ofrecer.
 \label{tab:subtipos_funcionales_sesion}
 \end{table}
 
-\subsection*{Diseño de integración con Spotify}
+\subsection{Diseño de integración con Spotify}
 
 La integración con Spotify no se concibe como un elemento ornamental, sino como
 la pieza que convierte la recomendación en una salida realmente utilizable. El
@@ -414,7 +479,7 @@ de ranking sobre msd\_tracks y limita la dependencia externa a la
 materialización final. Esta decisión es importante porque evita que la utilidad
 completa de Harmony Hub dependa de un único punto de fragilidad externa.
 
-\subsection*{Modelo supervisado de sesión}
+\subsection{Modelo supervisado de sesión}
 \label{subsec:modelo_ml_sesion}
 
 El modelo de aprendizaje de Harmony Hub no intenta predecir la canción ideal,
@@ -527,7 +592,7 @@ qué tipo de recomendación suele ayudar más. Si ese historial todavía no es
 suficiente para activar el clasificador con garantías, el sistema se abstiene
 de aplicar esa capa aprendida y vuelve al respaldo contextual.
 
-\subsection*{Funcionamiento paso a paso del modelo}
+\subsection{Funcionamiento paso a paso del modelo}
 
 El ciclo completo del modelo supervisado puede resumirse en cinco pasos:
 
@@ -597,7 +662,7 @@ FIN ALGORITMO
 \label{lst:pseudocodigo_regresion_logistica}
 \end{listing}
 
-\subsection*{Ejemplificación del funcionamiento}
+\subsection{Ejemplificación del funcionamiento}
 
 Una sesión sencilla permite concretar el funcionamiento. Si el contexto recoge
 ánimo cansado, objetivo energía, estrés intermedio, energía baja, intensidad
@@ -618,7 +683,7 @@ se formula a nivel de sesión y no de canción individual: la señal supervisada
 no intenta resolver qué pista concreta es mejor, sino qué tipo de sesión
 tiende a funcionar mejor cuando el contexto emocional y funcional se parece.
 
-\subsection*{Interpretación académica y para el usuario}
+\subsection{Interpretación académica y para el usuario}
 
 En términos académicos, el modelo puede entenderse como una capa supervisada de
 reordenación que opera sobre un conjunto pequeño de candidatos plausibles. No
@@ -653,7 +718,7 @@ Salida & Probabilidad de utilidad para cada modo candidato en una nueva sesión.
 \label{tab:resumen_modelo_supervisado}
 \end{table}
 
-\subsection*{Preprocesado y estandarización}
+\subsection{Preprocesado y estandarización}
 \label{subsec:estandarizacion_ml}
 
 Antes de entrenar el modelo, las variables pasan por un pipeline de
@@ -677,7 +742,7 @@ el criterio de madurez del modelo. Con ello se evita que el aprendizaje entre
 en producción solo porque existan algunos check-ins, cuando todavía no hay
 evidencia suficiente para justificar su uso.
 
-\subsection*{Tiempo de aprendizaje y criterio de madurez}
+\subsection{Tiempo de aprendizaje y criterio de madurez}
 \label{subsec:tiempo_aprendizaje_modelo}
 
 Harmony Hub no aprende a una única velocidad. En la solución conviven dos
@@ -898,23 +963,23 @@ información sensible se separa en estructuras privadas, como
 \texttt{CheckinPrivado} y \texttt{FeedbackPrivado}, para reforzar la protección
 de datos personales y emocionales.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.78\linewidth]{Imagenes/diagrama_entidad_relacion.png}
-    \caption{Diagrama entidad-relación lógico principal de Harmony Hub.}
-    \label{fig:er_principal}
-\end{figure}
-
 Sin embargo, para entender cómo se implementa realmente esta estructura,
 conviene recordar que Cloud Firestore organiza la información en colecciones y
 documentos jerárquicos \cite{firebase_firestore_data_model}. Desde ese punto de
 vista, el modelo lógico anterior se traduce a un conjunto de colecciones
 principales con responsabilidades bastante concretas.
 
-\subsection*{Colecciones y documentos principales}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.78\linewidth]{Imagenes/diagrama_entidad_relacion.png}
+    \caption{Diagrama entidad-relación lógico principal de Harmony Hub.}
+    \label{fig:er_principal}
+\end{figure}
 
-\begin{table}[H]
-\centering
+\subsection{Colecciones y documentos principales}
+
+\begin{center}
+\captionsetup{type=table}
 \scriptsize
 \renewcommand{\arraystretch}{1.1}
 \setlength{\tabcolsep}{3pt}
@@ -945,7 +1010,7 @@ principales con responsabilidades bastante concretas.
 \end{tabularx}
 \caption{Colecciones principales de Firestore y tipo de información que almacenan.}
 \label{tab:colecciones_firestore}
-\end{table}
+\end{center}
 
 Esta organización muestra una decisión de diseño relevante: las unidades de uso
 visibles para el usuario (check-in, recomendación, playlist y feedback) no se
@@ -985,13 +1050,6 @@ través de un diagrama de clases general. En él se aprecia cómo la aplicación
 articula alrededor de servicios, modelos y componentes de persistencia
 especializados, en lugar de concentrar demasiada lógica en una sola capa.
 
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=\textwidth,height=0.9\textheight,keepaspectratio]{Imagenes/diagrama_clases_general.png}
-    \caption{Diagrama de clases general de Harmony Hub.}
-    \label{fig:clases_general}
-\end{figure}
-
 Además, para comprender bien el comportamiento dinámico del sistema, conviene
 observar cómo se encadena el flujo completo de una sesión musical. La
 \textbf{Figura~\ref{fig:actividades_sesion}} resume primero esa lógica desde un
@@ -1000,28 +1058,48 @@ punto de vista de actividades y decisiones. A continuación, la
 desde la interacción inicial del usuario hasta la creación de la playlist y el
 registro del feedback posterior.
 
+Este bloque funcional puede leerse desde tres perspectivas complementarias. La
+vista de clases ayuda a entender qué piezas cooperan entre sí; la vista de
+actividades muestra en qué orden se activan las decisiones principales; y la
+vista de secuencia deja ver cómo circulan las llamadas entre cliente, backend,
+motor híbrido y servicios externos durante una sesión real.
+
+Por último, el cierre del ciclo se detalla en la
+\textbf{Figura~\ref{fig:secuencia_feedback}}, donde se aprecia cómo el feedback
+del usuario no solo se almacena, sino que desencadena la actualización del
+perfil individual, la conservación de ejemplos supervisados y la auditoría del
+estado del modelo.
+
 \begin{landscape}
 \begin{figure}[p]
     \centering
-    \includegraphics[width=0.88\linewidth,height=0.8\textheight,keepaspectratio,angle=90]{Imagenes/diagrama_actividades_sesion.png}
-    \caption{Diagrama de actividades del flujo principal de generación de sesión musical.}
-    \label{fig:actividades_sesion}
+    \includegraphics[width=\linewidth,height=0.84\textheight,keepaspectratio]{Imagenes/diagrama_clases_general.png}
+    \caption{Diagrama de clases general de Harmony Hub.}
+    \label{fig:clases_general}
 \end{figure}
 \end{landscape}
 
-Este diagrama permite leer el flujo desde una perspectiva menos estructural y
-más operativa. En él se distinguen con claridad tres momentos: la recogida del
-contexto inicial mediante el check-in y, en su caso, el entorno acústico; la
-generación y materialización de la sesión musical; y el cierre del ciclo por
-medio del feedback, que activa tanto la actualización del perfil aprendido como
-la consolidación de nuevos ejemplos supervisados. La representación también
-resulta útil para mostrar que ciertos pasos son condicionales, como la medición
-del entorno, la solicitud de playlist o el envío de feedback posterior.
+La vista de actividades permite leer el flujo desde una perspectiva menos
+estructural y más operativa. En ella se distinguen con claridad tres momentos:
+la recogida del contexto inicial mediante el check-in y, en su caso, el
+entorno acústico; la generación y materialización de la sesión musical; y el
+cierre del ciclo por medio del feedback, que activa tanto la actualización del
+perfil aprendido como la consolidación de nuevos ejemplos supervisados. La
+representación también resulta útil para mostrar que ciertos pasos son
+condicionales, como la medición del entorno, la solicitud de playlist o el
+envío de feedback posterior.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.38\textwidth,height=0.56\textheight,keepaspectratio]{Imagenes/diagrama_actividades_sesion.png}
+    \caption{Diagrama de actividades del flujo principal de generación de sesión musical.}
+    \label{fig:actividades_sesion}
+\end{figure}
 
 \begin{landscape}
 \begin{figure}[p]
     \centering
-    \includegraphics[width=0.95\linewidth,height=0.8\textheight,keepaspectratio]{Imagenes/diagrama_secuencia_principal.png}
+    \includegraphics[width=\linewidth,height=0.84\textheight,keepaspectratio]{Imagenes/diagrama_secuencia_principal.png}
     \caption{Diagrama de secuencia principal del flujo de generación de sesión musical.}
     \label{fig:secuencia_principal}
 \end{figure}
@@ -1075,7 +1153,7 @@ Si se sigue el mismo hilo que aparece en el diagrama general de casos de uso,
 el diseño funcional puede entenderse como una cadena de bloques que se apoyan
 entre sí y que, poco a poco, van cerrando el ciclo completo de uso.
 
-\subsection*{Acceso y recuperación de cuenta}
+\subsection{Acceso y recuperación de cuenta}
 
 El primer bloque cubre el alta del usuario, el inicio de sesión y la
 recuperación de contraseña. Aunque pueda parecer una parte más convencional del
@@ -1085,7 +1163,7 @@ acceso a la cuenta. Por eso se optó por una autenticación basada en Firebase,
 con persistencia mínima del perfil y un mecanismo de restablecimiento que se
 apoya en el correo real asociado a la cuenta.
 
-\subsection*{Check-in y generación de recomendación}
+\subsection{Check-in y generación de recomendación}
 
 El núcleo de Harmony Hub empieza realmente en el check-in. Esta parte está
 pensada para capturar el estado del usuario sin convertir la interacción en un
@@ -1098,7 +1176,7 @@ darle una propuesta funcional de sesión con sentido para ese momento concreto.
 Además, cada recomendación queda vinculada a un identificador que sirve como
 hilo conductor del resto del flujo.
 
-\subsection*{Conexión con Spotify y materialización de la sesión}
+\subsection{Conexión con Spotify y materialización de la sesión}
 
 La recomendación, por sí sola, todavía no resuelve el problema. Tiene que
 convertirse en una playlist real y reproducible dentro de una plataforma de uso
@@ -1111,7 +1189,7 @@ propio de Harmony Hub con un servicio externo sobre el que la aplicación no
 tiene control absoluto. Y es precisamente ahí donde cobra sentido haber
 separado interfaz, backend y persistencia.
 
-\subsection*{Historial y memoria de uso}
+\subsection{Historial y memoria de uso}
 
 Una vez generadas varias sesiones, la aplicación necesita ofrecer al usuario un
 espacio donde recuperar lo vivido. El historial no se plantea solo como una
@@ -1120,7 +1198,7 @@ recomendaciones, playlists y valoraciones. Esto permite volver sobre sesiones
 anteriores, reinterpretar patrones y reforzar la sensación de continuidad entre
 usos.
 
-\subsection*{Modos rápidos}
+\subsection{Modos rápidos}
 
 Los modos rápidos responden a una idea bastante simple, pero muy útil: hay
 situaciones que se repiten. Por eso el sistema ofrece accesos predefinidos para
@@ -1128,7 +1206,7 @@ momentos como entrar en foco, bajar carga mental o cambiar de ritmo tras una
 jornada intensa. Desde el diseño funcional, esta capa actúa como un atajo
 práctico entre el uso libre y el uso recurrente.
 
-\subsection*{Feedback y aprendizaje personal}
+\subsection{Feedback y aprendizaje personal}
 
 El cierre del flujo llega con el feedback. Cuando el usuario valora si la
 sesión le ayudó, la aplicación no solo guarda una respuesta; convierte esa
@@ -1238,12 +1316,54 @@ conexión con Spotify como la navegación principal dentro del \textit{AppShell}
 desde donde se articula el flujo más importante del sistema: check-in,
 recomendación, generación de playlist y devolución de feedback.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.72\textwidth]{Imagenes/diagrama_navegacion_app.png}
 \caption{Diagrama de navegación principal de Harmony Hub.}
 \label{fig:diagrama_navegacion_app}
 \end{figure}
+
+Para complementar esa visión estructural, resulta útil mostrar también algunas
+pantallas clave del producto final. La Figura~\ref{fig:interfaz_principal_app}
+reúne cuatro momentos representativos del flujo: acceso inicial, pantalla
+principal, recomendación contextual y playlist generada. Esta selección permite
+ver cómo la lógica funcional del sistema se traduce en una interfaz móvil
+coherente y suficientemente guiada.
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{0.23\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-37-08-051_com.example.harmonyhub.jpg}
+\end{minipage}
+\hfill
+\begin{minipage}{0.23\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-46-14-698_com.example.harmonyhub.jpg}
+\end{minipage}
+\hfill
+\begin{minipage}{0.23\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-49-39-980_com.example.harmonyhub.jpg}
+\end{minipage}
+\hfill
+\begin{minipage}{0.23\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Imagenes/manual_app/Screenshot_2026-05-25-18-50-27-942_com.example.harmonyhub.jpg}
+\end{minipage}
+\caption{Pantallas representativas de la interfaz final: acceso, inicio, recomendación y playlist generada.}
+\label{fig:interfaz_principal_app}
+\end{figure}
+
+Estas capturas permiten identificar cuatro decisiones de diseño. En primer
+lugar, el acceso utiliza una jerarquía visual suave y directa, evitando
+sobrecargar la pantalla inicial. En segundo lugar, la pantalla principal
+prioriza la acción inmediata de comenzar una nueva sesión, lo que refuerza la
+naturaleza cotidiana del uso. En tercer lugar, la recomendación no se presenta
+como una simple lista de canciones, sino como una explicación funcional del
+tipo de sesión propuesto. Por último, la materialización de la playlist deja
+una sensación clara de cierre del flujo, ya que transforma la recomendación en
+un recurso reproducible dentro de Spotify.
 
 Desde el punto de vista visual, predominan bloques amplios, esquinas redondeadas,
 colores suaves y una jerarquía tipográfica marcada, sobre todo en las pantallas

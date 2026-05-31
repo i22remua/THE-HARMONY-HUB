@@ -161,7 +161,7 @@ pistas y funciona como fuente principal de ranking. Esa división ha permitido
 modificar reglas, catálogo, aprendizaje individual o integración con Spotify
 sin rehacer el pipeline completo en cada iteración.
 
-\subsection*{Lectura de una traza típica de generación}
+\subsection{Lectura de una traza típica de generación}
 
 Una ventaja práctica de la implementación es que el backend deja trazas lo
 bastante expresivas como para reconstruir el recorrido completo de una sesión
@@ -184,7 +184,7 @@ popularidad alternativa y medición de entorno activa. El entorno inferido fue
 \texttt{burst\_count = 4}. Sobre esa base, el backend dejó una traza completa
 que permite reconstruir el flujo general en orden.
 
-\subsection*{Ejemplo ordenado de flujo completo}
+\subsection{Ejemplo ordenado de flujo completo}
 
 En una primera fase, el sistema resuelve la autenticación con Spotify mediante
 OAuth con PKCE. Las líneas \texttt{[AUTH] login\_url\_created},
@@ -408,7 +408,7 @@ MSD aunque Spotify limite búsquedas o retrase la materialización, y el cliente
 documentos propios incluso cuando una sesión concreta termina en abstención local
 del clasificador por falta de confianza.
 
-\subsection*{Medición del entorno acústico}
+\subsection{Medición del entorno acústico}
 
 La app utiliza el micrófono del dispositivo únicamente para obtener una ventana
 breve de medición y derivar un perfil agregado del entorno. La implementación no
@@ -432,7 +432,7 @@ Firestore, sino que participa realmente en la construcción del perfil musical,
 en el refuerzo de consultas y en la selección final de canciones de la
 playlist.
 
-\subsection*{Pipeline de entrenamiento supervisado}
+\subsection{Pipeline de entrenamiento supervisado}
 
 El modelo de sesión se entrena fuera del flujo interactivo principal, pero ya
 no depende exclusivamente de que un desarrollador ejecute
@@ -460,7 +460,7 @@ observación es importante porque refleja que el pipeline no solo está terminad
 e integrado, sino también activado en ejecución real dentro del flujo del
 producto.
 
-\subsection*{Cuándo se audita y cuándo se reentrena el modelo}
+\subsection{Cuándo se audita y cuándo se reentrena el modelo}
 
 El comportamiento final puede resumirse de forma muy concreta. Cada vez que una
 sesión termina con feedback útil para aprendizaje, el backend ejecuta una tarea
@@ -493,7 +493,7 @@ entrenar cuando existe una razón técnica objetiva para hacerlo.
 La implementación incorpora varias medidas orientadas a reducir la exposición de
 datos personales y emocionales.
 
-\subsection*{Separación entre bloque público y bloque privado}
+\subsection{Separación entre bloque público y bloque privado}
 
 Los campos más sensibles del check-in y del feedback no se guardan únicamente en
 el documento funcional principal. Se separan en colecciones privadas paralelas
@@ -501,7 +501,7 @@ el documento funcional principal. Se separan en colecciones privadas paralelas
 documento público conserva solo el mínimo necesario para trazabilidad y uso de
 la aplicación.
 
-\subsection*{Cifrado en cliente del bloque emocional}
+\subsection{Cifrado en cliente del bloque emocional}
 
 El cliente móvil cifra la carga emocional usando AES-GCM de 256 bits antes de
 persistirla. La clave asociada al usuario se almacena localmente mediante
@@ -510,7 +510,7 @@ persistirla. La clave asociada al usuario se almacena localmente mediante
 por completo otras capas de seguridad, pero sí reduce exposición innecesaria de
 estados emocionales explícitos.
 
-\subsection*{Control de acceso en Firestore}
+\subsection{Control de acceso en Firestore}
 
 Las reglas de Firestore restringen el acceso por propietario y validan la
 forma de los documentos aceptados. Esto se aprecia especialmente en las
@@ -527,7 +527,7 @@ esquema. Sus garantías principales son las siguientes:
 \item \texttt{\seqsplit{user\_generation\_preferences}}, \texttt{\seqsplit{training\_examples}} y \texttt{\seqsplit{training\_session\_examples}} permanecen cerradas a escritura desde el cliente, de modo que el aprendizaje agregado y los ejemplos supervisados quedan reservados al backend o a cuentas con privilegios administrativos.
 \end{itemize}
 
-\subsection*{Gestión de permisos y minimización de datos}
+\subsection{Gestión de permisos y minimización de datos}
 
 El acceso al micrófono se solicita únicamente cuando el usuario activa la
 medición del entorno, y la salida persistida se limita a métricas resumidas del

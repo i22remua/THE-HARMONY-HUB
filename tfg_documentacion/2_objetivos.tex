@@ -26,14 +26,23 @@ De forma más concreta, se persigue construir una solución funcional que no se 
 
 El cumplimiento de los objetivos anteriores no se evaluará solo desde una perspectiva descriptiva, sino a través de resultados observables dentro del sistema desarrollado. Esto permite conectar cada objetivo con una evidencia concreta y, además, preparar mejor la validación posterior del proyecto.
 
-\begin{table}[H]
-\centering
 \small
 \renewcommand{\arraystretch}{1.08}
-\begin{tabularx}{\textwidth}{|P{1.75cm}|P{4.7cm}|Y|}
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{0pt}
+\begin{longtable}{|p{1.7cm}|p{4.7cm}|p{7.15cm}|}
+\caption{Relación entre los objetivos específicos y los resultados esperados del proyecto.}
+\label{tab:objetivos_resultados}\\
 \hline
 \textbf{Objetivo} & \textbf{Resultado esperado} & \textbf{Evidencia de cumplimiento} \\
 \hline
+\endfirsthead
+\hline
+\textbf{Objetivo} & \textbf{Resultado esperado} & \textbf{Evidencia de cumplimiento} \\
+\hline
+\endhead
+\hline
+\endfoot
 OE1 & Modelo de aprendizaje automático defendible para relacionar contexto emocional y rasgos musicales. & Capítulos~\ref{ch:diseno_solucion} y~\ref{ch:pruebas_validacion}, con el modelo supervisado de sesión, las puertas de activación, el aprendizaje individual del perfil y las métricas finales del sistema. \\
 \hline
 OE2 & Aplicación móvil usable con flujo completo de acceso, check-in, recomendación, feedback y navegación auxiliar. & Capítulos~\ref{ch:desarrollo_implementacion} y~\ref{ch:pruebas_validacion}, además del manual de usuario y las capturas incluidas en anexos. \\
@@ -44,10 +53,7 @@ OE4 & Captura y aprovechamiento del entorno acústico como señal funcional adic
 \hline
 OE5 & Gestión razonable de seguridad y privacidad en credenciales, datos emocionales y comunicación entre componentes. & Capítulos~\ref{ch:diseno_solucion} y~\ref{ch:desarrollo_implementacion}, junto con las reglas de Firestore, la autenticación de usuarios y la separación entre credenciales sensibles y repositorio público. \\
 \hline
-\end{tabularx}
-\caption{Relación entre los objetivos específicos y los resultados esperados del proyecto.}
-\label{tab:objetivos_resultados}
-\end{table}
+\end{longtable}
 
 De este modo, cada objetivo queda vinculado a una salida concreta del proyecto:
 aprendizaje, interfaz, infraestructura, procesamiento contextual o seguridad.

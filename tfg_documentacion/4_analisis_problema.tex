@@ -190,197 +190,206 @@ forma aislada, sino representar las interacciones más relevantes del sistema:
 acceso, check-in, recomendación, generación de playlist, consulta del historial
 y cierre del ciclo mediante feedback.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.52\linewidth]{Imagenes/diagrama_casos_uso.png}
     \caption{Diagrama general de casos de uso de Harmony Hub.}
     \label{fig:casos_uso_general}
 \end{figure}
 
-\subsection*{Casos de uso principales descritos}
+\subsection{Casos de uso principales descritos}
 
 Siguiendo el orden funcional del sistema, conviene resumir primero el acceso,
 después la vinculación con Spotify, a continuación el flujo principal de sesión
-y, por último, las funcionalidades de seguimiento, memoria y aprendizaje. Para
-facilitar la lectura y la referencia cruzada posterior, cada caso de uso
-principal se recoge en una tabla independiente y se acompaña de su diagrama
-específico.
+y, por último, las funcionalidades de seguimiento, memoria y aprendizaje. En
+lugar de representar cada caso con un diagrama independiente, se detallan a
+continuación sus pasos principales y sus posibles variantes, ya que esa
+descripción secuencial resulta más útil para comprender cómo utiliza realmente
+el usuario el sistema.
 
-\begin{table}[H]
-\centering
-\small
-\renewcommand{\arraystretch}{1.1}
-\begin{tabularx}{\textwidth}{|P{1.1cm}|P{2.8cm}|P{1.4cm}|P{3.4cm}|Y|}
-\hline
-\textbf{ID} & \textbf{Caso de uso} & \textbf{Actor} & \textbf{Precondición} & \textbf{Resultado esperado} \\
-\hline
-CU1 & Registrarse e iniciar sesión & Usuario & El usuario dispone de la app y no mantiene sesión válida activa. & Se crea o valida la cuenta y se habilita el acceso a la pantalla principal. \\
-\hline
-\end{tabularx}
-\caption{Caso de uso CU1: registrarse e iniciar sesión.}
-\label{tab:caso_uso_cu1}
-\end{table}
+\subsection{CU1. Registrarse e iniciar sesión}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.54\linewidth]{Imagenes/caso_uso_cu1.png}
-    \caption{Diagrama específico del caso de uso CU1: registrarse e iniciar sesión.}
-    \label{fig:caso_uso_cu1}
-\end{figure}
+\textbf{Actor principal:} usuario. \\
+\textbf{Precondición:} la persona dispone de la app y no mantiene una sesión
+válida activa. \\
+\textbf{Postcondición:} la cuenta queda creada o validada y se habilita el
+acceso al flujo principal.
 
-\begin{table}[H]
-\centering
-\small
-\renewcommand{\arraystretch}{1.1}
-\begin{tabularx}{\textwidth}{|P{1.1cm}|P{2.8cm}|P{1.4cm}|P{3.4cm}|Y|}
-\hline
-\textbf{ID} & \textbf{Caso de uso} & \textbf{Actor} & \textbf{Precondición} & \textbf{Resultado esperado} \\
-\hline
-CU2 & Recuperar contraseña & Usuario & El usuario ha olvidado la contraseña, pero recuerda el correo asociado. & El sistema envía el enlace de restablecimiento y la cuenta sigue siendo recuperable. \\
-\hline
-\end{tabularx}
-\caption{Caso de uso CU2: recuperar contraseña.}
-\label{tab:caso_uso_cu2}
-\end{table}
+\textbf{Flujo principal}
+\begin{enumerate}[label=\arabic*.]
+    \item El usuario abre la aplicación y accede a la pantalla de entrada.
+    \item Introduce sus credenciales o completa el formulario de registro.
+    \item La app valida localmente el formato básico de los datos.
+    \item El cliente solicita autenticación al servicio correspondiente.
+    \item Si la validación es correcta, la app crea o recupera la sesión activa.
+    \item El sistema redirige al usuario al flujo principal o al paso de conexión con Spotify.
+\end{enumerate}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.54\linewidth]{Imagenes/caso_uso_cu2.png}
-    \caption{Diagrama específico del caso de uso CU2: recuperar contraseña.}
-    \label{fig:caso_uso_cu2}
-\end{figure}
+\textbf{Flujos alternativos}
+\begin{itemize}
+    \item Si el correo ya existe o la contraseña no cumple longitud mínima, la app muestra el error y el usuario corrige el formulario.
+    \item Si la autenticación falla, el sistema impide el acceso y mantiene al usuario en la pantalla inicial.
+\end{itemize}
 
-\begin{table}[H]
-\centering
-\small
-\renewcommand{\arraystretch}{1.1}
-\begin{tabularx}{\textwidth}{|P{1.1cm}|P{2.8cm}|P{1.4cm}|P{3.4cm}|Y|}
-\hline
-\textbf{ID} & \textbf{Caso de uso} & \textbf{Actor} & \textbf{Precondición} & \textbf{Resultado esperado} \\
-\hline
-CU3 & Conectar cuenta con Spotify & Usuario & El usuario ha iniciado sesión en Harmony Hub y todavía no ha vinculado su cuenta musical. & La cuenta de Spotify queda autorizada y disponible para generar playlists reales. \\
-\hline
-\end{tabularx}
-\caption{Caso de uso CU3: conectar cuenta con Spotify.}
-\label{tab:caso_uso_cu3}
-\end{table}
+\subsection{CU2. Recuperar contraseña}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.54\linewidth]{Imagenes/caso_uso_cu3.png}
-    \caption{Diagrama específico del caso de uso CU3: conectar cuenta con Spotify.}
-    \label{fig:caso_uso_cu3}
-\end{figure}
+\textbf{Actor principal:} usuario. \\
+\textbf{Precondición:} el usuario ha olvidado la contraseña, pero recuerda el
+correo asociado. \\
+\textbf{Postcondición:} el sistema envía el enlace de restablecimiento y la
+cuenta sigue siendo recuperable.
 
-\begin{table}[H]
-\centering
-\small
-\renewcommand{\arraystretch}{1.1}
-\begin{tabularx}{\textwidth}{|P{1.1cm}|P{2.8cm}|P{1.4cm}|P{3.4cm}|Y|}
-\hline
-\textbf{ID} & \textbf{Caso de uso} & \textbf{Actor} & \textbf{Precondición} & \textbf{Resultado esperado} \\
-\hline
-CU4 & Realizar una sesión musical contextual & Usuario & El usuario ha iniciado sesión y tiene acceso operativo a la app. & Se registra el check-in, se genera la recomendación y se crea una playlist trazable. \\
-\hline
-\end{tabularx}
-\caption{Caso de uso CU4: realizar una sesión musical contextual.}
-\label{tab:caso_uso_cu4}
-\end{table}
+\textbf{Flujo principal}
+\begin{enumerate}[label=\arabic*.]
+    \item El usuario selecciona la opción de recuperación de contraseña.
+    \item Introduce el correo asociado a su cuenta.
+    \item La aplicación envía la solicitud al servicio de autenticación.
+    \item El sistema confirma el envío del enlace de restablecimiento.
+\end{enumerate}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.54\linewidth]{Imagenes/caso_uso_cu4.png}
-    \caption{Diagrama específico del caso de uso CU4: realizar una sesión musical contextual.}
-    \label{fig:caso_uso_cu4}
-\end{figure}
+\textbf{Flujos alternativos}
+\begin{itemize}
+    \item Si el correo no tiene formato válido, la app solicita corregirlo antes de enviar la petición.
+    \item Si el servicio de autenticación devuelve error, la app informa del fallo y ofrece reintentar más tarde.
+\end{itemize}
 
-\begin{table}[H]
-\centering
-\small
-\renewcommand{\arraystretch}{1.1}
-\begin{tabularx}{\textwidth}{|P{1.1cm}|P{2.8cm}|P{1.4cm}|P{3.4cm}|Y|}
-\hline
-\textbf{ID} & \textbf{Caso de uso} & \textbf{Actor} & \textbf{Precondición} & \textbf{Resultado esperado} \\
-\hline
-CU5 & Consultar historial personal & Usuario & Existen sesiones registradas previamente. & El usuario puede revisar check-ins, playlists y feedback asociados. \\
-\hline
-\end{tabularx}
-\caption{Caso de uso CU5: consultar historial personal.}
-\label{tab:caso_uso_cu5}
-\end{table}
+\subsection{CU3. Conectar cuenta con Spotify}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.54\linewidth]{Imagenes/caso_uso_cu5.png}
-    \caption{Diagrama específico del caso de uso CU5: consultar historial personal.}
-    \label{fig:caso_uso_cu5}
-\end{figure}
+\textbf{Actor principal:} usuario. \\
+\textbf{Precondición:} el usuario ha iniciado sesión en Harmony Hub y todavía no
+ha vinculado su cuenta musical. \\
+\textbf{Postcondición:} la cuenta de Spotify queda autorizada y disponible para
+generar playlists reales.
 
-\begin{table}[H]
-\centering
-\small
-\renewcommand{\arraystretch}{1.1}
-\begin{tabularx}{\textwidth}{|P{1.1cm}|P{2.8cm}|P{1.4cm}|P{3.4cm}|Y|}
-\hline
-\textbf{ID} & \textbf{Caso de uso} & \textbf{Actor} & \textbf{Precondición} & \textbf{Resultado esperado} \\
-\hline
-CU6 & Guardar un modo rápido & Usuario & El usuario navega por la sección de modos y detecta una situación reutilizable. & El modo queda almacenado como acceso rápido para uso posterior. \\
-\hline
-\end{tabularx}
-\caption{Caso de uso CU6: guardar un modo rápido.}
-\label{tab:caso_uso_cu6}
-\end{table}
+\textbf{Flujo principal}
+\begin{enumerate}[label=\arabic*.]
+    \item El usuario pulsa la opción para conectar Spotify.
+    \item La app solicita al backend la URL de autorización.
+    \item Se abre el flujo OAuth/PKCE en Spotify.
+    \item El usuario acepta los permisos solicitados.
+    \item La app recibe el callback y envía el código al backend.
+    \item El backend intercambia el código por un token y recupera el perfil musical básico.
+    \item La cuenta queda vinculada y la app habilita la generación de playlists.
+\end{enumerate}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.54\linewidth]{Imagenes/caso_uso_cu6.png}
-    \caption{Diagrama específico del caso de uso CU6: guardar un modo rápido.}
-    \label{fig:caso_uso_cu6}
-\end{figure}
+\textbf{Flujos alternativos}
+\begin{itemize}
+    \item Si el usuario cancela la autorización, el sistema vuelve al estado previo sin conexión activa.
+    \item Si falla el intercambio del código o el backend no es accesible, la app muestra el error y propone reintentar.
+\end{itemize}
 
-\begin{table}[H]
-\centering
-\small
-\renewcommand{\arraystretch}{1.1}
-\begin{tabularx}{\textwidth}{|P{1.1cm}|P{2.8cm}|P{1.4cm}|P{3.4cm}|Y|}
-\hline
-\textbf{ID} & \textbf{Caso de uso} & \textbf{Actor} & \textbf{Precondición} & \textbf{Resultado esperado} \\
-\hline
-CU7 & Enviar feedback sobre una sesión & Usuario & Existe una recomendación o playlist generada asociada a la sesión. & La sesión queda cerrada con valoración y disponible para aprendizaje posterior. \\
-\hline
-\end{tabularx}
-\caption{Caso de uso CU7: enviar feedback sobre una sesión.}
-\label{tab:caso_uso_cu7}
-\end{table}
+\subsection{CU4. Realizar una sesión musical contextual}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.54\linewidth]{Imagenes/caso_uso_cu7.png}
-    \caption{Diagrama específico del caso de uso CU7: enviar feedback sobre una sesión.}
-    \label{fig:caso_uso_cu7}
-\end{figure}
+\textbf{Actor principal:} usuario. \\
+\textbf{Precondición:} el usuario ha iniciado sesión y tiene acceso operativo a
+la aplicación. \\
+\textbf{Postcondición:} se registra el check-in, se genera una recomendación y,
+si se desea, se crea una playlist trazable.
 
-\begin{table}[H]
-\centering
-\small
-\renewcommand{\arraystretch}{1.1}
-\begin{tabularx}{\textwidth}{|P{1.1cm}|P{2.8cm}|P{1.4cm}|P{3.4cm}|Y|}
-\hline
-\textbf{ID} & \textbf{Caso de uso} & \textbf{Actor} & \textbf{Precondición} & \textbf{Resultado esperado} \\
-\hline
-CU8 & Consultar aprendizaje personal & Usuario & Existe actividad previa suficiente dentro del sistema. & El usuario accede a patrones e insights agregados sobre su historial de uso. \\
-\hline
-\end{tabularx}
-\caption{Caso de uso CU8: consultar aprendizaje personal.}
-\label{tab:caso_uso_cu8}
-\end{table}
+\textbf{Flujo principal}
+\begin{enumerate}[label=\arabic*.]
+    \item El usuario inicia un nuevo check-in desde la pantalla principal.
+    \item Indica objetivo, estado de ánimo, energía, estrés y preferencias de sesión.
+    \item Puede activar, si lo desea, la medición del entorno acústico.
+    \item La app envía el contexto al backend y registra el check-in.
+    \item El backend genera candidatos de modo, calcula el perfil musical y devuelve la recomendación.
+    \item El usuario revisa la explicación funcional de la sesión propuesta.
+    \item Si acepta materializarla, la app solicita la creación de la playlist.
+    \item El backend selecciona pistas, resuelve su materialización en Spotify y devuelve el identificador de la playlist.
+\end{enumerate}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.54\linewidth]{Imagenes/caso_uso_cu8.png}
-    \caption{Diagrama específico del caso de uso CU8: consultar aprendizaje personal.}
-    \label{fig:caso_uso_cu8}
-\end{figure}
+\textbf{Flujos alternativos}
+\begin{itemize}
+    \item Si no se concede acceso al micrófono, la sesión continúa sin señal de entorno.
+    \item Si Spotify no está conectado, la recomendación puede mostrarse, pero la generación de playlist queda bloqueada hasta completar la vinculación.
+    \item Si la materialización falla, la recomendación sigue existiendo como sesión, aunque la playlist no llegue a crearse.
+\end{itemize}
+
+\subsection{CU5. Consultar historial personal}
+
+\textbf{Actor principal:} usuario. \\
+\textbf{Precondición:} existen sesiones registradas previamente. \\
+\textbf{Postcondición:} el usuario revisa check-ins, playlists y feedback
+asociados a sesiones anteriores.
+
+\textbf{Flujo principal}
+\begin{enumerate}[label=\arabic*.]
+    \item El usuario accede a la sección de historial.
+    \item La aplicación recupera las sesiones registradas asociadas a su cuenta.
+    \item Se muestra la lista de sesiones con información resumida.
+    \item El usuario consulta el detalle de una sesión concreta si lo necesita.
+\end{enumerate}
+
+\textbf{Flujos alternativos}
+\begin{itemize}
+    \item Si aún no existen sesiones, la app muestra un estado vacío sin error.
+    \item Si la lectura del backend o de Firestore falla, la app informa del problema y ofrece reintentar.
+\end{itemize}
+
+\subsection{CU6. Guardar un modo rápido}
+
+\textbf{Actor principal:} usuario. \\
+\textbf{Precondición:} el usuario navega por la sección de modos y detecta una
+situación reutilizable. \\
+\textbf{Postcondición:} el modo queda almacenado como acceso rápido para uso
+posterior.
+
+\textbf{Flujo principal}
+\begin{enumerate}[label=\arabic*.]
+    \item El usuario accede a la pantalla de modos.
+    \item Selecciona un modo útil para una situación recurrente.
+    \item Solicita guardarlo como acceso rápido o modo reutilizable.
+    \item El sistema registra esa preferencia y la deja disponible para sesiones futuras.
+\end{enumerate}
+
+\textbf{Flujos alternativos}
+\begin{itemize}
+    \item Si la persistencia falla, la app informa de que el modo no se ha podido guardar.
+\end{itemize}
+
+\subsection{CU7. Enviar feedback sobre una sesión}
+
+\textbf{Actor principal:} usuario. \\
+\textbf{Precondición:} existe una recomendación o playlist generada asociada a
+la sesión. \\
+\textbf{Postcondición:} la sesión queda cerrada con valoración y disponible para
+aprendizaje posterior.
+
+\textbf{Flujo principal}
+\begin{enumerate}[label=\arabic*.]
+    \item Tras escuchar la sesión, el usuario accede a la pantalla de feedback.
+    \item Indica si la sesión le ha resultado útil y, si procede, añade comentario o estado posterior.
+    \item La app envía la valoración al backend.
+    \item El sistema guarda el feedback y lo vincula con la recomendación y la playlist generadas.
+    \item Si corresponde, se actualizan el perfil aprendido y el mantenimiento del modelo supervisado.
+\end{enumerate}
+
+\textbf{Flujos alternativos}
+\begin{itemize}
+    \item Si el usuario intenta guardar el formulario sin indicar si la sesión ayudó o no, la app bloquea el envío.
+    \item Si la escritura falla, la sesión no se marca como cerrada y el sistema invita a reintentar.
+\end{itemize}
+
+\subsection{CU8. Consultar aprendizaje personal}
+
+\textbf{Actor principal:} usuario. \\
+\textbf{Precondición:} existe actividad previa suficiente dentro del sistema. \\
+\textbf{Postcondición:} el usuario accede a patrones e \textit{insights}
+agregados sobre su historial de uso.
+
+\textbf{Flujo principal}
+\begin{enumerate}[label=\arabic*.]
+    \item El usuario entra en la sección de aprendizaje.
+    \item La aplicación solicita los resúmenes agregados del perfil.
+    \item Se muestran indicadores sobre afinidad positiva, sesiones valoradas y patrones generales.
+    \item El usuario explora los bloques de detalle si desea comprender mejor la evolución del sistema.
+\end{enumerate}
+
+\textbf{Flujos alternativos}
+\begin{itemize}
+    \item Si todavía no existe actividad suficiente, la app muestra el estado de aprendizaje insuficiente.
+    \item Si el backend no puede recuperar los agregados, se informa del error sin afectar al resto de la navegación.
+\end{itemize}
 
 \section{Matriz de trazabilidad}
 \label{sec:matriz_trazabilidad}

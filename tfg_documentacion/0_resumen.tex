@@ -1,0 +1,44 @@
+\chapter*{Resumen}
+\phantomsection
+\addcontentsline{toc}{chapter}{Resumen}
+\markboth{Resumen}{Resumen}
+
+\noindent\textbf{Título original:} \TituloTFG
+
+\vspace{0.4cm}
+
+Harmony Hub es una aplicación móvil orientada a transformar el estado
+emocional y contextual del usuario en una experiencia musical más útil para su
+bienestar cotidiano. La solución combina un check-in guiado, una lógica de
+recomendación contextual, un catálogo musical estructurado, la materialización
+de playlists reales en Spotify y un ciclo de aprendizaje apoyado en feedback.
+Desde el punto de vista técnico, el sistema se construye sobre un cliente móvil
+en Flutter, un backend en FastAPI, persistencia documental en Firestore y un
+modelo supervisado a nivel de sesión cuya activación solo se permite cuando
+existe evidencia objetiva suficiente.
+
+El proceso de recomendación no depende exclusivamente de un modelo de
+aprendizaje automático. En su lugar, el sistema adopta un enfoque híbrido: una
+capa heurística garantiza operatividad desde la primera sesión, mientras que un
+modelo de regresión logística puede reordenar los modos candidatos cuando se
+alcanzan mínimos de datos, cobertura por clase y calidad global. El ranking
+musical principal se realiza sobre el catálogo propio \texttt{msd\_tracks},
+mientras que Spotify se utiliza principalmente para autenticación, lectura de
+contexto musical básico y materialización final de la playlist. Esta decisión
+permite mantener utilidad incluso bajo restricciones externas, como cambios en
+endpoints, limitaciones de cuota o ausencia de datos de entrenamiento
+suficientes.
+
+El proyecto explora así cómo combinar software móvil, APIs externas, datos
+contextuales y aprendizaje progresivo para acompañar momentos cotidianos de
+regulación emocional sin plantearse como una herramienta clínica. En el estado
+actual del entregable, el aprendizaje individual del perfil ya es visible en la
+experiencia y deja evidencia longitudinal sobre los cinco estados emocionales
+considerados. Además, el modelo supervisado de sesión se encuentra activo bajo
+puertas explícitas de calidad y puede aportar reordenación probabilística sin
+perder la capacidad de abstención cuando la evidencia es débil. La validación
+realizada muestra también que la medición del entorno acústico puede integrarse
+en el contexto de recomendación y en la generación de playlists. El resultado
+es un prototipo funcional que demuestra la viabilidad de una recomendación
+musical explicable, orientada a sesiones y capaz de crear playlists reales en
+Spotify con trazabilidad contextual y aprendizaje progresivo.

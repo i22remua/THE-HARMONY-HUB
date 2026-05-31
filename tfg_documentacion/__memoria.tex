@@ -29,7 +29,16 @@
 \usepackage{appendix}
 \usepackage{pdfpages}
 \usepackage{pdflscape} %poner pdf horizontal
-\usepackage[hidelinks,linktoc=all]{hyperref}%para el hiperlink de las secciones
+\usepackage[
+  unicode,
+  hidelinks,
+  linktoc=all,
+  bookmarksopen=true,
+  bookmarksnumbered=true,
+  pdfpagelabels=true,
+  hypertexnames=false
+]{hyperref}%para el hiperlink de las secciones
+\usepackage{bookmark}
 \usepackage[newfloat]{minted}
 \usepackage[nottoc]{tocbibind}
 \usepackage{glossaries}
@@ -42,7 +51,7 @@
 
 
 \usepackage{tikz} % Diagramas de flujo
-\usetikzlibrary{shapes.geometric, arrows} %Libería de flechas
+\usetikzlibrary{shapes.geometric, arrows, positioning} %Libería de flechas
 
 % FONTs
 \usepackage{fontenc}
@@ -156,7 +165,7 @@
 % Para que ponga ANEXO en vez de APENDICE
  \addto\captionsspanish{\renewcommand{\appendixname}{Anexo}} %para que ponga anexo y no apéndice.
 
-\makeglossaries
+\makenoidxglossaries
 \raggedbottom  % Quita huecos grandes en blanco
 \setlength{\emergencystretch}{3em}
 \begin{document}
@@ -183,6 +192,7 @@
 % AGRADECIMIENTOS %
 %%%%%%%%%%%%%%%%%%%
 \input{0_agradecimientos}
+\input{0_resumen}
 \input{0_abstract}
 \input{0_palabras_clave}
 
@@ -213,12 +223,12 @@
 % \listofdiagrams
 
 % Lista de acrónimos.
-\cleardoublepage
 \phantomsection
 \pdfbookmark[0]{Lista de acrónimos}{lista-acronimos}
 \addcontentsline{toc}{chapter}{Lista de Acrónimos}
 \glsaddall[types=\acronymtype]
-\printglossary[type=\acronymtype, title={Acrónimos}, nonumberlist]
+\printnoidxglossary[type=\acronymtype, title={Lista de Acrónimos}, nonumberlist]
+\clearpage
 
 %---------------------%
 %	CUERPO DE TEXTO   %
