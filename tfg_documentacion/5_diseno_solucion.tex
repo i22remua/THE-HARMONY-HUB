@@ -111,7 +111,7 @@ vez.
 Por esa razón, el diseño se apoya en módulos relativamente desacoplados, con
 fronteras funcionales bastante claras:
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \renewcommand{\arraystretch}{1.1}
@@ -701,8 +701,9 @@ para aceptar la reordenación supervisada.
 
 \begin{table}[H]
 \centering
-\small
-\renewcommand{\arraystretch}{1.1}
+\scriptsize
+\renewcommand{\arraystretch}{1.0}
+\setlength{\tabcolsep}{3pt}
 \begin{tabularx}{\textwidth}{|P{2.7cm}|Y|Y|}
 \hline
 \textbf{Elemento} & \textbf{Descripción} & \textbf{Valor para el usuario} \\
@@ -1318,7 +1319,7 @@ recomendación, generación de playlist y devolución de feedback.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.72\textwidth]{Imagenes/diagrama_navegacion_app.png}
+\includegraphics[width=0.84\textwidth]{Imagenes/diagrama_navegacion_app.png}
 \caption{Diagrama de navegación principal de Harmony Hub.}
 \label{fig:diagrama_navegacion_app}
 \end{figure}
@@ -1373,14 +1374,26 @@ acompañamiento en lugar de exigir una interacción áspera o demasiado funciona
 
 También se tomaron decisiones específicas para mejorar la experiencia en móvil:
 
-\begin{table}[H]
-\centering
+\begingroup
 \small
 \renewcommand{\arraystretch}{1.1}
-\begin{tabularx}{\textwidth}{|P{4.4cm}|Y|}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{|P{4.1cm}|P{9.9cm}|}
+\caption{Decisiones específicas adoptadas en el diseño de la interfaz.}
+\label{tab:decisiones_interfaz}\\
 \hline
 \textbf{Decisión de interfaz} & \textbf{Justificación} \\
 \hline
+\endfirsthead
+\hline
+\textbf{Decisión de interfaz} & \textbf{Justificación} \\
+\hline
+\endhead
+\hline
+\multicolumn{2}{r}{\textit{Continúa en la página siguiente}} \\
+\endfoot
+\hline
+\endlastfoot
 Jerarquía tipográfica muy marcada en pantallas clave & Permite que el usuario entienda rápidamente dónde está y cuál es la siguiente acción importante sin leer bloques largos. \\
 \hline
 Check-in guiado por pasos cortos & Reduce la sensación de cuestionario y favorece respuestas rápidas en momentos de carga mental o poco tiempo disponible. \\
@@ -1396,11 +1409,8 @@ Reducción de densidad textual y agrupación por contexto & Facilita el escaneo 
 Revisión explícita de espaciados y overflows & Resulta necesaria para que la experiencia sea sólida también en dispositivos compactos y no se rompa en momentos críticos del flujo. \\
 \hline
 Presencia de branding propio y lenguaje visual coherente & Refuerza identidad de producto y ayuda a que Harmony Hub no se perciba como una demo técnica sin personalidad. \\
-\hline
-\end{tabularx}
-\caption{Decisiones específicas adoptadas en el diseño de la interfaz.}
-\label{tab:decisiones_interfaz}
-\end{table}
+\end{longtable}
+\endgroup
 
 \section{Diseño de pruebas}
 \label{sec:diseno_pruebas}

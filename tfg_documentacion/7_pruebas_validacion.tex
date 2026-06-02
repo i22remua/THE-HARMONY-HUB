@@ -66,24 +66,34 @@ creación de playlists reales en Spotify (\textbf{RF8}), el cierre con feedback
 La comprobación funcional más relevante ha sido la ejecución de tres casos
 completos de generación:
 
-\begin{table}[H]
-\centering
-\small
+\medskip
+\begingroup
+\scriptsize
 \renewcommand{\arraystretch}{1.1}
-\begin{tabularx}{\textwidth}{|P{1.2cm}|P{2.5cm}|P{2.2cm}|Y|P{2.6cm}|}
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{|P{1.0cm}|P{2.9cm}|P{2.1cm}|P{5.1cm}|P{1.8cm}|}
+\caption{Casos funcionales reales ejecutados para la generación de playlists.}
+\label{tab:casos_funcionales_playlist}\\
 \hline
 \textbf{Caso} & \textbf{Objetivo y contexto} & \textbf{Modo recomendado} & \textbf{Observaciones verificadas} & \textbf{Resultado} \\
 \hline
+\endfirsthead
+\hline
+\textbf{Caso} & \textbf{Objetivo y contexto} & \textbf{Modo recomendado} & \textbf{Observaciones verificadas} & \textbf{Resultado} \\
+\hline
+\endhead
+\hline
+\multicolumn{5}{r}{\textit{Continúa en la página siguiente}} \\
+\endfoot
+\hline
+\endlastfoot
 C1 & Relajación, usuario estresado, energía baja-media, entorno quiet, preferencia instrumental e intensidad suave. & Relajación / estresado / suave & Se generó playlist Harmony Hub · Relajacion. El backend construyó perfil con géneros semilla ambient, chill y classical; además cerró la sesión con feedback sin error funcional. & Correcto \\
 \hline
 C2 & Foco, usuario estresado, energía media, entorno medido con picos intermitentes, preferencia con voz e intensidad suave, ejecutado desde dispositivo Android físico. & Foco / estresado / media & Se activó el modelo supervisado a nivel de sesión, el entorno se incorporó a la recomendación y a la generación, y se creó la playlist Harmony Hub · Foco en Spotify. Las trazas mostraron \texttt{ml\_enabled = True}, \texttt{selection\_source = session\_ml} y \texttt{use\_environment = True}. & Correcto \\
 \hline
 C3 & Energía, usuario cansado, energía baja, sin uso de entorno, intensidad suave y perfil de popularidad mainstream. & Energía / cansado / suave & Se generó playlist Harmony Hub · Energia. El sistema completó el ranking principal sobre msd\_tracks y materializó la sesión final en Spotify sin bloqueo funcional. & Correcto \\
-\hline
-\end{tabularx}
-\caption{Casos funcionales reales ejecutados para la generación de playlists.}
-\label{tab:casos_funcionales_playlist}
-\end{table}
+\end{longtable}
+\endgroup
 
 Estos tres casos permiten afirmar que el flujo de generación está implementado
 y es operativo. Además, permiten comprobar que el comportamiento final no
@@ -115,14 +125,26 @@ La revisión funcional también permite contrastar si los casos de uso descritos
 en el Capítulo~\ref{ch:analisis_problema} han quedado realmente cubiertos por
 la aplicación y por su backend asociado.
 
-\begin{table}[H]
-\centering
+\begingroup
 \small
 \renewcommand{\arraystretch}{1.1}
-\begin{tabularx}{\textwidth}{|P{1.0cm}|P{4.2cm}|Y|P{1.8cm}|}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{|P{1.0cm}|P{4.2cm}|P{6.0cm}|P{1.8cm}|}
+\caption{Comprobación de cobertura de los casos de uso principales.}
+\label{tab:cobertura_casos_uso}\\
 \hline
 \textbf{ID} & \textbf{Caso de uso} & \textbf{Evidencia verificada} & \textbf{Estado} \\
 \hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Caso de uso} & \textbf{Evidencia verificada} & \textbf{Estado} \\
+\hline
+\endhead
+\hline
+\multicolumn{4}{r}{\textit{Continúa en la página siguiente}} \\
+\endfoot
+\hline
+\endlastfoot
 CU1 & Registrarse e iniciar sesión & Flujo disponible en cliente mediante Firebase Authentication y validado durante las pruebas manuales de acceso. & Cumplido \\
 \hline
 CU2 & Recuperar contraseña & Implementado mediante envío de correo de restablecimiento desde \texttt{AuthService} y accesible desde la pantalla de autenticación. & Cumplido \\
@@ -138,11 +160,8 @@ CU6 & Guardar un modo rápido & Implementado sobre la colección \texttt{saved\_
 CU7 & Enviar feedback sobre una sesión & Validado en el cierre de sesión, con persistencia pública y privada y efecto posterior sobre el aprendizaje. & Cumplido \\
 \hline
 CU8 & Consultar aprendizaje personal & Cubierto por la pantalla de aprendizaje y por los documentos agregados en \texttt{user\_generation\_preferences}. & Cumplido \\
-\hline
-\end{tabularx}
-\caption{Comprobación de cobertura de los casos de uso principales.}
-\label{tab:cobertura_casos_uso}
-\end{table}
+\end{longtable}
+\endgroup
 
 \section{Pruebas no funcionales}
 \label{sec:pruebas_no_funcionales}
@@ -194,7 +213,7 @@ payload enviado por el cliente con el esquema realmente permitido por
 del indicador de bloque cifrado.
 
 Otra corrección relevante ha afectado al flujo de generación de playlist cuando
-las búsquedas externas entran en rate limit. En lugar de quedar bloqueado
+las búsquedas externas entran en limitación de tasa. En lugar de quedar bloqueado
 durante esperas muy largas, el sistema acota reintentos, conserva el ranking
 musical construido sobre el catálogo MSD y mantiene un flujo de materialización
 controlado cuando es viable. Esto resulta coherente con la arquitectura final:

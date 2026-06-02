@@ -104,6 +104,7 @@ tfg_documentacion/__memoria.out
 tfg_documentacion/__memoria.pdf
 tfg_documentacion/__memoria.toc
 tfg_documentacion/_minted-__memoria/
+tfg_documentacion/pygmentize
 
 # Local packages / delivery artifacts
 *.zip
