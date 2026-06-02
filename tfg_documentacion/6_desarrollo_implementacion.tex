@@ -447,15 +447,17 @@ fichero de auditoría.
 El script \texttt{train\_ranking\_model.py} sigue existiendo como mecanismo
 manual de recuperación o depuración, pero el flujo ordinario del prototipo ya
 queda cubierto por ese mantenimiento automático. En ambos casos, la fase de
-entrenamiento calcula observabilidad por mood, estado de puertas de calidad y
+entrenamiento calcula observabilidad por \textit{mood}, estado de puertas de calidad y
 motivo de disponibilidad o abstención del modelo.
 
 En el estado actual del repositorio, este pipeline ya genera no solo el modelo
 serializado y sus metadatos, sino también artefactos de auditoría y
 explicabilidad. La situación real del clasificador global ya no es de
 abstención completa: dispone de 66 ejemplos de sesión, con un balance
-suficiente para la configuración operativa final, puerta global activa,
-cobertura completa por mood y umbral de confianza configurable. Esta
+suficiente para la configuración operativa final, puerta global activa
+y umbral de confianza configurable. La observabilidad por \textit{mood}
+queda disponible como señal de auditoría complementaria sobre la cobertura del
+dataset, pero no como puerta dura de activación. Esta
 observación es importante porque refleja que el pipeline no solo está terminado
 e integrado, sino también activado en ejecución real dentro del flujo del
 producto.

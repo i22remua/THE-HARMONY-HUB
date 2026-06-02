@@ -223,10 +223,12 @@ capa de autorización, contexto musical básico y materialización final.
 La validación del componente aprendido llevó a refinar la política
 de activación del modelo. La versión actual no se basa en desbloquear el
 aprendizaje tras un número fijo de sesiones, sino en exigir evidencia
-suficiente a nivel global y también para el estado emocional concreto que se
-pretende recomendar. Esto permitió alinear mejor el comportamiento del sistema
-con una explicación académica más prudente y más fiel al estado real de los
-datos.
+suficiente a nivel global, junto con un umbral operativo de confianza en la
+sesión concreta. La observabilidad por \textit{mood} se conserva como señal de
+auditoría y lectura del dataset, pero ya no actúa como puerta dura
+independiente del clasificador global. Esto permitió alinear mejor el
+comportamiento del sistema con una explicación académica más prudente y más
+fiel al estado real de los datos.
 
 En esa misma línea se corrigió el comportamiento binario del aprendizaje por
 mood. Antes, si el estado emocional actual no superaba su puerta local,
