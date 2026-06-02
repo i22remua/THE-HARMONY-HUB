@@ -8,7 +8,7 @@ class ApiClient {
     'API_BASE_URL',
     defaultValue: '',
   );
-  static const String _localNetworkBaseUrl = 'http://192.168.18.52:8000';
+  static const String _localNetworkBaseUrl = 'http://192.168.18.61:8000';
 
   static String _resolveBaseUrl() {
     if (_configuredBaseUrl.isNotEmpty) {

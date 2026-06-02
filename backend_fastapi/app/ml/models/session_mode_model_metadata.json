@@ -1,9 +1,9 @@
 {
-  "trained_at": "2026-05-26T15:20:54.211978+00:00",
+  "trained_at": "2026-06-02T17:58:56.829903+00:00",
   "collection_name": "training_session_examples",
-  "total_examples": 67,
+  "total_examples": 68,
   "class_counts": {
-    "1": 55,
+    "1": 56,
     "0": 12
   },
   "minimum_data_thresholds": {
@@ -37,13 +37,13 @@
   "decision_thresholds": {
     "calibration_method": "oof_f1_threshold",
     "cv_folds": 5,
-    "min_selected_mode_probability": 0.98,
-    "oof_recommended_threshold": 0.1026,
-    "oof_positive_precision": 0.8333,
-    "oof_positive_recall": 1.0,
-    "oof_positive_f1": 0.9091,
-    "oof_positive_coverage": 0.0149,
-    "oof_positive_base_rate": 0.8209,
+    "min_selected_mode_probability": 0.14,
+    "oof_recommended_threshold": 0.0966,
+    "oof_positive_precision": 0.8209,
+    "oof_positive_recall": 0.9821,
+    "oof_positive_f1": 0.8943,
+    "oof_positive_coverage": 0.9559,
+    "oof_positive_base_rate": 0.8235,
     "calibration_ready": true
   },
   "data_gate_passed": true,
@@ -53,11 +53,11 @@
   "mood_coverage": {
     "quality_gate_passed": true,
     "coverage_ratio": 1.0,
-    "average_quality_score": 69.7,
-    "overall_quality_score": 88.91,
+    "average_quality_score": 69.64,
+    "overall_quality_score": 88.92,
     "moods_observed": 5,
     "moods_ready": 5,
-    "overall_observation_strength": 0.9758,
+    "overall_observation_strength": 0.9771,
     "per_mood": {
       "cansado": {
         "total_examples": 12,
@@ -71,14 +71,14 @@
         "quality_gate_passed": true
       },
       "estresado": {
-        "total_examples": 16,
-        "positive_count": 13,
+        "total_examples": 17,
+        "positive_count": 14,
         "negative_count": 3,
         "unique_recommended_modes": 5,
-        "observation_strength": 0.9305,
-        "label_balance": 0.375,
+        "observation_strength": 0.9412,
+        "label_balance": 0.3529,
         "mode_diversity": 0.9179,
-        "quality_score": 73.29,
+        "quality_score": 72.95,
         "quality_gate_passed": true
       },
       "feliz": {
@@ -120,12 +120,12 @@
   "readiness_reason": "quality_gate_passed",
   "cv_folds": 5,
   "metrics": {
-    "balanced_accuracy_mean": 0.4621,
-    "balanced_accuracy_std": 0.1231,
-    "roc_auc_mean": 0.5515,
-    "roc_auc_std": 0.1641,
-    "f1_mean": 0.7375,
-    "f1_std": 0.1077
+    "balanced_accuracy_mean": 0.5583,
+    "balanced_accuracy_std": 0.1404,
+    "roc_auc_mean": 0.5394,
+    "roc_auc_std": 0.2233,
+    "f1_mean": 0.8081,
+    "f1_std": 0.0631
   },
-  "quality_score": 54.85
+  "quality_score": 60.17
 }
