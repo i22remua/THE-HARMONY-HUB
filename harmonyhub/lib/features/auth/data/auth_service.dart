@@ -42,42 +42,9 @@ class AuthService {
   }
 
   Future<void> sendPasswordReset({required String email}) async {
-    final trimmedEmail = email.trim();
     final normalizedEmail = _normalizeEmail(email);
-    String resetEmail = trimmedEmail;
-
-    final normalizedMatch = await _firestore
-        .collection('users')
-        .where('email_normalized', isEqualTo: normalizedEmail)
-        .limit(1)
-        .get();
-
-    if (normalizedMatch.docs.isNotEmpty) {
-      resetEmail =
-          (normalizedMatch.docs.first.data()['email'] as String?)
-                  ?.trim()
-                  .isNotEmpty ==
-              true
-          ? (normalizedMatch.docs.first.data()['email'] as String).trim()
-          : normalizedEmail;
-    } else {
-      final directMatch = await _firestore
-          .collection('users')
-          .where('email', isEqualTo: trimmedEmail)
-          .limit(1)
-          .get();
-
-      if (directMatch.docs.isNotEmpty) {
-        resetEmail =
-            (directMatch.docs.first.data()['email'] as String?)
-                    ?.trim()
-                    .isNotEmpty ==
-                true
-            ? (directMatch.docs.first.data()['email'] as String).trim()
-            : trimmedEmail;
-      }
-    }
-
-    await _auth.sendPasswordResetEmail(email: resetEmail);
+    // La recuperación no debe depender de leer Firestore sin sesión iniciada.
+    // Firebase Auth ya resuelve el envío del correo de reseteo usando el email.
+    await _auth.sendPasswordResetEmail(email: normalizedEmail);
   }
 }

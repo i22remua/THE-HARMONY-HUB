@@ -33,13 +33,22 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final isCompactBottomNav = width < 410;
+    final theme = Theme.of(context);
+
     return Scaffold(
       extendBody: true,
       body: IndexedStack(index: _index, children: _pages),
       bottomNavigationBar: SafeArea(
         minimum: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
+          padding: EdgeInsets.fromLTRB(
+            isCompactBottomNav ? 8 : 10,
+            10,
+            isCompactBottomNav ? 8 : 10,
+            8,
+          ),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -61,41 +70,69 @@ class _AppShellState extends State<AppShell> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(28),
-            child: NavigationBar(
-              backgroundColor: Colors.transparent,
-              selectedIndex: _index,
-              onDestinationSelected: (value) {
-                setState(() {
-                  _index = value;
-                });
-              },
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.home_outlined),
-                  selectedIcon: Icon(Icons.home_rounded),
-                  label: 'Home',
+            child: NavigationBarTheme(
+              data: NavigationBarThemeData(
+                labelTextStyle: WidgetStateProperty.resolveWith(
+                  (states) =>
+                      (isCompactBottomNav
+                              ? theme.textTheme.labelSmall
+                              : theme.textTheme.bodyMedium)
+                          ?.copyWith(
+                            fontSize: isCompactBottomNav ? 10.5 : null,
+                            fontWeight: states.contains(WidgetState.selected)
+                                ? FontWeight.w800
+                                : FontWeight.w600,
+                            color: states.contains(WidgetState.selected)
+                                ? const Color(0xFF1F2F2B)
+                                : const Color(0xFF7A756E),
+                          ),
                 ),
-                NavigationDestination(
-                  icon: Icon(Icons.auto_awesome_outlined),
-                  selectedIcon: Icon(Icons.auto_awesome),
-                  label: 'Modos',
+                iconTheme: WidgetStateProperty.resolveWith(
+                  (states) => IconThemeData(
+                    size: isCompactBottomNav ? 22 : 24,
+                    color: states.contains(WidgetState.selected)
+                        ? const Color(0xFF1F2F2B)
+                        : const Color(0xFF7A756E),
+                  ),
                 ),
-                NavigationDestination(
-                  icon: Icon(Icons.history_rounded),
-                  selectedIcon: Icon(Icons.history_toggle_off_rounded),
-                  label: 'Historial',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.psychology_alt_outlined),
-                  selectedIcon: Icon(Icons.psychology_alt_rounded),
-                  label: 'Aprendizaje',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.person_outline_rounded),
-                  selectedIcon: Icon(Icons.person_rounded),
-                  label: 'Perfil',
-                ),
-              ],
+                height: isCompactBottomNav ? 74 : 78,
+              ),
+              child: NavigationBar(
+                backgroundColor: Colors.transparent,
+                selectedIndex: _index,
+                onDestinationSelected: (value) {
+                  setState(() {
+                    _index = value;
+                  });
+                },
+                destinations: const [
+                  NavigationDestination(
+                    icon: Icon(Icons.home_outlined),
+                    selectedIcon: Icon(Icons.home_rounded),
+                    label: 'Home',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.auto_awesome_outlined),
+                    selectedIcon: Icon(Icons.auto_awesome),
+                    label: 'Modos',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.history_rounded),
+                    selectedIcon: Icon(Icons.history_toggle_off_rounded),
+                    label: 'Historial',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.psychology_alt_outlined),
+                    selectedIcon: Icon(Icons.psychology_alt_rounded),
+                    label: 'Aprendizaje',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.person_outline_rounded),
+                    selectedIcon: Icon(Icons.person_rounded),
+                    label: 'Perfil',
+                  ),
+                ],
+              ),
             ),
           ),
         ),

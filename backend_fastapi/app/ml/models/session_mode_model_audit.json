@@ -1,50 +1,50 @@
 {
-  "executed_at": "2026-06-02T17:58:56.925721+00:00",
-  "current_labeled_examples": 68,
-  "previous_metadata_examples": 67,
+  "executed_at": "2026-06-16T17:22:22.083965+00:00",
+  "current_labeled_examples": 69,
+  "previous_metadata_examples": 68,
   "trained": true,
   "skipped_reason": null,
   "train_result": {
     "trained": true,
     "reason": "trained",
     "collection_name": "training_session_examples",
-    "total_examples": 68,
+    "total_examples": 69,
     "class_counts": {
-      "1": 56,
+      "1": 57,
       "0": 12
     },
     "cv_folds": 5,
     "metrics": {
-      "balanced_accuracy_mean": 0.5583,
-      "balanced_accuracy_std": 0.1404,
-      "roc_auc_mean": 0.5394,
-      "roc_auc_std": 0.2233,
-      "f1_mean": 0.8081,
-      "f1_std": 0.0631
+      "balanced_accuracy_mean": 0.5197,
+      "balanced_accuracy_std": 0.0871,
+      "roc_auc_mean": 0.5841,
+      "roc_auc_std": 0.2317,
+      "f1_mean": 0.8193,
+      "f1_std": 0.0418
     },
-    "quality_score": 60.17,
+    "quality_score": 60.22,
     "quality_gate_passed": true,
     "quality_reason": "quality_gate_passed",
     "decision_thresholds": {
       "calibration_method": "oof_f1_threshold",
       "cv_folds": 5,
       "min_selected_mode_probability": 0.14,
-      "oof_recommended_threshold": 0.0966,
-      "oof_positive_precision": 0.8209,
-      "oof_positive_recall": 0.9821,
-      "oof_positive_f1": 0.8943,
-      "oof_positive_coverage": 0.9559,
-      "oof_positive_base_rate": 0.8235,
+      "oof_recommended_threshold": 0.0957,
+      "oof_positive_precision": 0.8358,
+      "oof_positive_recall": 0.9825,
+      "oof_positive_f1": 0.9032,
+      "oof_positive_coverage": 0.9565,
+      "oof_positive_base_rate": 0.8261,
       "calibration_ready": true
     },
     "mood_coverage": {
       "quality_gate_passed": true,
       "coverage_ratio": 1.0,
-      "average_quality_score": 69.64,
+      "average_quality_score": 69.57,
       "overall_quality_score": 88.92,
       "moods_observed": 5,
       "moods_ready": 5,
-      "overall_observation_strength": 0.9771,
+      "overall_observation_strength": 0.9784,
       "per_mood": {
         "cansado": {
           "total_examples": 12,
@@ -58,14 +58,14 @@
           "quality_gate_passed": true
         },
         "estresado": {
-          "total_examples": 17,
-          "positive_count": 14,
+          "total_examples": 18,
+          "positive_count": 15,
           "negative_count": 3,
           "unique_recommended_modes": 5,
-          "observation_strength": 0.9412,
-          "label_balance": 0.3529,
+          "observation_strength": 0.9502,
+          "label_balance": 0.3333,
           "mode_diversity": 0.9179,
-          "quality_score": 72.95,
+          "quality_score": 72.62,
           "quality_gate_passed": true
         },
         "feliz": {
@@ -126,10 +126,10 @@
   },
   "audit": {
     "collection": "training_session_examples",
-    "examples_total_in_firestore": 68,
-    "examples_with_label": 68,
+    "examples_total_in_firestore": 69,
+    "examples_with_label": 69,
     "class_counts": {
-      "1": 56,
+      "1": 57,
       "0": 12
     },
     "minimum_total_examples_required": 40,
@@ -138,12 +138,12 @@
     "top_goals": {
       "energia": 29,
       "relajacion": 23,
-      "foco": 16
+      "foco": 17
     },
     "top_modes": {
       "energia_triste_media": 14,
       "relajacion_estresado_suave": 8,
-      "foco_estresado_media": 6,
+      "foco_estresado_media": 7,
       "relajacion_neutral_suave": 6,
       "energia_cansado_media": 5,
       "relajacion_cansado_suave": 4,
@@ -153,10 +153,10 @@
       "relajacion_triste_suave": 2
     },
     "metadata_summary": {
-      "trained_at": "2026-06-02T17:58:56.829903+00:00",
-      "total_examples": 68,
+      "trained_at": "2026-06-16T17:22:21.960220+00:00",
+      "total_examples": 69,
       "class_counts": {
-        "1": 56,
+        "1": 57,
         "0": 12
       },
       "data_gate_passed": true,
@@ -164,23 +164,23 @@
       "model_readiness_reason": "model_gate_passed",
       "quality_gate_passed": true,
       "readiness_reason": "quality_gate_passed",
-      "quality_score": 60.17,
+      "quality_score": 60.22,
       "metrics": {
-        "balanced_accuracy_mean": 0.5583,
-        "balanced_accuracy_std": 0.1404,
-        "roc_auc_mean": 0.5394,
-        "roc_auc_std": 0.2233,
-        "f1_mean": 0.8081,
-        "f1_std": 0.0631
+        "balanced_accuracy_mean": 0.5197,
+        "balanced_accuracy_std": 0.0871,
+        "roc_auc_mean": 0.5841,
+        "roc_auc_std": 0.2317,
+        "f1_mean": 0.8193,
+        "f1_std": 0.0418
       },
       "mood_coverage": {
         "quality_gate_passed": true,
         "coverage_ratio": 1.0,
-        "average_quality_score": 69.64,
+        "average_quality_score": 69.57,
         "overall_quality_score": 88.92,
         "moods_observed": 5,
         "moods_ready": 5,
-        "overall_observation_strength": 0.9771,
+        "overall_observation_strength": 0.9784,
         "per_mood": {
           "cansado": {
             "total_examples": 12,
@@ -194,14 +194,14 @@
             "quality_gate_passed": true
           },
           "estresado": {
-            "total_examples": 17,
-            "positive_count": 14,
+            "total_examples": 18,
+            "positive_count": 15,
             "negative_count": 3,
             "unique_recommended_modes": 5,
-            "observation_strength": 0.9412,
-            "label_balance": 0.3529,
+            "observation_strength": 0.9502,
+            "label_balance": 0.3333,
             "mode_diversity": 0.9179,
-            "quality_score": 72.95,
+            "quality_score": 72.62,
             "quality_gate_passed": true
           },
           "feliz": {

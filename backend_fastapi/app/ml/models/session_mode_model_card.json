@@ -1,9 +1,9 @@
 {
   "model_type": "LogisticRegression",
-  "trained_at": "2026-06-02T17:58:56.829903+00:00",
-  "total_examples": 68,
+  "trained_at": "2026-06-16T17:22:21.960220+00:00",
+  "total_examples": 69,
   "class_counts": {
-    "1": 56,
+    "1": 57,
     "0": 12
   },
   "feature_groups": {
@@ -31,37 +31,37 @@
   "quality_summary": {
     "model_gate_passed": true,
     "quality_gate_passed": true,
-    "quality_score": 60.17,
+    "quality_score": 60.22,
     "model_readiness_reason": "model_gate_passed",
     "metrics": {
-      "balanced_accuracy_mean": 0.5583,
-      "balanced_accuracy_std": 0.1404,
-      "roc_auc_mean": 0.5394,
-      "roc_auc_std": 0.2233,
-      "f1_mean": 0.8081,
-      "f1_std": 0.0631
+      "balanced_accuracy_mean": 0.5197,
+      "balanced_accuracy_std": 0.0871,
+      "roc_auc_mean": 0.5841,
+      "roc_auc_std": 0.2317,
+      "f1_mean": 0.8193,
+      "f1_std": 0.0418
     }
   },
   "decision_thresholds": {
     "calibration_method": "oof_f1_threshold",
     "cv_folds": 5,
     "min_selected_mode_probability": 0.14,
-    "oof_recommended_threshold": 0.0966,
-    "oof_positive_precision": 0.8209,
-    "oof_positive_recall": 0.9821,
-    "oof_positive_f1": 0.8943,
-    "oof_positive_coverage": 0.9559,
-    "oof_positive_base_rate": 0.8235,
+    "oof_recommended_threshold": 0.0957,
+    "oof_positive_precision": 0.8358,
+    "oof_positive_recall": 0.9825,
+    "oof_positive_f1": 0.9032,
+    "oof_positive_coverage": 0.9565,
+    "oof_positive_base_rate": 0.8261,
     "calibration_ready": true
   },
   "mood_coverage": {
     "quality_gate_passed": true,
     "coverage_ratio": 1.0,
-    "average_quality_score": 69.64,
+    "average_quality_score": 69.57,
     "overall_quality_score": 88.92,
     "moods_observed": 5,
     "moods_ready": 5,
-    "overall_observation_strength": 0.9771,
+    "overall_observation_strength": 0.9784,
     "per_mood": {
       "cansado": {
         "total_examples": 12,
@@ -75,14 +75,14 @@
         "quality_gate_passed": true
       },
       "estresado": {
-        "total_examples": 17,
-        "positive_count": 14,
+        "total_examples": 18,
+        "positive_count": 15,
         "negative_count": 3,
         "unique_recommended_modes": 5,
-        "observation_strength": 0.9412,
-        "label_balance": 0.3529,
+        "observation_strength": 0.9502,
+        "label_balance": 0.3333,
         "mode_diversity": 0.9179,
-        "quality_score": 72.95,
+        "quality_score": 72.62,
         "quality_gate_passed": true
       },
       "feliz": {
@@ -120,192 +120,192 @@
       }
     }
   },
-  "intercept": 1.2652,
+  "intercept": 1.2557,
   "coefficient_summary": {
     "top_positive_features": [
       {
         "feature": "bin__use_environment",
         "label": "use_environment",
-        "coefficient": 1.2148
+        "coefficient": 1.2128
       },
       {
         "feature": "cat__target_bpm_range_60-90",
         "label": "target_bpm_range=60-90",
-        "coefficient": 0.6939
+        "coefficient": 0.6855
       },
       {
         "feature": "cat__recommended_mode_relajacion_estresado_suave",
         "label": "recommended_mode=relajacion_estresado_suave",
-        "coefficient": 0.6524
+        "coefficient": 0.6492
       },
       {
         "feature": "cat__intensity_preference_alta",
         "label": "intensity_preference=alta",
-        "coefficient": 0.622
+        "coefficient": 0.6326
       },
       {
         "feature": "cat__exploration_preference_equilibrado",
         "label": "exploration_preference=equilibrado",
-        "coefficient": 0.5772
-      },
-      {
-        "feature": "cat__noise_category_active",
-        "label": "noise_category=active",
-        "coefficient": 0.5673
-      },
-      {
-        "feature": "cat__desired_outcome_mas_acompanado",
-        "label": "desired_outcome=mas_acompanado",
-        "coefficient": 0.5617
+        "coefficient": 0.6031
       },
       {
         "feature": "cat__target_energy_baja-media",
         "label": "target_energy=baja-media",
-        "coefficient": 0.5416
+        "coefficient": 0.5745
       },
       {
-        "feature": "cat__target_bpm_range_105-135",
-        "label": "target_bpm_range=105-135",
-        "coefficient": 0.3848
+        "feature": "cat__desired_outcome_mas_acompanado",
+        "label": "desired_outcome=mas_acompanado",
+        "coefficient": 0.5723
       },
       {
-        "feature": "cat__target_energy_media",
-        "label": "target_energy=media",
-        "coefficient": 0.3786
+        "feature": "cat__noise_category_active",
+        "label": "noise_category=active",
+        "coefficient": 0.5676
       },
       {
         "feature": "cat__recommended_mode_energia_triste_media",
         "label": "recommended_mode=energia_triste_media",
-        "coefficient": 0.3764
+        "coefficient": 0.389
+      },
+      {
+        "feature": "cat__target_bpm_range_105-135",
+        "label": "target_bpm_range=105-135",
+        "coefficient": 0.3877
       },
       {
         "feature": "cat__target_energy_alta",
         "label": "target_energy=alta",
         "coefficient": 0.3764
+      },
+      {
+        "feature": "cat__target_energy_media",
+        "label": "target_energy=media",
+        "coefficient": 0.3552
       }
     ],
     "top_negative_features": [
       {
         "feature": "cat__recommended_mode_relajacion_cansado_suave",
         "label": "recommended_mode=relajacion_cansado_suave",
-        "coefficient": -0.9008
+        "coefficient": -0.9213
       },
       {
         "feature": "cat__recommended_mode_foco_triste_media",
         "label": "recommended_mode=foco_triste_media",
-        "coefficient": -0.8805
+        "coefficient": -0.8882
       },
       {
         "feature": "cat__target_energy_media-alta",
         "label": "target_energy=media-alta",
-        "coefficient": -0.7883
-      },
-      {
-        "feature": "cat__intensity_preference_media",
-        "label": "intensity_preference=media",
-        "coefficient": -0.7491
+        "coefficient": -0.7955
       },
       {
         "feature": "cat__recommended_mode_energia_estresado_alta",
         "label": "recommended_mode=energia_estresado_alta",
-        "coefficient": -0.7467
+        "coefficient": -0.7547
+      },
+      {
+        "feature": "cat__intensity_preference_media",
+        "label": "intensity_preference=media",
+        "coefficient": -0.7478
       },
       {
         "feature": "cat__noise_category_quiet",
         "label": "noise_category=quiet",
-        "coefficient": -0.6606
+        "coefficient": -0.6623
       },
       {
         "feature": "cat__exploration_preference_descubrir",
         "label": "exploration_preference=descubrir",
-        "coefficient": -0.5667
-      },
-      {
-        "feature": "cat__target_energy_baja",
-        "label": "target_energy=baja",
-        "coefficient": -0.5094
-      },
-      {
-        "feature": "cat__target_bpm_range_55-75",
-        "label": "target_bpm_range=55-75",
-        "coefficient": -0.5094
+        "coefficient": -0.5755
       },
       {
         "feature": "num__stress_level",
         "label": "stress_level",
-        "coefficient": -0.4932
+        "coefficient": -0.5213
+      },
+      {
+        "feature": "cat__target_energy_baja",
+        "label": "target_energy=baja",
+        "coefficient": -0.5105
+      },
+      {
+        "feature": "cat__target_bpm_range_55-75",
+        "label": "target_bpm_range=55-75",
+        "coefficient": -0.5105
       },
       {
         "feature": "cat__goal_foco",
         "label": "goal=foco",
-        "coefficient": -0.455
+        "coefficient": -0.4489
       },
       {
         "feature": "cat__recommended_mode_foco_feliz_suave",
         "label": "recommended_mode=foco_feliz_suave",
-        "coefficient": -0.4389
+        "coefficient": -0.4454
       }
     ],
     "recommended_mode_feature_weights": [
       {
         "feature": "cat__recommended_mode_relajacion_cansado_suave",
         "label": "recommended_mode=relajacion_cansado_suave",
-        "coefficient": -0.9008
+        "coefficient": -0.9213
       },
       {
         "feature": "cat__recommended_mode_foco_triste_media",
         "label": "recommended_mode=foco_triste_media",
-        "coefficient": -0.8805
+        "coefficient": -0.8882
       },
       {
         "feature": "cat__recommended_mode_energia_estresado_alta",
         "label": "recommended_mode=energia_estresado_alta",
-        "coefficient": -0.7467
+        "coefficient": -0.7547
       },
       {
         "feature": "cat__recommended_mode_relajacion_estresado_suave",
         "label": "recommended_mode=relajacion_estresado_suave",
-        "coefficient": 0.6524
+        "coefficient": 0.6492
       },
       {
         "feature": "cat__recommended_mode_foco_feliz_suave",
         "label": "recommended_mode=foco_feliz_suave",
-        "coefficient": -0.4389
+        "coefficient": -0.4454
       },
       {
         "feature": "cat__recommended_mode_foco_feliz_media",
         "label": "recommended_mode=foco_feliz_media",
-        "coefficient": -0.3948
+        "coefficient": -0.3958
       },
       {
         "feature": "cat__recommended_mode_energia_triste_media",
         "label": "recommended_mode=energia_triste_media",
-        "coefficient": 0.3764
+        "coefficient": 0.389
       },
       {
         "feature": "cat__recommended_mode_energia_cansado_media",
         "label": "recommended_mode=energia_cansado_media",
-        "coefficient": 0.3169
+        "coefficient": 0.3257
       },
       {
         "feature": "cat__recommended_mode_foco_cansado_suave",
         "label": "recommended_mode=foco_cansado_suave",
-        "coefficient": 0.3103
+        "coefficient": 0.3006
       },
       {
         "feature": "cat__recommended_mode_relajacion_feliz_suave",
         "label": "recommended_mode=relajacion_feliz_suave",
-        "coefficient": 0.2914
+        "coefficient": 0.2896
       },
       {
         "feature": "cat__recommended_mode_foco_feliz_alta",
         "label": "recommended_mode=foco_feliz_alta",
-        "coefficient": 0.2681
+        "coefficient": 0.2704
       },
       {
-        "feature": "cat__recommended_mode_energia_feliz_alta",
-        "label": "recommended_mode=energia_feliz_alta",
-        "coefficient": 0.2417
+        "feature": "cat__recommended_mode_foco_estresado_media",
+        "label": "recommended_mode=foco_estresado_media",
+        "coefficient": 0.2562
       }
     ]
   },
