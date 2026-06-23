@@ -16,3 +16,71 @@ Desde ese repositorio pueden revisarse la organización del cliente Flutter, la
 implementación del backend FastAPI, la integración con Spotify, el catálogo
 musical estructurado, el componente de aprendizaje y la propia memoria del
 TFG.
+
+\section*{Puertas de calidad del modelo supervisado}
+
+Para evitar que el componente de aprendizaje actúe con evidencia insuficiente,
+Harmony Hub incorpora una política explícita de puertas de calidad antes de
+permitir que el modelo reordene candidatos de sesión. Esta explicación resume
+lo desarrollado en el diseño de la solución y facilita localizarlo en el código
+y en los artefactos de auditoría.
+
+En primer lugar, se aplica una \textbf{puerta de datos}. El modelo solo puede
+considerarse operativo cuando existe un mínimo de ejemplos totales y una
+cobertura mínima por clase. En términos prácticos, esto significa que no basta
+con acumular muchas sesiones, sino que deben existir suficientes casos útiles y
+no útiles para que el clasificador vea ambos comportamientos. En la
+implementación actual se exige \texttt{total\_examples >= 40} y al menos
+\texttt{8} ejemplos por clase.
+
+En segundo lugar, cuando la distribución lo permite, se utiliza
+\textbf{validación cruzada estratificada}. Esta técnica divide el conjunto de
+ejemplos en varios pliegues conservando proporciones similares de clases en
+cada partición. Su objetivo es reducir el riesgo de considerar válido un modelo
+que solo funciona bien en una única separación afortunada de los datos.
+
+Sobre esa validación se calculan varias métricas. La
+\textbf{balanced accuracy} mide si el modelo diferencia de forma razonable las
+sesiones útiles y las no útiles sin sesgarse hacia la clase mayoritaria. El
+\textbf{ROC AUC} mide si el clasificador sabe asignar más probabilidad a los
+casos positivos que a los negativos antes incluso de fijar un umbral binario.
+La métrica \textbf{F1-score} resume el equilibrio entre precisión y recobrado
+de la clase positiva.
+
+Para sintetizar estas señales se utiliza un \textbf{índice compuesto de
+calidad}, calculado como:
+
+\begin{center}
+\texttt{quality score = (0.45 * balanced accuracy + 0.35 * ROC AUC + 0.20 * F1) * 100}
+\end{center}
+
+En la configuración actual, el modelo solo supera la puerta de calidad si
+alcanza simultáneamente:
+
+\begin{itemize}
+    \item \texttt{balanced accuracy >= 0.45},
+    \item \texttt{ROC AUC >= 0.38},
+    \item \texttt{quality score >= 49}.
+\end{itemize}
+
+Además, incluso cuando el modelo ha sido entrenado y auditado correctamente, su
+influencia sobre una recomendación concreta queda condicionada por una
+\textbf{puerta de confianza operacional}. Esta última exige que la probabilidad
+del mejor candidato supere un umbral mínimo antes de modificar el ranking
+heurístico. En el estado actual del proyecto, ese valor operativo aparece
+registrado como \texttt{min\_selected\_mode\_probability = 0.14}.
+
+Estas comprobaciones pueden localizarse directamente en los siguientes puntos
+del repositorio:
+
+\begin{itemize}
+    \item \texttt{backend\_fastapi/app/services/session\_mode\_ml\_service.py}: umbrales operativos y activación del modelo en tiempo de recomendación.
+    \item \texttt{backend\_fastapi/app/ml/train\_ranking\_model.py}: entrenamiento, validación cruzada, cálculo de métricas y decisión de paso de puertas.
+    \item \texttt{backend\_fastapi/app/ml/models/session\_mode\_model\_audit.json}: evidencia persistida del estado de auditoría y de los umbrales vigentes.
+    \item \texttt{backend\_fastapi/app/ml/models/session\_mode\_model\_card.json}: resumen funcional del modelo, su propósito y sus parámetros de operación.
+\end{itemize}
+
+Esta política de control tiene una función importante dentro del proyecto: el
+aprendizaje no sustituye a la base heurística, sino que solo interviene cuando
+dispone de evidencia mínima, calidad suficiente y confianza operacional en el
+contexto evaluado.
